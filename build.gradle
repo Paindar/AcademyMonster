@@ -1,0 +1,130 @@
+buildscript {
+    repositories {
+        mavenCentral()
+        maven {
+            name = "forge"
+            url = "http://files.minecraftforge.net/maven"
+        }
+        maven {
+            name = "sonatype"
+            url = "https://oss.sonatype.org/content/repositories/snapshots"
+        }
+    }
+    dependencies {
+        classpath 'net.minecraftforge.gradle:ForgeGradle:1.2-SNAPSHOT'
+    }
+}
+
+ext.configFile = file "build.properties"
+
+configFile.withReader {
+    def prop = new Properties()
+    prop.load(it)
+    project.ext.config = new ConfigSlurper().parse prop
+}
+
+configurations {
+    deployerJars
+}
+
+apply plugin: 'scala'
+apply plugin: 'forge'
+apply plugin: 'idea'
+
+idea {
+        module {
+            inheritOutputDirs = true
+        }
+    }
+
+version             = config.mod_ver
+group               = config.mod_group
+archivesBaseName    = config.mod_name
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+minecraft {
+    version = "${config.mc_ver}-${config.forge_ver}"
+    runDir = "eclipse"
+
+    // Replacing stuff in the source
+    replace "@VERSION@", config.mod_ver
+    replace "@LL_VERSION@", config.lambdalib_ver
+    replace "@MC_VERSION@", config.mc_ver
+}
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+    maven {
+        name = "chickenbones"
+        url = "http://chickenbones.net/maven"
+    }
+    maven {
+        name = "ic2"
+        url = "http://maven.ic2.player.to"
+    }
+}
+
+
+configurations {
+    provided
+}
+
+
+dependencies {
+    compile "cn.lambdalib:LambdaLib:${config.lambdalib_ver}:dev"
+    compile "cn.academy:AcademyCraft:${config.academycraft_ver}:dev"
+
+    provided "net.industrial-craft:industrialcraft-2:2.2.717-experimental:dev"
+    
+    compile "codechicken:CodeChickenLib:1.7.10-${config.ccl_ver}:dev"
+    compile "codechicken:CodeChickenCore:1.7.10-${config.ccc_ver}:dev"
+    compile "codechicken:NotEnoughItems:1.7.10-${config.nei_ver}:dev"
+    
+    deployerJars "org.apache.maven.wagon:wagon-ftp:2.2" 
+}
+
+sourceSets.main.compileClasspath += [configurations.provided]
+
+idea {
+  module{
+    scopes.PROVIDED.plus += [configurations.provided]
+  }
+}
+
+sourceSets.main {
+    java.srcDirs = []
+    scala.srcDirs =  ['src/main/java', 'src/main/scala']
+}
+
+processResources {
+    from(sourceSets.main.resources.srcDirs) {
+        include 'mcmod.info'
+        expand 'version':project.version, 'mcversion':project.minecraft.version
+    }
+
+    from(sourceSets.main.resources.srcDirs) {
+        exclude 'mcmod.info'
+    }
+}
+
+compileJava.options.encoding = "UTF-8"
+compileScala.options.encoding = "UTF-8"
+
+task deobfJar(type: Jar, dependsOn: 'jar') {
+    classifier 'dev'
+    from sourceSets.main.output
+}
+
+artifacts {
+    archives deobfJar
+}
+
+task getLibs << {
+    ant.mkdir(dir: 'libs')
+    ant.get(src: 'http://minetweaker.powerofbytes.com/download/MineTweaker3-Dev-1.7.10-3.0.9C.jar', dest: 'libs/MineTweaker3-Dev-1.7.10-3.0.9C.jar', skipexisting: 'true')
+}
+sourceMainJava.dependsOn getLibs
+install.dependsOn build

@@ -61,3 +61,16 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
+.gradle/
+.idea/
+build/
+eclipse/
+libs/
+out/
+AcademyZombie.ipr
+AcademyZombie.iws
+CREDITS-fml.txt
+LICENSE-fml.txt
+MinecraftForge-Credits.txt
+MinecraftForge-License.txt
+README.txt
