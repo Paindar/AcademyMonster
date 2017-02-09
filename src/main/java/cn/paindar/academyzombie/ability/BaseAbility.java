@@ -8,6 +8,7 @@ import cn.lambdalib.annoreg.mc.RegInitCallback;
 import cn.lambdalib.s11n.nbt.NBTS11n;
 import cn.lambdalib.s11n.network.NetworkS11n;
 import cn.lambdalib.util.generic.RandUtils;
+import cn.paindar.academyzombie.core.AcademyZombie;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.ServerTickEvent;
@@ -38,7 +39,7 @@ public abstract class BaseAbility
 
     protected int getMaxCooldown(){return maxCooldown;}
 
-    public boolean isSkillInCooldown(){return remainCooldown==0;}
+    public boolean isSkillInCooldown(){return remainCooldown!=0;}
 
     @SubscribeEvent
     public void onServerTick(ServerTickEvent event)
