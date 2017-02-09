@@ -16,12 +16,13 @@ import static cn.lambdalib.util.generic.MathUtils.lerpf;
  */
 public class AIPenetrateTeleport extends BaseAbility
 {
-    private static final String MSG_SOUND="msg_sound";
+    private float maxDistance;
     public AIPenetrateTeleport(float abilityExp) {
         super((int)lerpf(200, 100, abilityExp), abilityExp);
+        maxDistance=lerpf(3,10, getSkillExp());
     }
 
-    public float getMaxDistance(){return lerpf(3, 10, getSkillExp());}
+    public float getMaxDistance(){return maxDistance;}
 
     public void spell(EntityLivingBase speller,double x, double y, double z)
     {
@@ -37,9 +38,10 @@ public class AIPenetrateTeleport extends BaseAbility
             for(Entity e:list)
             {
 
-                NetworkManager.sendTo( "tp.tp",(EntityPlayerMP)e);
+                NetworkManager.sendTo("tp.tp",(EntityPlayerMP)e);
             }
         }
         super.spell();
     }
+
 }

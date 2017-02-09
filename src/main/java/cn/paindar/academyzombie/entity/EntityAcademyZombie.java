@@ -1,5 +1,6 @@
 package cn.paindar.academyzombie.entity;
 
+import cn.lambdalib.util.generic.RandUtils;
 import cn.paindar.academyzombie.ability.AIPenetrateTeleport;
 import cn.paindar.academyzombie.ability.BaseAbility;
 import cn.paindar.academyzombie.core.AcademyZombie;
@@ -25,7 +26,7 @@ public class EntityAcademyZombie extends EntityZombie implements IRangedAttackMo
 
     public EntityAcademyZombie(World world) {
         super(world);
-        abilityList.add(new AIPenetrateTeleport(1));
+        abilityList.add(new AIPenetrateTeleport(1-RandUtils.rangef(0,1)*RandUtils.rangef(0,1)));
         this.tasks.addTask(5,new EntityAIPenetrateTeleport(this));
     }
 

@@ -59,22 +59,6 @@ public class EntityAIPenetrateTeleport  extends EntityAIBase
         this.target = null;
     }
 
-    /**
-     * Updates the task
-     */
-    private float getDepth(double x,double y,double z)
-    {
-        for(int i=0;i<4;i++)
-        {
-            Block block=speller.worldObj.getBlock((int)x,(int)y-i,(int)z);
-            if(y-i<=0)
-                break;
-            if(block.getMaterial()!=Material.air)
-                return i;
-        }
-        return 25565;
-    }
-
     private boolean hasPlace(World world ,double  x,double y,double z)
     {
         int ix=(int)x,iy=(int)y,iz=(int)z;
