@@ -2,7 +2,6 @@ package cn.paindar.academyzombie.ability;
 
 import cn.lambdalib.util.mc.EntitySelectors;
 import cn.lambdalib.util.mc.WorldUtils;
-import cn.paindar.academyzombie.core.AcademyZombie;
 import cn.paindar.academyzombie.network.NetworkManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -22,11 +21,11 @@ public class AIPenetrateTeleport extends BaseAbility
         super((int)lerpf(200, 100, abilityExp), abilityExp);
     }
 
-    public float getMaxDistance(){return lerpf(10, 35, getSkillExp());}
+    public float getMaxDistance(){return lerpf(3, 10, getSkillExp());}
 
     public void spell(EntityLivingBase speller,double x, double y, double z)
     {
-        if(remainCooldown!=0)
+        if(isSkillInCooldown())
             return;
         if(speller.isRiding())
             speller.mountEntity(null);
@@ -41,7 +40,6 @@ public class AIPenetrateTeleport extends BaseAbility
                 NetworkManager.sendTo( "tp.tp",(EntityPlayerMP)e);
             }
         }
-        AcademyZombie.log.info("zombie "+speller+" spell the skill, cooldown= "+getMaxCooldown());
         super.spell();
     }
 }

@@ -2,6 +2,7 @@ package cn.paindar.academyzombie.entity.ai;
 
 import cn.paindar.academyzombie.ability.AIPenetrateTeleport;
 import cn.paindar.academyzombie.ability.BaseAbility;
+import cn.paindar.academyzombie.core.AcademyZombie;
 import cn.paindar.academyzombie.entity.EntityAcademyZombie;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -36,7 +37,8 @@ public class EntityAIPenetrateTeleport  extends EntityAIBase
     @Override
     public boolean shouldExecute() {
 
-        if(this.speller.getAttackTarget()!=null && skill.isSkillInCooldown() && this.speller.getDistanceSqToEntity(this.speller.getAttackTarget())<=skill.getMaxDistance())
+        //&& this.speller.getDistanceSqToEntity(this.speller.getAttackTarget())<=skill.getMaxDistance()
+        if(this.speller.getAttackTarget()!=null && !skill.isSkillInCooldown() )
             return true;
         return false;
     }
@@ -67,36 +69,48 @@ public class EntityAIPenetrateTeleport  extends EntityAIBase
             Block block=speller.worldObj.getBlock((int)x,(int)y-i,(int)z);
             if(y-i<=0)
                 break;
-            if(!block.isAir(speller.worldObj,(int)x,(int)y-i,(int)z))
+            if(block.getMaterial()!=Material.air)
                 return i;
         }
         return 25565;
     }
 
+    private boolean hasPlace(World world ,double  x,double y,double z)
+    {
+        int ix=(int)x,iy=(int)y,iz=(int)z;
+        Block b1 = world.getBlock(ix, iy, iz);
+        Block b2  = world.getBlock(ix, iy + 1, iz);
+        return !b1.canCollideCheck(world.getBlockMetadata(ix, iy, iz), false) && !b2.canCollideCheck(world.getBlockMetadata(ix, iy + 1, iz), false);
+}
+
     public void updateTask()
     {
-        double dist=this.speller.getDistanceSqToEntity(target);
-        if(target!=null && skill.isSkillInCooldown() && dist<=skill.getMaxDistance() && dist >=0.5)
+        double dist=Math.sqrt(this.speller.getDistanceSqToEntity(target));
+        double distBtwEntitys=dist;
+        dist=dist>skill.getMaxDistance()?skill.getMaxDistance():dist;
+        if(target!=null && !skill.isSkillInCooldown() && dist >=0.5)
         {
 
-            double dx= (target.posX-speller.posX)/dist,
-                    dy=(target.posY-speller.posY)/dist,
-                    dz=(target.posZ-speller.posZ)/dist;
+            double dx= (target.posX-speller.posX)/distBtwEntitys,
+                    dy=(target.posY-speller.posY)/distBtwEntitys,
+                    dz=(target.posZ-speller.posZ)/distBtwEntitys;
             World world=speller.worldObj;
-            for(double d=1;d<dist;d+=1)
+            for(double d=dist;d>0;d-=1)
             {
-                double x=target.posX-dx*d,
-                        y=target.posY-dy*d,
-                        z=target.posZ-dz*d;
-                if(world.getBlock((int)x,(int)y,(int)z).getMaterial()== Material.air
-                        && world.getBlock((int)x,(int)y+1,(int)z).getMaterial()== Material.air
-                        && getDepth(x,y,z)<3)
+                double x = speller.posX + dx * d;
+                double y = speller.posY + dy * d;
+                double z = speller.posZ + dz * d;
+                if(hasPlace(world,x,y,z))
                 {
                     this.skill.spell(speller,x,y,z);
                     break;
                 }
+                else if(hasPlace(world,x,y+1,z))
+                {
+                    this.skill.spell(speller,x,y+1,z);
+                    break;
+                }
             }
-
         }
 
     }

@@ -27,7 +27,6 @@ public class EntityAcademyZombie extends EntityZombie implements IRangedAttackMo
         super(world);
         abilityList.add(new AIPenetrateTeleport(1));
         this.tasks.addTask(5,new EntityAIPenetrateTeleport(this));
-        this.setSize(2f,2f);
     }
 
     //设置是否能够破门而入
