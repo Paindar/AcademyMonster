@@ -1,42 +1,40 @@
-package cn.paindar.academyzombie.core;
+package cn.paindar.academymonster.core;
 
-import cn.lambdalib.annoreg.core.Registrant;
-import cn.lambdalib.annoreg.core.RegistrationManager;
-import cn.lambdalib.annoreg.core.RegistrationMod;
-import cn.paindar.academyzombie.entity.EntityAcademyZombie;
-import cn.paindar.academyzombie.entity.EntityLoader;
-import cn.paindar.academyzombie.network.NetworkManager;
+import cn.paindar.academymonster.entity.EntityLoader;
+import cn.paindar.academymonster.network.NetworkManager;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.event.*;
-import net.minecraft.entity.EnumCreatureType;
-import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.common.config.Configuration;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import static cn.paindar.academyzombie.entity.EntityLoader.registerEntitySpawn;
 
 /**
  * Created by Paindar on 2017/2/9.
  */
 
-@Mod(modid = "academy-zombie", name = "AcademyZombie", version = AcademyZombie.VERSION,
+@Mod(modid =AcademyMonster.MODID , name = AcademyMonster.NAME, version = AcademyMonster.VERSION,
         dependencies = "required-after:LambdaLib@@LL_VERSION@") // LambdaLib is currently unstable. Supports only one version.
-public class AcademyZombie
+public class AcademyMonster
 {
+    public static final String MODID = "academy-zombie";
+    public static final String NAME = "Academy Monster";
     public static final String VERSION = "@VERSION@";
-    public static final Logger log = LogManager.getLogger("AcademyZombie");
+    public static final Logger log = LogManager.getLogger("AcademyMonster");
     public static Configuration config;
     @Instance
-    public static AcademyZombie instance;
+    public static AcademyMonster instance;
 
     @EventHandler
     public void preInit(FMLPreInitializationEvent event)
     {
         new EntityLoader();
         NetworkManager.init(event);
+        config=new Configuration(event.getSuggestedConfigurationFile());
+        config.load();
+        config.save();
     }
 
     @EventHandler
