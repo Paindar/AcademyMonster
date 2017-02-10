@@ -1,5 +1,6 @@
 package cn.paindar.academymonster.ability;
 
+import cn.academy.vanilla.teleporter.skill.PenetrateTeleport;
 import cn.lambdalib.util.mc.EntitySelectors;
 import cn.lambdalib.util.mc.WorldUtils;
 import cn.paindar.academymonster.network.NetworkManager;
@@ -46,7 +47,8 @@ public class AIPenetrateTeleport extends BaseAbility
 
 
     @Override
-    public String getSkillName() {
-        return "ac.ability.teleporter.threatening_teleport.name";
+    public String getSkillName()
+    {
+        return PenetrateTeleport.getDisplayName();
     }
 }

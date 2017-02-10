@@ -71,7 +71,7 @@ public class EntityAIElectronBomb extends EntityAIBase
                     Vec3.createVectorHelper(target.posX,target.posY+target.getEyeHeight(),target.posZ), BlockSelectors.filNothing
             );
             if(trace==null || trace.typeOfHit!= MovingObjectPosition.MovingObjectType.BLOCK)
-                skill.spell(target.posX, target.posY, target.posZ);
+                skill.spell();
         }
     }
 }

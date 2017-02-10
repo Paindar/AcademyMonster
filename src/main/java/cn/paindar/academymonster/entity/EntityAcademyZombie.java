@@ -1,5 +1,6 @@
 package cn.paindar.academymonster.entity;
 
+import cn.lambdalib.util.generic.RandUtils;
 import cn.paindar.academymonster.ability.AIElectronBomb;
 import cn.paindar.academymonster.ability.AIPenetrateTeleport;
 import cn.paindar.academymonster.ability.BaseAbility;
@@ -26,8 +27,8 @@ public class EntityAcademyZombie extends EntityZombie implements IRangedAttackMo
 
     public EntityAcademyZombie(World world) {
         super(world);
-//        abilityList.add(new AIPenetrateTeleport(this,1-RandUtils.rangef(0,1)*RandUtils.rangef(0,1)));
-        abilityList.add(new AIElectronBomb(this,1));
+        //abilityList.add(new AIPenetrateTeleport(this,1- RandUtils.rangef(0,1)*RandUtils.rangef(0,1)));
+        //abilityList.add(new AIElectronBomb(this,1- RandUtils.rangef(0,1)*RandUtils.rangef(0,1)));
         for(BaseAbility skill:abilityList)
         {
             if(skill instanceof AIElectronBomb)
