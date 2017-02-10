@@ -1,20 +1,13 @@
 package cn.paindar.academyzombie.ability;
 
-import cn.academy.ability.api.Category;
-import cn.academy.ability.api.CategoryManager;
-import cn.academy.ability.api.Controllable;
-import cn.lambdalib.annoreg.core.Registrant;
-import cn.lambdalib.annoreg.mc.RegInitCallback;
-import cn.lambdalib.s11n.nbt.NBTS11n;
-import cn.lambdalib.s11n.network.NetworkS11n;
-import cn.lambdalib.util.generic.RandUtils;
-import cn.paindar.academyzombie.core.AcademyZombie;
+import cn.academy.ability.SkillDamageSource;
+import cn.academy.ability.api.event.CalcEvent;
+import cn.paindar.academyzombie.ability.api.SkillDamageSourceNative;
+import cn.paindar.academyzombie.ability.api.event.CalcEventNative;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.ServerTickEvent;
-import io.netty.buffer.ByteBuf;
-import net.minecraft.nbt.NBTBase;
-import net.minecraft.nbt.NBTTagByteArray;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.Vec3;
 
 /**
@@ -26,12 +19,14 @@ public abstract class BaseAbility
     private int maxCooldown;
     protected int remainCooldown=0;
     private float skillExp;
+    protected EntityLivingBase speller;
     protected boolean isChanting=false;
     protected Vec3 targetPos;
-    public BaseAbility(int maxCooldown,float abilityExp)
+    public BaseAbility(EntityLivingBase speller,int maxCooldown,float abilityExp)
     {
         this.maxCooldown=maxCooldown;
         this.skillExp=abilityExp;
+        this.speller=speller;
         FMLCommonHandler.instance().bus().register(this);
     }
 
@@ -52,6 +47,21 @@ public abstract class BaseAbility
     {
         remainCooldown=maxCooldown;
     }
+    private float getFinalDamage(float damage) {
+        return damage;
+    }
+
+    public boolean attack(EntityLivingBase target,float damage)
+    {
+        damage = CalcEvent.calc(new CalcEventNative.SkillAttack(speller, this, target, damage));
+
+        if (damage > 0)
+        {
+            target.attackEntityFrom(new SkillDamageSourceNative(speller, this), getFinalDamage(damage));
+        }
+        return true;
+    }
+    public abstract String getSkillName();
 
 
 }

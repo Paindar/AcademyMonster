@@ -17,14 +17,14 @@ import static cn.lambdalib.util.generic.MathUtils.lerpf;
 public class AIPenetrateTeleport extends BaseAbility
 {
     private float maxDistance;
-    public AIPenetrateTeleport(float abilityExp) {
-        super((int)lerpf(200, 100, abilityExp), abilityExp);
+    public AIPenetrateTeleport(EntityLivingBase speller,float abilityExp) {
+        super(speller,(int)lerpf(200, 100, abilityExp), abilityExp);
         maxDistance=lerpf(3,10, getSkillExp());
     }
 
     public float getMaxDistance(){return maxDistance;}
 
-    public void spell(EntityLivingBase speller,double x, double y, double z)
+    public void spell(double x, double y, double z)
     {
         if(isSkillInCooldown())
             return;
@@ -44,4 +44,9 @@ public class AIPenetrateTeleport extends BaseAbility
         super.spell();
     }
 
+
+    @Override
+    public String getSkillName() {
+        return "ac.ability.teleporter.threatening_teleport.name";
+    }
 }
