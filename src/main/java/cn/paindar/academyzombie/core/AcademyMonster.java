@@ -15,15 +15,17 @@ import org.apache.logging.log4j.Logger;
  * Created by Paindar on 2017/2/9.
  */
 
-@Mod(modid = "academy-zombie", name = "AcademyZombie", version = AcademyZombie.VERSION,
+@Mod(modid =AcademyMonster.MODID , name = AcademyMonster.NAME, version = AcademyMonster.VERSION,
         dependencies = "required-after:LambdaLib@@LL_VERSION@") // LambdaLib is currently unstable. Supports only one version.
-public class AcademyZombie
+public class AcademyMonster
 {
+    public static final String MODID = "academy-zombie";
+    public static final String NAME = "Academy Monster";
     public static final String VERSION = "@VERSION@";
-    public static final Logger log = LogManager.getLogger("AcademyZombie");
+    public static final Logger log = LogManager.getLogger("AcademyMonster");
     public static Configuration config;
     @Instance
-    public static AcademyZombie instance;
+    public static AcademyMonster instance;
 
     @EventHandler
     public void preInit(FMLPreInitializationEvent event)
