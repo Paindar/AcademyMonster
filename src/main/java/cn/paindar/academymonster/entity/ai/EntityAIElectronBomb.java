@@ -1,9 +1,8 @@
-package cn.paindar.academyzombie.entity.ai;
+package cn.paindar.academymonster.entity.ai;
 
 import cn.lambdalib.util.mc.BlockSelectors;
 import cn.lambdalib.util.mc.Raytrace;
-import cn.paindar.academyzombie.ability.AIElectronBomb;
-import cn.paindar.academyzombie.core.AcademyMonster;
+import cn.paindar.academymonster.ability.AIElectronBomb;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.IRangedAttackMob;

@@ -1,8 +1,8 @@
-package cn.paindar.academyzombie.ability;
+package cn.paindar.academymonster.ability;
 
 import cn.lambdalib.util.mc.EntitySelectors;
 import cn.lambdalib.util.mc.WorldUtils;
-import cn.paindar.academyzombie.network.NetworkManager;
+import cn.paindar.academymonster.network.NetworkManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayerMP;

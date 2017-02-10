@@ -1,6 +1,6 @@
-package cn.paindar.academyzombie.network;
+package cn.paindar.academymonster.network;
 
-import cn.paindar.academyzombie.core.AcademyMonster;
+import cn.paindar.academymonster.core.AcademyMonster;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;

@@ -1,11 +1,10 @@
-package cn.paindar.academyzombie.ability.api.event;
+package cn.paindar.academymonster.ability.api.event;
 
 import cn.academy.ability.api.event.CalcEvent;
-import cn.paindar.academyzombie.ability.BaseAbility;
+import cn.paindar.academymonster.ability.BaseAbility;
 import cpw.mods.fml.common.eventhandler.Event;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.common.MinecraftForge;
 
 /**

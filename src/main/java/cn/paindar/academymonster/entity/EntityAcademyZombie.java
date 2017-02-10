@@ -1,11 +1,10 @@
-package cn.paindar.academyzombie.entity;
+package cn.paindar.academymonster.entity;
 
-import cn.lambdalib.util.generic.RandUtils;
-import cn.paindar.academyzombie.ability.AIElectronBomb;
-import cn.paindar.academyzombie.ability.AIPenetrateTeleport;
-import cn.paindar.academyzombie.ability.BaseAbility;
-import cn.paindar.academyzombie.entity.ai.EntityAIElectronBomb;
-import cn.paindar.academyzombie.entity.ai.EntityAIPenetrateTeleport;
+import cn.paindar.academymonster.ability.AIElectronBomb;
+import cn.paindar.academymonster.ability.AIPenetrateTeleport;
+import cn.paindar.academymonster.ability.BaseAbility;
+import cn.paindar.academymonster.entity.ai.EntityAIElectronBomb;
+import cn.paindar.academymonster.entity.ai.EntityAIPenetrateTeleport;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.IRangedAttackMob;
 import net.minecraft.entity.ai.*;

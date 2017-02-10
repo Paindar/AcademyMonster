@@ -1,7 +1,7 @@
-package cn.paindar.academyzombie.entity;
+package cn.paindar.academymonster.entity;
 
 import cn.academy.vanilla.meltdowner.entity.EntityMdBall;
-import cn.paindar.academyzombie.core.AcademyMonster;
+import cn.paindar.academymonster.core.AcademyMonster;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.common.registry.EntityRegistry;
 import cpw.mods.fml.relauncher.Side;

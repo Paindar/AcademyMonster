@@ -1,8 +1,6 @@
-package cn.paindar.academyzombie.entity.ai;
+package cn.paindar.academymonster.entity.ai;
 
-import cn.paindar.academyzombie.ability.AIPenetrateTeleport;
-import cn.paindar.academyzombie.ability.BaseAbility;
-import cn.paindar.academyzombie.entity.EntityAcademyZombie;
+import cn.paindar.academymonster.ability.AIPenetrateTeleport;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;

@@ -1,7 +1,7 @@
-package cn.paindar.academyzombie.core;
+package cn.paindar.academymonster.core;
 
-import cn.paindar.academyzombie.entity.EntityLoader;
-import cn.paindar.academyzombie.network.NetworkManager;
+import cn.paindar.academymonster.entity.EntityLoader;
+import cn.paindar.academymonster.network.NetworkManager;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;

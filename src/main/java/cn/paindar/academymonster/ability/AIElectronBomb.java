@@ -1,16 +1,14 @@
-package cn.paindar.academyzombie.ability;
+package cn.paindar.academymonster.ability;
 
-import cn.academy.vanilla.meltdowner.skill.MDDamageHelper;
 import cn.lambdalib.util.entityx.EntityCallback;
 import cn.lambdalib.util.generic.VecUtils;
 import cn.lambdalib.util.mc.EntitySelectors;
 import cn.lambdalib.util.mc.Raytrace;
 import cn.lambdalib.util.mc.WorldUtils;
-import cn.paindar.academyzombie.entity.EntityMdBallNative;
-import cn.paindar.academyzombie.network.NetworkManager;
+import cn.paindar.academymonster.entity.EntityMdBallNative;
+import cn.paindar.academymonster.network.NetworkManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;

@@ -1,4 +1,4 @@
-package cn.paindar.academyzombie.network;
+package cn.paindar.academymonster.network;
 
 import cn.academy.vanilla.meltdowner.entity.EntityMdRaySmall;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
@@ -8,7 +8,6 @@ import cpw.mods.fml.relauncher.Side;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.Vec3;
 
 /**

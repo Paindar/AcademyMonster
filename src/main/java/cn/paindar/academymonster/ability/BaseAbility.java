@@ -1,9 +1,8 @@
-package cn.paindar.academyzombie.ability;
+package cn.paindar.academymonster.ability;
 
-import cn.academy.ability.SkillDamageSource;
 import cn.academy.ability.api.event.CalcEvent;
-import cn.paindar.academyzombie.ability.api.SkillDamageSourceNative;
-import cn.paindar.academyzombie.ability.api.event.CalcEventNative;
+import cn.paindar.academymonster.ability.api.SkillDamageSourceNative;
+import cn.paindar.academymonster.ability.api.event.CalcEventNative;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.ServerTickEvent;

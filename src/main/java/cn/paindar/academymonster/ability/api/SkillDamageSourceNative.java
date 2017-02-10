@@ -1,6 +1,6 @@
-package cn.paindar.academyzombie.ability.api;
+package cn.paindar.academymonster.ability.api;
 
-import cn.paindar.academyzombie.ability.BaseAbility;
+import cn.paindar.academymonster.ability.BaseAbility;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.EntityDamageSource;

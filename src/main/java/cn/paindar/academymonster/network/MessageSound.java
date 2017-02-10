@@ -1,4 +1,4 @@
-package cn.paindar.academyzombie.network;
+package cn.paindar.academymonster.network;
 
 import cn.academy.core.client.sound.ACSounds;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
