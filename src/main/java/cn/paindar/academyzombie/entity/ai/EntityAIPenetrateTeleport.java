@@ -2,10 +2,9 @@ package cn.paindar.academyzombie.entity.ai;
 
 import cn.paindar.academyzombie.ability.AIPenetrateTeleport;
 import cn.paindar.academyzombie.ability.BaseAbility;
-import cn.paindar.academyzombie.core.AcademyZombie;
 import cn.paindar.academyzombie.entity.EntityAcademyZombie;
 import net.minecraft.block.Block;
-import net.minecraft.block.material.Material;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.world.World;
@@ -15,21 +14,14 @@ import net.minecraft.world.World;
  */
 public class EntityAIPenetrateTeleport  extends EntityAIBase
 {
-    EntityAcademyZombie speller;
+    EntityLiving speller;
     AIPenetrateTeleport skill;
     EntityLivingBase target;
 
-    public EntityAIPenetrateTeleport(EntityAcademyZombie zombie)
+    public EntityAIPenetrateTeleport(EntityLiving zombie,AIPenetrateTeleport skill)
     {
         speller=zombie;
-        for(BaseAbility ability:speller.abilityList)
-        {
-            if(ability instanceof AIPenetrateTeleport)
-            {
-                skill = (AIPenetrateTeleport) ability;
-                break;
-            }
-        }
+        this.skill=skill;
     }
     /**
      * Returns whether the EntityAIBase should begin execution.
@@ -86,12 +78,12 @@ public class EntityAIPenetrateTeleport  extends EntityAIBase
                 double z = speller.posZ + dz * d;
                 if(hasPlace(world,x,y,z))
                 {
-                    this.skill.spell(speller,x,y,z);
+                    this.skill.spell(x,y,z);
                     break;
                 }
                 else if(hasPlace(world,x,y+1,z))
                 {
-                    this.skill.spell(speller,x,y+1,z);
+                    this.skill.spell(x,y+1,z);
                     break;
                 }
             }

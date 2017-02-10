@@ -1,9 +1,10 @@
 package cn.paindar.academyzombie.entity;
 
 import cn.lambdalib.util.generic.RandUtils;
+import cn.paindar.academyzombie.ability.AIElectronBomb;
 import cn.paindar.academyzombie.ability.AIPenetrateTeleport;
 import cn.paindar.academyzombie.ability.BaseAbility;
-import cn.paindar.academyzombie.core.AcademyZombie;
+import cn.paindar.academyzombie.entity.ai.EntityAIElectronBomb;
 import cn.paindar.academyzombie.entity.ai.EntityAIPenetrateTeleport;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.IRangedAttackMob;
@@ -26,8 +27,16 @@ public class EntityAcademyZombie extends EntityZombie implements IRangedAttackMo
 
     public EntityAcademyZombie(World world) {
         super(world);
-        abilityList.add(new AIPenetrateTeleport(1-RandUtils.rangef(0,1)*RandUtils.rangef(0,1)));
-        this.tasks.addTask(5,new EntityAIPenetrateTeleport(this));
+//        abilityList.add(new AIPenetrateTeleport(this,1-RandUtils.rangef(0,1)*RandUtils.rangef(0,1)));
+        abilityList.add(new AIElectronBomb(this,1));
+        for(BaseAbility skill:abilityList)
+        {
+            if(skill instanceof AIElectronBomb)
+                this.tasks.addTask(4,new EntityAIElectronBomb(this,(AIElectronBomb)skill));
+            else if (skill instanceof AIPenetrateTeleport)
+                this.tasks.addTask(5,new EntityAIPenetrateTeleport(this,(AIPenetrateTeleport)skill));
+        }
+
     }
 
     //设置是否能够破门而入
