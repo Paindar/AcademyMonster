@@ -1,5 +1,6 @@
 package cn.paindar.academymonster.ability;
 
+import cn.academy.vanilla.meltdowner.skill.ElectronBomb;
 import cn.lambdalib.util.entityx.EntityCallback;
 import cn.lambdalib.util.generic.VecUtils;
 import cn.lambdalib.util.mc.EntitySelectors;
@@ -23,7 +24,6 @@ import static cn.lambdalib.util.generic.MathUtils.lerpf;
 public class AIElectronBomb extends BaseAbility
 {
     private float maxDistance;
-    private EntityLivingBase speller;
     private float damage;
 
     public AIElectronBomb(EntityLivingBase speller,float abilityExp) {
@@ -36,7 +36,7 @@ public class AIElectronBomb extends BaseAbility
 
     private Vec3 getDest(EntityLivingBase speller){return Raytrace.getLookingPos(speller, maxDistance).getLeft();}
 
-    public void spell(double x,double y,double z)
+    public void spell()
     {
         if(isSkillInCooldown())
             return;
@@ -67,7 +67,8 @@ public class AIElectronBomb extends BaseAbility
     }
 
     @Override
-    public String getSkillName() {
-        return "ac.ability.meltdowner.electron_bomb.name";
+    public String getSkillName()
+    {
+        return ElectronBomb.getDisplayName();
     }
 }

@@ -19,7 +19,7 @@ import org.apache.logging.log4j.Logger;
         dependencies = "required-after:LambdaLib@@LL_VERSION@") // LambdaLib is currently unstable. Supports only one version.
 public class AcademyMonster
 {
-    public static final String MODID = "academy-zombie";
+    public static final String MODID = "academy-monster";
     public static final String NAME = "Academy Monster";
     public static final String VERSION = "@VERSION@";
     public static final Logger log = LogManager.getLogger("AcademyMonster");
