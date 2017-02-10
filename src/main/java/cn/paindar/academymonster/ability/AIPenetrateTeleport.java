@@ -1,9 +1,8 @@
-package cn.paindar.academyzombie.ability;
+package cn.paindar.academymonster.ability;
 
 import cn.lambdalib.util.mc.EntitySelectors;
 import cn.lambdalib.util.mc.WorldUtils;
-import cn.paindar.academyzombie.core.AcademyZombie;
-import cn.paindar.academyzombie.network.NetworkManager;
+import cn.paindar.academymonster.network.NetworkManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -17,16 +16,17 @@ import static cn.lambdalib.util.generic.MathUtils.lerpf;
  */
 public class AIPenetrateTeleport extends BaseAbility
 {
-    private static final String MSG_SOUND="msg_sound";
-    public AIPenetrateTeleport(float abilityExp) {
-        super((int)lerpf(200, 100, abilityExp), abilityExp);
+    private float maxDistance;
+    public AIPenetrateTeleport(EntityLivingBase speller,float abilityExp) {
+        super(speller,(int)lerpf(200, 100, abilityExp), abilityExp);
+        maxDistance=lerpf(3,10, getSkillExp());
     }
 
-    public float getMaxDistance(){return lerpf(10, 35, getSkillExp());}
+    public float getMaxDistance(){return maxDistance;}
 
-    public void spell(EntityLivingBase speller,double x, double y, double z)
+    public void spell(double x, double y, double z)
     {
-        if(remainCooldown!=0)
+        if(isSkillInCooldown())
             return;
         if(speller.isRiding())
             speller.mountEntity(null);
@@ -38,10 +38,15 @@ public class AIPenetrateTeleport extends BaseAbility
             for(Entity e:list)
             {
 
-                NetworkManager.sendTo( "tp.tp",(EntityPlayerMP)e);
+                NetworkManager.sendTo("tp.tp",(EntityPlayerMP)e);
             }
         }
-        AcademyZombie.log.info("zombie "+speller+" spell the skill, cooldown= "+getMaxCooldown());
         super.spell();
+    }
+
+
+    @Override
+    public String getSkillName() {
+        return "ac.ability.teleporter.threatening_teleport.name";
     }
 }
