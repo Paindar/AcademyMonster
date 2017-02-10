@@ -28,7 +28,10 @@ public class EntityLoader
         {
             //AcademyMonster.log.info(i); i!=BiomeGenBase.hell &&
             if (i!=null &&i!=BiomeGenBase.sky)
+            {
                 registerEntitySpawn(EntityAcademyZombie.class,100,4, 4, EnumCreatureType.monster,i);
+                registerEntitySpawn(EntityAcademySkeleton.class,100,4, 4, EnumCreatureType.monster,i);
+            }
         }
     }
     @SideOnly(Side.CLIENT)
