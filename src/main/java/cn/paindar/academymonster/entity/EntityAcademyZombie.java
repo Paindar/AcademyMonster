@@ -1,20 +1,22 @@
 package cn.paindar.academymonster.entity;
 
+import cn.paindar.academymonster.ability.AIBodyIntensify;
 import cn.paindar.academymonster.ability.AIElectronBomb;
 import cn.paindar.academymonster.ability.AIPenetrateTeleport;
 import cn.paindar.academymonster.ability.BaseAbility;
+import cn.paindar.academymonster.entity.ai.EntityAIBodyIntensify;
 import cn.paindar.academymonster.entity.ai.EntityAIElectronBomb;
 import cn.paindar.academymonster.entity.ai.EntityAIPenetrateTeleport;
 import cn.lambdalib.util.generic.RandUtils;
+import javafx.util.Pair;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.IRangedAttackMob;
 import net.minecraft.entity.ai.*;
 import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.world.World;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.HashMap;
+import java.lang.reflect.InvocationTargetException;
+import java.util.*;
 import java.lang.reflect.Constructor;
 
 
@@ -23,45 +25,47 @@ import java.lang.reflect.Constructor;
  */
 public class EntityAcademyZombie extends EntityZombie implements IRangedAttackMob
 {
+    private static HashMap<Class<? extends EntityAIBase>,Integer> aiLevel=new HashMap<>();
+    private static List<Pair<Class<? extends BaseAbility>,Class<? extends EntityAIBase>>> validSkillList=new ArrayList<>();
+    static
+    {
+        validSkillList.add(new Pair<>(AIBodyIntensify.class, EntityAIBodyIntensify.class));
+        aiLevel.put(EntityAIBodyIntensify.class,5);
+        validSkillList.add(new Pair<>(AIElectronBomb.class, EntityAIElectronBomb.class));
+        aiLevel.put(EntityAIElectronBomb.class,5);
+        validSkillList.add(new Pair<>(AIPenetrateTeleport.class, EntityAIPenetrateTeleport.class));
+        aiLevel.put(EntityAIPenetrateTeleport.class,4);
+    }
+
     private final EntityAIBreakDoor aIBreakDoor = new EntityAIBreakDoor(this);
     private boolean canBreakDoor=false;
-    private HashMap<BaseAbility,String> AbilityMap=new HashMap<BaseAbility,String>();
-    public EntityAcademyZombie(World world) {
+    private static float factor=0.5f;
+
+
+    public EntityAcademyZombie(World world) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException
+    {
         super(world);
-        AbilityMap.put(new AIPenetrateTeleport(this,1-RandUtils.rangef(0,1)*RandUtils.rangef(0,1)),"4～EntityAIPenetrateTeleport");
-        AbilityMap.put(new AIElectronBomb(this,1),"5～EntityAIElectronBomb");//按照类似格式添加进map   4～指的是优先级4
-        //abilityList.add(new AIPenetrateTeleport(this,1-RandUtils.rangef(0,1)*RandUtils.rangef(0,1)));
-        //abilityList.add(new AIElectronBomb(this,1));
+        Collections.shuffle(validSkillList);
+        float prob=1f;
+        int level=0;
         BaseAbility skill=null;
-        EntityAIBase BaseAI;
-        String AbilityType=new String(AbilityMap.get(skill));
-        if (AbilityType.equals(null))
+        EntityAIBase baseAI=null;
+        Constructor constructor=null;
+        while(RandUtils.nextFloat()<=prob)
         {
-
-        }
-        else
-        {
-            String mid[]=new String[2];
-            mid=AbilityType.split("~");
-            try
+            if(level>=validSkillList.size())
+                break;
+            else
             {
-                Class temp1=Class.forName("cn.painder.academymonster.ability."+mid[1]);
-                Constructor constructor1=temp1.getConstructor(Object.class,Double.class);
-                skill=(BaseAbility)constructor1.newInstance(this,1-RandUtils.rangef(0,1)*RandUtils.rangef(0,1));//动态生成技能对象
+                constructor=validSkillList.get(level).getKey().getConstructor(Objects.class,float.class);
+                skill=(BaseAbility)constructor.newInstance(this,1-RandUtils.rangef(0,1)*RandUtils.rangef(0,1));//动态生成技能对象
+                constructor=validSkillList.get(level).getValue().getConstructor(Object.class,Object.class);
+                baseAI=(EntityAIBase)constructor.newInstance(this,skill);//动态生成怪物AI
+                this.tasks.addTask(aiLevel.get(baseAI.getClass()),baseAI);//加入怪物AI至任务
+                prob*=factor;
 
-                Class temp2=Class.forName("cn.painder.academymonster.entity.ai.Entity"+mid[1]);
-                Constructor constructor2=temp2.getConstructor(Object.class,Object.class);
-                BaseAI=(EntityAIBase)constructor2.newInstance(this,skill);//动态生成怪物AI
-
-                this.tasks.addTask(Integer.valueOf(mid[0]),BaseAI);//加入怪物AI至任务
-            }catch (Exception e)
-            {
-                e.printStackTrace();
             }
         }
-
-
-
 
     }
 
