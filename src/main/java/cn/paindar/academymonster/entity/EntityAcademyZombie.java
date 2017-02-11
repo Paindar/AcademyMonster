@@ -1,14 +1,13 @@
 package cn.paindar.academymonster.entity;
 
-import cn.paindar.academymonster.ability.AIBodyIntensify;
-import cn.paindar.academymonster.ability.AIElectronBomb;
-import cn.paindar.academymonster.ability.AIPenetrateTeleport;
-import cn.paindar.academymonster.ability.BaseAbility;
+import cn.paindar.academymonster.ability.*;
 import cn.paindar.academymonster.entity.ai.EntityAIBodyIntensify;
 import cn.paindar.academymonster.entity.ai.EntityAIElectronBomb;
+import cn.paindar.academymonster.entity.ai.EntityAIFleshRipping;
 import cn.paindar.academymonster.entity.ai.EntityAIPenetrateTeleport;
 import cn.lambdalib.util.generic.RandUtils;
 import javafx.util.Pair;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.IRangedAttackMob;
 import net.minecraft.entity.ai.*;
@@ -35,6 +34,8 @@ public class EntityAcademyZombie extends EntityZombie implements IRangedAttackMo
         aiLevel.put(EntityAIElectronBomb.class,5);
         validSkillList.add(new Pair<>(AIPenetrateTeleport.class, EntityAIPenetrateTeleport.class));
         aiLevel.put(EntityAIPenetrateTeleport.class,4);
+        validSkillList.add(new Pair<>(AIFleshRipping.class, EntityAIFleshRipping.class));
+        aiLevel.put(EntityAIFleshRipping.class,5);
     }
 
     private final EntityAIBreakDoor aIBreakDoor = new EntityAIBreakDoor(this);
