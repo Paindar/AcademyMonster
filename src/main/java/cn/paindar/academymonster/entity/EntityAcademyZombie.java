@@ -57,14 +57,18 @@ public class EntityAcademyZombie extends EntityZombie implements IRangedAttackMo
                 break;
             else
             {
-                constructor=validSkillList.get(level).getKey().getConstructor(Objects.class,float.class);
+                constructor=validSkillList.get(level).getKey().getConstructor(EntityLivingBase.class,float.class);
                 skill=(BaseAbility)constructor.newInstance(this,1-RandUtils.rangef(0,1)*RandUtils.rangef(0,1));//动态生成技能对象
-                constructor=validSkillList.get(level).getValue().getConstructor(Object.class,Object.class);
+                Class aclass=validSkillList.get(level).getValue();
+                Constructor[] tempconstructor=aclass.getDeclaredConstructors();
+                Class[] parameterTypes=tempconstructor[0].getParameterTypes();
+                constructor=validSkillList.get(level).getValue().getConstructor(parameterTypes[0],parameterTypes[1]);
                 baseAI=(EntityAIBase)constructor.newInstance(this,skill);//动态生成怪物AI
                 this.tasks.addTask(aiLevel.get(baseAI.getClass()),baseAI);//加入怪物AI至任务
                 prob*=factor;
 
             }
+            level++;
         }
 
     }
