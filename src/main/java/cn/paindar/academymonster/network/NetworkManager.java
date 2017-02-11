@@ -7,6 +7,7 @@ import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import cpw.mods.fml.relauncher.Side;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.Vec3;
 
@@ -21,6 +22,7 @@ public class NetworkManager
     {
         registerMessage(MessageSound.Handler.class, MessageSound.class, Side.CLIENT);
         registerMessage(MessageMdRayEffect.Handler.class, MessageMdRayEffect.class, Side.CLIENT);
+        registerMessage(MessageFleshRippingEffect.Handler.class, MessageFleshRippingEffect.class, Side.CLIENT);
     }
 
 
@@ -46,6 +48,17 @@ public class NetworkManager
         if(!player.getEntityWorld().isRemote)
         {
             MessageMdRayEffect msg = new MessageMdRayEffect(str,end);
+            instance.sendTo(msg, player);
+        }
+        else
+            throw new IllegalStateException("Wrong context side!");
+    }
+
+    public static void sendTo(EntityLivingBase target, EntityPlayerMP player)
+    {
+        if(!player.getEntityWorld().isRemote)
+        {
+            MessageFleshRippingEffect msg = new MessageFleshRippingEffect(target);
             instance.sendTo(msg, player);
         }
         else
