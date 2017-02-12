@@ -25,22 +25,7 @@ public class EntityLoader
 
     public EntityLoader()
     {
-        registerEntity(EntityAcademyZombie.class, "AcademyZombie", 80, 3, true);
-        registerEntity(EntityAcademySkeleton.class, "AcademySkeleton", 80, 3, true);
-        registerEntity(EntityAcademyCreeper.class, "AcademyCreeper", 80, 3, true);
-        registerEntity(EntityAcademyEnderman.class, "AcademyEnderman", 80, 3, true);
         EntityLoader.registerRenders();
-        BiomeGenBase[] allBiome=BiomeGenBase.getBiomeGenArray();
-        for(BiomeGenBase i:allBiome)
-        {
-            //AcademyMonster.log.info(i); i!=BiomeGenBase.hell &&
-            if (i!=null &&i!=BiomeGenBase.sky)
-            {
-                registerEntitySpawn(EntityAcademyZombie.class,100,4, 4, EnumCreatureType.monster,i);
-                //registerEntitySpawn(EntityAcademySkeleton.class,100,4, 4, EnumCreatureType.monster,i);
-                //registerEntitySpawn(EntityAcademyCreeper.class,100,4, 4, EnumCreatureType.monster,i);
-            }
-        }
     }
     @SideOnly(Side.CLIENT)
     public static void registerRenders()
