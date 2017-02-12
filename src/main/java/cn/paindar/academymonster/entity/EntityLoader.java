@@ -1,7 +1,11 @@
 package cn.paindar.academymonster.entity;
 
+import cn.academy.vanilla.electromaster.client.renderer.RendererCoinThrowing;
+import cn.academy.vanilla.electromaster.entity.EntityRailgunFX;
 import cn.academy.vanilla.meltdowner.entity.EntityMdBall;
 import cn.paindar.academymonster.core.AcademyMonster;
+import cn.paindar.academymonster.entity.ai.EntityCoinThrowingNative;
+import cn.paindar.academymonster.entity.ai.EntityRailgunFXNative;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.common.registry.EntityRegistry;
 import cpw.mods.fml.relauncher.Side;
@@ -42,6 +46,8 @@ public class EntityLoader
     public static void registerRenders()
     {
         registerEntityRender(EntityMdBallNative.class, new EntityMdBall.R());
+        registerEntityRender(EntityCoinThrowingNative.class,new RendererCoinThrowing());
+        registerEntityRender(EntityRailgunFXNative.class,new EntityRailgunFXNative.R());
     }
 
     @SideOnly(Side.CLIENT)

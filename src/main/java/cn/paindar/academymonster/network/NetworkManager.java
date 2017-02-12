@@ -23,6 +23,7 @@ public class NetworkManager
         registerMessage(MessageSound.Handler.class, MessageSound.class, Side.CLIENT);
         registerMessage(MessageMdRayEffect.Handler.class, MessageMdRayEffect.class, Side.CLIENT);
         registerMessage(MessageFleshRippingEffect.Handler.class, MessageFleshRippingEffect.class, Side.CLIENT);
+        registerMessage(MessageRailgunEffect.Handler.class, MessageRailgunEffect.class, Side.CLIENT);
     }
 
 
@@ -32,7 +33,7 @@ public class NetworkManager
         instance.registerMessage(messageHandler, requestMessageType, nextID++, side);
     }
 
-    public static void sendTo(String sound, EntityPlayerMP player)
+    public static void sendSoundTo(String sound, EntityPlayerMP player)
     {
         if(!player.getEntityWorld().isRemote)
         {
@@ -43,7 +44,7 @@ public class NetworkManager
             throw new IllegalStateException("Wrong context side!");
     }
 
-    public static void sendTo(Vec3 str,Vec3 end, EntityPlayerMP player)
+    public static void sendMdRayEffectTo(Vec3 str,Vec3 end, EntityPlayerMP player)
     {
         if(!player.getEntityWorld().isRemote)
         {
@@ -54,11 +55,22 @@ public class NetworkManager
             throw new IllegalStateException("Wrong context side!");
     }
 
-    public static void sendTo(EntityLivingBase target, EntityPlayerMP player)
+    public static void sendFleshRippingEffectTo(EntityLivingBase target, EntityPlayerMP player)
     {
         if(!player.getEntityWorld().isRemote)
         {
             MessageFleshRippingEffect msg = new MessageFleshRippingEffect(target);
+            instance.sendTo(msg, player);
+        }
+        else
+            throw new IllegalStateException("Wrong context side!");
+    }
+
+    public static void sendRailgunEffectTo(EntityLivingBase target,int dist, EntityPlayerMP player)
+    {
+        if(!player.getEntityWorld().isRemote)
+        {
+            MessageRailgunEffect msg = new MessageRailgunEffect(target,dist);
             instance.sendTo(msg, player);
         }
         else
