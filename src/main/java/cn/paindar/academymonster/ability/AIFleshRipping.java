@@ -42,13 +42,13 @@ public class AIFleshRipping extends BaseAbility
     public void spell()
     {
         EntityLivingBase target=getAttackTarget();
-        if(target==null)
+        if(target==null || isSkillInCooldown())
             return;
         attackIgnoreArmor(target,damage);
         List<Entity> list= WorldUtils.getEntities(speller, 25, EntitySelectors.player());
         for(Entity e:list)
         {
-            NetworkManager.sendTo(target,(EntityPlayerMP)e);
+            NetworkManager.sendFleshRippingEffectTo(target,(EntityPlayerMP)e);
         }
         super.spell();
     }

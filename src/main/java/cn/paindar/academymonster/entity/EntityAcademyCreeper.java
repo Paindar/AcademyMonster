@@ -37,34 +37,33 @@ public class EntityAcademyCreeper extends EntityCreeper
     }
 
     private float factor = 0.3f;
-    public EntityAcademyCreeper(World world) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException
+    public EntityAcademyCreeper(World world)
     {
         super(world);
         Collections.shuffle(validSkillList);
         float prob=1f;
         int level=0;
-        BaseAbility skill=null;
-        EntityAIBase baseAI=null;
-        Constructor constructor=null;
-        while(RandUtils.nextFloat()<=prob)
+        while(RandUtils.nextFloat()<=prob && level>=validSkillList.size())
         {
-            if(level>=validSkillList.size())
-                break;
-            else
+            try
             {
                 Pair<Class<? extends BaseAbility>,Class<? extends EntityAIBase>> elem=validSkillList.get(level);
-                constructor=elem.getKey().getConstructor(EntityLivingBase.class,float.class);
-                skill=(BaseAbility)constructor.newInstance(this,1-RandUtils.rangef(0,1)*RandUtils.rangef(0,1));//动态生成技能对象
+                Constructor constructor=elem.getKey().getConstructor(EntityLivingBase.class,float.class);
+                BaseAbility skill=(BaseAbility)constructor.newInstance(this,1-RandUtils.rangef(0,1)*RandUtils.rangef(0,1));//动态生成技能对象
                 Class aclass=elem.getValue();
                 Constructor[] tempconstructor=aclass.getDeclaredConstructors();
                 Class[] parameterTypes=tempconstructor[0].getParameterTypes();
                 constructor=elem.getValue().getConstructor(parameterTypes[0],parameterTypes[1]);
                 //AcademyMonster.log.info("param1="+parameterTypes[0]+" param2 "+parameterTypes[1]+" skill= "+skill);
-                baseAI=(EntityAIBase)constructor.newInstance(this,skill);//动态生成怪物AI
+                EntityAIBase baseAI=(EntityAIBase)constructor.newInstance(this,skill);//动态生成怪物AI
                 this.tasks.addTask(aiLevel.get(baseAI.getClass()),baseAI);//加入怪物AI至任务
                 prob*=factor;
+                level++;
             }
-            level++;
+            catch (Exception e)
+            {
+                throw new RuntimeException();
+            }
         }
     }
 

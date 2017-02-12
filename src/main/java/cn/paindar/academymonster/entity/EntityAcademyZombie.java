@@ -1,21 +1,15 @@
 package cn.paindar.academymonster.entity;
 
 import cn.paindar.academymonster.ability.*;
-import cn.paindar.academymonster.core.AcademyMonster;
-import cn.paindar.academymonster.entity.ai.EntityAIBodyIntensify;
-import cn.paindar.academymonster.entity.ai.EntityAIElectronBomb;
-import cn.paindar.academymonster.entity.ai.EntityAIFleshRipping;
-import cn.paindar.academymonster.entity.ai.EntityAIPenetrateTeleport;
+import cn.paindar.academymonster.entity.ai.*;
 import cn.lambdalib.util.generic.RandUtils;
 import javafx.util.Pair;
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.IRangedAttackMob;
 import net.minecraft.entity.ai.*;
 import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.world.World;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.lang.reflect.Constructor;
 
@@ -27,6 +21,8 @@ public class EntityAcademyZombie extends EntityZombie implements IRangedAttackMo
 {
     private static HashMap<Class<? extends EntityAIBase>,Integer> aiLevel=new HashMap<>();
     private static List<Pair<Class<? extends BaseAbility>,Class<? extends EntityAIBase>>> validSkillList=new ArrayList<>();
+    private List<? extends BaseAbility> skillList=new ArrayList<>();
+
     static
     {
         validSkillList.add(new Pair<>(AIBodyIntensify.class, EntityAIBodyIntensify.class));
@@ -37,6 +33,8 @@ public class EntityAcademyZombie extends EntityZombie implements IRangedAttackMo
         aiLevel.put(EntityAIFleshRipping.class,5);
         validSkillList.add(new Pair<>(AIPenetrateTeleport.class, EntityAIPenetrateTeleport.class));
         aiLevel.put(EntityAIPenetrateTeleport.class,4);
+        validSkillList.add(new Pair<>(AIRailgun.class, EntityAIRailgun.class));
+        aiLevel.put(EntityAIRailgun.class,5);
     }
 
     private final EntityAIBreakDoor aIBreakDoor = new EntityAIBreakDoor(this);
@@ -44,36 +42,35 @@ public class EntityAcademyZombie extends EntityZombie implements IRangedAttackMo
     private static float factor=0.3f;
 
 
-    public EntityAcademyZombie(World world) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException
+    public EntityAcademyZombie(World world)
     {
         super(world);
         Collections.shuffle(validSkillList);
         float prob=1f;
         int level=0;
-        BaseAbility skill=null;
-        EntityAIBase baseAI=null;
-        Constructor constructor=null;
-        while(RandUtils.nextFloat()<=prob)
+        while(RandUtils.nextFloat()<=prob && level<validSkillList.size())
         {
-            if(level>=validSkillList.size())
-                break;
-            else
+            try
             {
                 Pair<Class<? extends BaseAbility>,Class<? extends EntityAIBase>> elem=validSkillList.get(level);
-                constructor=elem.getKey().getConstructor(EntityLivingBase.class,float.class);
-                skill=(BaseAbility)constructor.newInstance(this,1-RandUtils.rangef(0,1)*RandUtils.rangef(0,1));//动态生成技能对象
+                Constructor constructor=elem.getKey().getConstructor(EntityLivingBase.class,float.class);
+                BaseAbility skill=(BaseAbility)constructor.newInstance(this,1-RandUtils.rangef(0,1)*RandUtils.rangef(0,1));//动态生成技能对象
                 Class aclass=elem.getValue();
                 Constructor[] tempconstructor=aclass.getDeclaredConstructors();
                 Class[] parameterTypes=tempconstructor[0].getParameterTypes();
                 constructor=elem.getValue().getConstructor(parameterTypes[0],parameterTypes[1]);
                 //AcademyMonster.log.info("param1="+parameterTypes[0]+" param2 "+parameterTypes[1]+" skill= "+skill);
-                baseAI=(EntityAIBase)constructor.newInstance(this,skill);//动态生成怪物AI
+                EntityAIBase baseAI=(EntityAIBase)constructor.newInstance(this,skill);//动态生成怪物AI
                 this.tasks.addTask(aiLevel.get(baseAI.getClass()),baseAI);//加入怪物AI至任务
                 prob*=factor;
+                level++;
             }
-            level++;
+            catch (Exception e)
+            {
+                e.printStackTrace();
+                throw new RuntimeException();
+            }
         }
-
     }
 
     //设置是否能够破门而入

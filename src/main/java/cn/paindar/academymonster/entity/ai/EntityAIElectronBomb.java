@@ -15,7 +15,6 @@ import net.minecraft.util.Vec3;
  */
 public class EntityAIElectronBomb extends EntityAIBase
 {
-    private final IRangedAttackMob hoster;
     private final EntityLiving speller;
     private EntityLivingBase target;
     private AIElectronBomb skill;
@@ -23,7 +22,6 @@ public class EntityAIElectronBomb extends EntityAIBase
     public EntityAIElectronBomb(EntityLiving speller,AIElectronBomb skill)
     {
         this.speller=speller;
-        this.hoster=(IRangedAttackMob)speller;
         this.skill=skill;
     }
 
@@ -65,7 +63,6 @@ public class EntityAIElectronBomb extends EntityAIBase
      */
     public void updateTask(){
         if (target!=null ) {
-            double dist=speller.getDistanceSqToEntity(target);
             MovingObjectPosition trace = Raytrace.rayTraceBlocks(speller.worldObj,
                     Vec3.createVectorHelper(speller.posX, speller.posY + speller.getEyeHeight(), speller.posZ),
                     Vec3.createVectorHelper(target.posX,target.posY+target.getEyeHeight(),target.posZ), BlockSelectors.filNothing
