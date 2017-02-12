@@ -1,0 +1,13 @@
+[
+{
+  "modid": "academy-monster",
+  "name": "Academy Monster",
+  "description": "What will happen when monsters is an ESPer?",
+  "version": "${version}",
+  "updateUrl": "",
+  "authorList": ["Paindar , voidcl"],
+  "credits": "Lambda Innovation, and all the players of the mod, like you",
+  "screenshots": [],
+  "dependencies": []
+}
+]

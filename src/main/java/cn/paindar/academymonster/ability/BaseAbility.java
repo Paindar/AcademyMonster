@@ -60,6 +60,17 @@ public abstract class BaseAbility
         }
         return true;
     }
+
+    public boolean attackIgnoreArmor(EntityLivingBase target,float damage)
+    {
+        damage = CalcEvent.calc(new CalcEventNative.SkillAttack(speller, this, target, damage));
+
+        if (damage > 0)
+        {
+            target.attackEntityFrom(new SkillDamageSourceNative(speller, this).setDamageBypassesArmor(), getFinalDamage(damage));
+        }
+        return true;
+    }
     public abstract String getSkillName();
 
 

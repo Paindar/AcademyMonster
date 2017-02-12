@@ -2,7 +2,8 @@ package cn.paindar.academymonster.entity.ai;
 
 import cn.lambdalib.util.mc.BlockSelectors;
 import cn.lambdalib.util.mc.Raytrace;
-import cn.paindar.academymonster.ability.AIElectronBomb;
+import cn.paindar.academymonster.ability.AIRailgun;
+import cn.paindar.academymonster.core.AcademyMonster;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.IRangedAttackMob;
@@ -11,25 +12,24 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 
 /**
- * Created by Paindar on 2017/2/10.
+ * Created by Paindar on 2017/2/12.
  */
-public class EntityAIElectronBomb extends EntityAIBase
+public class EntityAIRailgun extends EntityAIBase
 {
     private final EntityLiving speller;
     private EntityLivingBase target;
-    private AIElectronBomb skill;
-
-    public EntityAIElectronBomb(EntityLiving speller,AIElectronBomb skill)
+    private AIRailgun skill;
+    public EntityAIRailgun(EntityLiving speller,AIRailgun skill)
     {
         this.speller=speller;
         this.skill=skill;
     }
-
     /**
      * Returns whether the EntityAIBase should begin execution.
      */
     @Override
-    public boolean shouldExecute() {
+    public boolean shouldExecute()
+    {
         EntityLivingBase target=speller.getAttackTarget();
         if (target==null)
             return false;
@@ -42,12 +42,13 @@ public class EntityAIElectronBomb extends EntityAIBase
     }
 
 
+
     /**
      * Execute a one shot task or start executing a continuous task
      */
     public void startExecuting()
     {
-        this.target =this.speller.getAttackTarget();
+        this.target = this.speller.getAttackTarget();
     }
 
     /**
@@ -61,14 +62,12 @@ public class EntityAIElectronBomb extends EntityAIBase
     /**
      * Update the task.
      */
-    public void updateTask(){
-        if (target!=null ) {
-            MovingObjectPosition trace = Raytrace.rayTraceBlocks(speller.worldObj,
-                    Vec3.createVectorHelper(speller.posX, speller.posY + speller.getEyeHeight(), speller.posZ),
-                    Vec3.createVectorHelper(target.posX,target.posY+target.getEyeHeight(),target.posZ), BlockSelectors.filNothing
-            );
-            if(trace==null || trace.typeOfHit!= MovingObjectPosition.MovingObjectType.BLOCK)
-                skill.spell();
+    public void updateTask()
+    {
+        if(!skill.isSkillInCooldown())
+        {
+            skill.spell();
+            AcademyMonster.log.info("spell.");
         }
     }
 }

@@ -1,14 +1,10 @@
 package cn.paindar.academymonster.entity.ai;
 
-import cn.lambdalib.util.mc.BlockSelectors;
-import cn.lambdalib.util.mc.Raytrace;
 import cn.paindar.academymonster.ability.AIBodyIntensify;
-import cn.paindar.academymonster.entity.EntityAcademyCreeper;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIBase;
-import net.minecraft.util.MovingObjectPosition;
-import net.minecraft.util.Vec3;
+import net.minecraft.entity.monster.EntityCreeper;
 
 /**
  * Created by Paindar on 2017/2/10.
@@ -59,7 +55,8 @@ public class EntityAIBodyIntensify extends EntityAIBase
         if (target!=null && !skill.isSkillInCooldown())
         {
             skill.spell();
-            if(speller instanceof EntityAcademyCreeper)
+
+            if(speller instanceof EntityCreeper)
             {
                 speller.getDataWatcher().updateObject(17, Byte.valueOf((byte)1));
             }

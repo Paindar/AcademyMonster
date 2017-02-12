@@ -39,7 +39,7 @@ public class AIPenetrateTeleport extends BaseAbility
             for(Entity e:list)
             {
 
-                NetworkManager.sendTo("tp.tp",(EntityPlayerMP)e);
+                NetworkManager.sendSoundTo("tp.tp",(EntityPlayerMP)e);
             }
         }
         super.spell();

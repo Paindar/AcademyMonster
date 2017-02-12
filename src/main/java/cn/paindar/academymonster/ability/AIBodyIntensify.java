@@ -21,27 +21,25 @@ public class AIBodyIntensify extends BaseAbility
     }
 
 
-    private double getProbability(int ct)
+    private double getProbability()
     {
-        return (ct - 10.0) / 18.0;
+        return lerpf(1,2.5f,getSkillExp());
     }
-    private int getBuffTime(int ct)
+    private int getBuffTime()
     {
-        return (int)(RandUtils.ranged(1, 2) * ct *
-                lerpf(1.5f, 2.5f, getSkillExp()));
+        return (int)lerpf(3f,10f, getSkillExp());
     }
-    private int getBuffLevel(int ct)
+    private int getBuffLevel()
     {
-        return (int)Math.floor(getProbability(ct));
+        return getSkillExp()>0.5?2:1;
     }
 
 
     public void spell()
     {
-        int tick=(int)lerpf(10,40,getSkillExp());
-        double p = getProbability(tick);
-        int time = getBuffTime(tick);
-        int level=getBuffLevel(tick);
+        double p = getProbability();
+        int time = getBuffTime();
+        int level=getBuffLevel();
         Vector<PotionEffect> vector=BodyIntensify.effects();
 
         for(int i=0;i<vector.size();i++)

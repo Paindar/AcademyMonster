@@ -27,7 +27,7 @@ public class AIElectronBomb extends BaseAbility
     private float damage;
 
     public AIElectronBomb(EntityLivingBase speller,float abilityExp) {
-        super(speller,(int)lerpf(20, 10, abilityExp), abilityExp);
+        super(speller,(int)lerpf(40,10, abilityExp), abilityExp);
         damage=lerpf(6, 12, abilityExp);
         maxDistance=lerpf(7,15,abilityExp);
         this.speller=speller;
@@ -54,7 +54,7 @@ public class AIElectronBomb extends BaseAbility
                 List<Entity> list= WorldUtils.getEntities(speller, 25, EntitySelectors.player());
                 for(Entity e:list)
                 {
-                    NetworkManager.sendTo(str,end,(EntityPlayerMP)e);
+                    NetworkManager.sendMdRayEffectTo(str,end,(EntityPlayerMP)e);
                 }
              }
 
