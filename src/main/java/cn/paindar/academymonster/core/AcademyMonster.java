@@ -10,7 +10,6 @@ import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.event.*;
-import javafx.util.Pair;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.IEntityOwnable;
@@ -24,8 +23,6 @@ import org.apache.logging.log4j.Logger;
 
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 
 
@@ -44,14 +41,16 @@ public class AcademyMonster
     public static Configuration config;
     @Instance
     public static AcademyMonster instance;
-    private static List<Pair<Class<? extends BaseAbility>,Float>> skillList=new ArrayList<>();
+    private static List<Class<? extends BaseAbility>> skillList=new ArrayList<>();
+    private static List<Float> probList=new ArrayList<>();
     private static List<Class<? extends EntityAIBase>> aiList=new ArrayList<>();
     private static List<Integer> aiLevelList=new ArrayList<>();
     private static float sumWeight=0f;
 
     private static void registerSkill(Class<? extends BaseAbility> skill,float prob,Class<? extends EntityAIBase> aiClass,int aiLevel)
     {
-        skillList.add(new Pair(skill,prob));
+        skillList.add(skill);
+        probList.add(prob);
         aiList.add(aiClass);
         aiLevelList.add(aiLevel);
         sumWeight+=prob;
@@ -100,8 +99,8 @@ public class AcademyMonster
     {
         if(entity.worldObj.isRemote)
            return;
-        @SuppressWarnings("unchecked")
-        List<Pair<Class<? extends BaseAbility>,Float>> tempList=new ArrayList(skillList);
+        List<Class<? extends BaseAbility>> tempList= new ArrayList<>(skillList);
+        List<Float> tempProbList=new ArrayList<>(probList);
         float prob=0.3f;
         float factor=0.5f;
         float tempSum=sumWeight;
@@ -112,22 +111,21 @@ public class AcademyMonster
 
             float rand=RandUtils.nextFloat()*tempSum;
             int id=-1;
-            for(int i=0;i<tempList.size();i++)
+            for(int i=0;i<tempProbList.size();i++)
             {
-                if(rand<tempList.get(i).getValue())
+                if(rand<tempProbList.get(i))
                 {
                     id=skillList.indexOf(tempList.get(i));
-                    tempSum-=tempList.get(i).getValue();
-                    tempList.remove(i);//抽取一个技能并且不放回
-
+                    tempSum-=tempProbList.get(i);
+                    tempList.remove(i);tempProbList.remove(i);//抽取一个技能并且不放回
                     break;
                 }
-                rand-=tempList.get(i).getValue();
+                rand-=tempProbList.get(i);
             }
-            Class<? extends BaseAbility> elem=skillList.get(id).getKey();
+            Class<? extends BaseAbility> elem=skillList.get(id);
             Constructor constructor;
             BaseAbility skill;
-            Class aclass;
+            Class<? extends EntityAIBase> aClass;
             Constructor[] tempConstructor;
             Class[] parameterTypes;
             float randExp=RandUtils.rangef(0, 1);
@@ -136,11 +134,11 @@ public class AcademyMonster
                 constructor = elem.getConstructor(EntityLivingBase.class, float.class);
                 skill = (BaseAbility) constructor.newInstance(entity, randExp * randExp);
 
-                aclass = aiList.get(id);
+                aClass = aiList.get(id);
 
-                tempConstructor = aclass.getDeclaredConstructors();
+                tempConstructor = aClass.getDeclaredConstructors();
                 parameterTypes = tempConstructor[0].getParameterTypes();
-                constructor = aclass.getConstructor(parameterTypes[0], parameterTypes[1]);
+                constructor = aClass.getConstructor(parameterTypes[0], parameterTypes[1]);
 
             }
             catch(Exception e)
