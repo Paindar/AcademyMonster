@@ -1,0 +1,5 @@
+am.app.aim_scanner_no_focus.name=无目标
+am.app.aim_scanner_skill_list.name=技能列表:
+ac.settings.prop.open_aim_scanner=开启AIM扫描仪
+am.aim_scanner_skill_list.notinstalled=你还没有安装AIM扫描仪
+ac.app.AIM_Scanner.name=AIM扫描仪

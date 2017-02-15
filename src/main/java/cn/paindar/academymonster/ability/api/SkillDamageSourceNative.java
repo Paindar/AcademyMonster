@@ -1,6 +1,6 @@
 package cn.paindar.academymonster.ability.api;
 
-import cn.paindar.academymonster.ability.BaseAbility;
+import cn.paindar.academymonster.ability.BaseSkill;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.EntityDamageSource;
@@ -11,9 +11,9 @@ import net.minecraft.util.IChatComponent;
  */
 public class SkillDamageSourceNative extends EntityDamageSource {
 
-    public final BaseAbility skill;
+    public final BaseSkill skill;
 
-    public SkillDamageSourceNative(EntityLivingBase speller, BaseAbility skill) {
+    public SkillDamageSourceNative(EntityLivingBase speller, BaseSkill skill) {
         super("am_skill", speller);
         this.skill = skill;
     }
@@ -24,7 +24,7 @@ public class SkillDamageSourceNative extends EntityDamageSource {
         return new ChatComponentTranslation("death.attack.ac_skill",
                 target.getCommandSenderName(),
                 this.damageSourceEntity.getCommandSenderName(),
-                skill.getSkillName());
+                BaseSkill.getSkillName());
     }
 
 }

@@ -2,13 +2,13 @@ package cn.paindar.academymonster.core;
 
 import cn.lambdalib.util.generic.RandUtils;
 import cn.paindar.academymonster.ability.*;
-import cn.paindar.academymonster.ability.event.GlobalEventHandle;
-import cn.paindar.academymonster.entity.EntityLoader;
+import cn.paindar.academymonster.core.command.CommandTest;
+import cn.paindar.academymonster.entity.SkillExtendedEntityProperties;
 import cn.paindar.academymonster.entity.ai.*;
-import cn.paindar.academymonster.network.NetworkManager;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
+import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.*;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
@@ -16,12 +16,14 @@ import net.minecraft.entity.IEntityOwnable;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.monster.IMob;
-import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.IExtendedEntityProperties;
 import net.minecraftforge.common.config.Configuration;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,16 +40,21 @@ public class AcademyMonster
     public static final String NAME = "Academy Monster";
     public static final String VERSION = "@VERSION@";
     public static final Logger log = LogManager.getLogger("AcademyMonster");
+    @SidedProxy(clientSide = "cn.paindar.academymonster.core.ClientProxy",
+            serverSide = "cn.paindar.academymonster.core.CommonProxy")
+    public static CommonProxy proxy;
     public static Configuration config;
     @Instance
     public static AcademyMonster instance;
-    private static List<Class<? extends BaseAbility>> skillList=new ArrayList<>();
+    private static List<Class<? extends BaseSkill>> skillList=new ArrayList<>();
     private static List<Float> probList=new ArrayList<>();
     private static List<Class<? extends EntityAIBase>> aiList=new ArrayList<>();
     private static List<Integer> aiLevelList=new ArrayList<>();
     private static float sumWeight=0f;
 
-    private static void registerSkill(Class<? extends BaseAbility> skill,float prob,Class<? extends EntityAIBase> aiClass,int aiLevel)
+
+
+    private static void registerSkill(Class<? extends BaseSkill> skill,float prob,Class<? extends EntityAIBase> aiClass,int aiLevel)
     {
         skillList.add(skill);
         probList.add(prob);
@@ -68,26 +75,25 @@ public class AcademyMonster
     @EventHandler
     public void preInit(FMLPreInitializationEvent event)
     {
-        new EntityLoader();
-        NetworkManager.init(event);
-        config=new Configuration(event.getSuggestedConfigurationFile());
-        config.load();
-        config.save();
+        proxy.preInit(event);
+
     }
 
     @EventHandler
     public void init(FMLInitializationEvent event)
     {
-        MinecraftForge.EVENT_BUS.register(new GlobalEventHandle());
+        proxy.init(event);
     }
 
     @EventHandler
     public void postInit(FMLPostInitializationEvent event)
     {
+        proxy.postInit(event);
     }
     @EventHandler
     public void serverStarting(FMLServerStartingEvent event)
     {
+        event.registerServerCommand(new CommandTest());
     }
 
     @EventHandler
@@ -99,9 +105,9 @@ public class AcademyMonster
     {
         if(entity.worldObj.isRemote)
            return;
-        List<Class<? extends BaseAbility>> tempList= new ArrayList<>(skillList);
+        List<Class<? extends BaseSkill>> tempList= new ArrayList<>(skillList);
         List<Float> tempProbList=new ArrayList<>(probList);
-        float prob=0.3f;
+        float prob=1f;
         float factor=0.5f;
         float tempSum=sumWeight;
 
@@ -122,9 +128,9 @@ public class AcademyMonster
                 }
                 rand-=tempProbList.get(i);
             }
-            Class<? extends BaseAbility> elem=skillList.get(id);
+            Class<? extends BaseSkill> elem=skillList.get(id);
             Constructor constructor;
-            BaseAbility skill;
+            BaseSkill skill;
             Class<? extends EntityAIBase> aClass;
             Constructor[] tempConstructor;
             Class[] parameterTypes;
@@ -132,7 +138,7 @@ public class AcademyMonster
             try
             {
                 constructor = elem.getConstructor(EntityLivingBase.class, float.class);
-                skill = (BaseAbility) constructor.newInstance(entity, randExp * randExp);
+                skill = (BaseSkill) constructor.newInstance(entity, randExp * randExp);
 
                 aClass = aiList.get(id);
 
@@ -157,11 +163,75 @@ public class AcademyMonster
                 throw new RuntimeException();
             }
             entity.tasks.addTask(aiLevelList.get(id),baseAI);//加入怪物AI至任务
-            string+=skill.getSkillName()+"\\s";
+            string+= BaseSkill.getUnlocalizedSkillName()+"~"+randExp+"-";
             prob*=factor;
         }
-        entity.getEntityData().setString(MODID,string);
-        //AcademyMonster.log.info("entity "+event.entity+" have ability:" +event.entity.getEntityData().getString(AcademyMonster.MODID));
+        SkillExtendedEntityProperties info= SkillExtendedEntityProperties.get(entity);
+        info.setSkillData(string);
+        //AcademyMonster.log.info("entity "+entity+" have ability:" +entity.getEntityData().getString(AcademyMonster.MODID));
+    }
+
+    public void refreshSkills(EntityLiving entity,String skillStr)
+    {
+        String[] strList=skillStr.split("-");
+
+        for(Class<? extends BaseSkill> skillClass:skillList)
+        {
+            try
+            {
+
+                Method method=skillClass.getMethod("getUnlocalizedSkillName");
+                String name=(String) method.invoke(skillClass);
+                for(String item:strList)
+                {
+                    String[] skillInfo=item.split("~");
+                    if(skillInfo[0].equals(name))
+                    {
+                        Constructor constructor;
+                        BaseSkill skill;
+                        Class<? extends EntityAIBase> aClass;
+                        Constructor[] tempConstructor;
+                        Class[] parameterTypes;
+                        float randExp=Float.parseFloat(skillInfo[1]);
+                        int id=skillList.indexOf(skillClass);
+                        try
+                        {
+                            constructor = skillClass.getConstructor(EntityLivingBase.class, float.class);
+                            skill = (BaseSkill) constructor.newInstance(entity, randExp * randExp);
+
+                            aClass = aiList.get(id);
+
+                            tempConstructor = aClass.getDeclaredConstructors();
+                            parameterTypes = tempConstructor[0].getParameterTypes();
+                            constructor = aClass.getConstructor(parameterTypes[0], parameterTypes[1]);
+
+                        }
+                        catch(Exception e)
+                        {
+                            AcademyMonster.log.error("No such constructor: (EntityLivingBase.class, float.class)");
+                            e.printStackTrace();
+                            throw new RuntimeException();
+                        }
+                        EntityAIBase baseAI;
+                        try{baseAI=(EntityAIBase)constructor.newInstance(entity,skill);}
+                        catch (Exception e)
+                        {
+                            AcademyMonster.log.error("param1: " + parameterTypes[0] + " , param2:" + parameterTypes[1]);
+                            AcademyMonster.log.error("Argument: " + entity + " , " + skill);
+                            e.printStackTrace();
+                            throw new RuntimeException();
+                        }
+                        entity.tasks.addTask(aiLevelList.get(id),baseAI);//加入怪物AI至任务
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+                throw new RuntimeException();
+            }
+
+        }
     }
 
 

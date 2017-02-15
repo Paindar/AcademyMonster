@@ -18,8 +18,11 @@ import static cn.lambdalib.util.generic.MathUtils.lerpf;
 /**
  * Created by Paindar on 2017/2/12.
  */
-public class AIDirectedShock extends BaseAbility
+public class AIDirectedShock extends BaseSkill
 {
+    {
+        skillName=DirectedShock.getFullName();
+    }
     private final float maxDistance=3;
     private float damage;
     public AIDirectedShock(EntityLivingBase speller, float abilityExp)
@@ -65,9 +68,4 @@ public class AIDirectedShock extends BaseAbility
         return maxDistance;
     }
 
-    @Override
-    public String getSkillName()
-    {
-        return DirectedShock.getDisplayName();
-    }
 }

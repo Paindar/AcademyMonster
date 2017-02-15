@@ -1,0 +1,152 @@
+<Root>
+    <Widget name="backBroad">
+        <Component class="cn.lambdalib.cgui.gui.component.Transform">
+            <width>640.0</width>
+            <height>340.0</height>
+            <x>0.0</x>
+            <y>0.0</y>
+            <pivotX>0.0</pivotX>
+            <pivotY>0.0</pivotY>
+            <scale>1.0</scale>
+            <doesDraw>true</doesDraw>
+            <doesListenKey>false</doesListenKey>
+            <alignWidth>LEFT</alignWidth>
+            <alignHeight>TOP</alignHeight>
+            <enabled>true</enabled>
+        </Component>
+        <Component class="cn.lambdalib.cgui.gui.component.DrawTexture">
+            <texture>academymonster:textures/gui/aim_scanner_back.png</texture>
+            <color>
+                <r>1.0</r>
+                <g>1.0</g>
+                <b>1.0</b>
+                <a>0.5</a>
+            </color>
+            <zLevel>0.0</zLevel>
+            <writeDepth>true</writeDepth>
+            <enabled>true</enabled>
+        </Component>
+        <Widget name="monsterName">
+            <Component class="cn.lambdalib.cgui.gui.component.Transform">
+                <width>200.0</width>
+                <height>30.0</height>
+                <x>0</x>
+                <y>84.0</y>
+                <pivotX>0.0</pivotX>
+                <pivotY>0.0</pivotY>
+                <scale>1.0</scale>
+                <doesDraw>true</doesDraw>
+                <doesListenKey>true</doesListenKey>
+                <alignWidth>LEFT</alignWidth>
+                <alignHeight>TOP</alignHeight>
+                <enabled>true</enabled>
+            </Component>
+            <Component class="cn.lambdalib.cgui.gui.component.TextBox">
+                <content>A Test Zombie</content>
+                <font>AC_Normal</font>
+                <option>
+                    <fontSize>40.0</fontSize>
+                    <align>CENTER</align>
+                    <color>
+                        <r>1.0</r>
+                        <g>1.0</g>
+                        <b>1.0</b>
+                        <a>0.6</a>
+                    </color>
+                </option>
+                <heightAlign>CENTER</heightAlign>
+                <localized>false</localized>
+                <allowEdit>false</allowEdit>
+                <emit>true</emit>
+                <doesEcho>false</doesEcho>
+                <echoChar>*</echoChar>
+                <zLevel>5.0</zLevel>
+                <xOffset>0.0</xOffset>
+                <yOffset>0.0</yOffset>
+                <enabled>true</enabled>
+            </Component>
+        </Widget>
+        <Component class="cn.lambdalib.cgui.gui.component.Transform">
+            <width>640.0</width>
+            <height>340.0</height>
+            <x>40.0</x>
+            <y>0.0</y>
+            <pivotX>0.0</pivotX>
+            <pivotY>0.0</pivotY>
+            <scale>1.0</scale>
+            <doesDraw>true</doesDraw>
+            <doesListenKey>false</doesListenKey>
+            <alignWidth>LEFT</alignWidth>
+            <alignHeight>TOP</alignHeight>
+            <enabled>true</enabled>
+        </Component>
+        <Component class="cn.lambdalib.cgui.gui.component.DrawTexture">
+            <texture>Have ability</texture>
+            <color>
+                <r>1.0</r>
+                <g>1.0</g>
+                <b>1.0</b>
+                <a>0.5</a>
+            </color>
+            <zLevel>0.0</zLevel>
+            <writeDepth>true</writeDepth>
+            <enabled>true</enabled>
+        </Component>
+        <Widget name="skill">
+            <Component class="cn.lambdalib.cgui.gui.component.Transform">
+                <width>400.0</width>
+                <height>30.0</height>
+                <x>0</x>
+                <y>84.0</y>
+                <pivotX>0.0</pivotX>
+                <pivotY>0.0</pivotY>
+                <scale>1.0</scale>
+                <doesDraw>true</doesDraw>
+                <doesListenKey>true</doesListenKey>
+                <alignWidth>LEFT</alignWidth>
+                <alignHeight>TOP</alignHeight>
+                <enabled>true</enabled>
+            </Component>
+            <Widget name="skillName">
+                <Component class="cn.lambdalib.cgui.gui.component.Transform">
+                    <width>100.0</width>
+                    <height>30.0</height>
+                    <x>0</x>
+                    <y>84.0</y>
+                    <pivotX>0.0</pivotX>
+                    <pivotY>0.0</pivotY>
+                    <scale>1.0</scale>
+                    <doesDraw>true</doesDraw>
+                    <doesListenKey>true</doesListenKey>
+                    <alignWidth>LEFT</alignWidth>
+                    <alignHeight>TOP</alignHeight>
+                    <enabled>true</enabled>
+                </Component>
+                <Component class="cn.lambdalib.cgui.gui.component.TextBox">
+                    <content>A Test Skill</content>
+                    <font>AC_Normal</font>
+                    <option>
+                        <fontSize>35.0</fontSize>
+                        <align>CENTER</align>
+                        <color>
+                            <r>1.0</r>
+                            <g>1.0</g>
+                            <b>1.0</b>
+                            <a>0.6</a>
+                        </color>
+                    </option>
+                    <heightAlign>LEFT</heightAlign>
+                    <localized>false</localized>
+                    <allowEdit>false</allowEdit>
+                    <emit>true</emit>
+                    <doesEcho>false</doesEcho>
+                    <echoChar>*</echoChar>
+                    <zLevel>5.0</zLevel>
+                    <xOffset>0.0</xOffset>
+                    <yOffset>0.0</yOffset>
+                    <enabled>true</enabled>
+                </Component>
+            </Widget>
+        </Widget>
+    </Widget>
+</Root>

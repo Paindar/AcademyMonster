@@ -15,8 +15,11 @@ import static cn.lambdalib.util.generic.MathUtils.lerpf;
 /**
  * Created by Paindar on 2017/2/9.
  */
-public class AIPenetrateTeleport extends BaseAbility
+public class AIPenetrateTeleport extends BaseSkill
 {
+    {
+        skillName=PenetrateTeleport.getFullName();
+    }
     private float maxDistance;
     public AIPenetrateTeleport(EntityLivingBase speller,float abilityExp) {
         super(speller,(int)lerpf(200, 100, abilityExp), abilityExp);
@@ -46,9 +49,4 @@ public class AIPenetrateTeleport extends BaseAbility
     }
 
 
-    @Override
-    public String getSkillName()
-    {
-        return PenetrateTeleport.getDisplayName();
-    }
 }

@@ -21,8 +21,11 @@ import static cn.lambdalib.util.generic.MathUtils.lerpf;
 /**
  * Created by Paindar on 2017/2/10.
  */
-public class AIElectronBomb extends BaseAbility
+public class AIElectronBomb extends BaseSkill
 {
+    {
+        skillName=ElectronBomb.getFullName();
+    }
     private float maxDistance;
     private float damage;
 
@@ -66,9 +69,4 @@ public class AIElectronBomb extends BaseAbility
 
     }
 
-    @Override
-    public String getSkillName()
-    {
-        return ElectronBomb.getDisplayName();
-    }
 }

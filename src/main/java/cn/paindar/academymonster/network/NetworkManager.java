@@ -7,6 +7,7 @@ import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import cpw.mods.fml.relauncher.Side;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.Vec3;
@@ -24,6 +25,7 @@ public class NetworkManager
         registerMessage(MessageMdRayEffect.Handler.class, MessageMdRayEffect.class, Side.CLIENT);
         registerMessage(MessageFleshRippingEffect.Handler.class, MessageFleshRippingEffect.class, Side.CLIENT);
         registerMessage(MessageRailgunEffect.Handler.class, MessageRailgunEffect.class, Side.CLIENT);
+        registerMessage(MessageSkillInfoSync.Handler.class, MessageSkillInfoSync.class,Side.CLIENT);
     }
 
 
@@ -71,6 +73,17 @@ public class NetworkManager
         if(!player.getEntityWorld().isRemote)
         {
             MessageRailgunEffect msg = new MessageRailgunEffect(target,dist);
+            instance.sendTo(msg, player);
+        }
+        else
+            throw new IllegalStateException("Wrong context side!");
+    }
+
+    public static void sendEntitySkillInfoTo(EntityLiving entity, EntityPlayerMP player)
+    {
+        if(!player.getEntityWorld().isRemote)
+        {
+            MessageSkillInfoSync msg = new MessageSkillInfoSync(entity);
             instance.sendTo(msg, player);
         }
         else

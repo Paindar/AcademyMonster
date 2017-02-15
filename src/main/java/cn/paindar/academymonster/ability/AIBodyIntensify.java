@@ -3,18 +3,19 @@ package cn.paindar.academymonster.ability;
 import cn.academy.vanilla.electromaster.skill.BodyIntensify;
 import cn.lambdalib.util.generic.RandUtils;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import scala.collection.immutable.Vector;
-import scala.util.Random;
 
 import static cn.lambdalib.util.generic.MathUtils.lerpf;
 
 /**
  * Created by Paindar on 2017/2/10.
  */
-public class AIBodyIntensify extends BaseAbility
+public class AIBodyIntensify extends BaseSkill
 {
+    {
+        skillName=BodyIntensify.getFullName();
+    }
     public AIBodyIntensify(EntityLivingBase speller, float abilityExp)
     {
         super(speller, (int)lerpf(900, 600,abilityExp), abilityExp);
@@ -52,9 +53,5 @@ public class AIBodyIntensify extends BaseAbility
         super.spell();
     }
 
-    @Override
-    public String getSkillName()
-    {
-        return BodyIntensify.getDisplayName();
-    }
+
 }
