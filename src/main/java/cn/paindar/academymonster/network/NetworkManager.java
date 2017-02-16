@@ -17,7 +17,7 @@ import net.minecraft.util.Vec3;
  */
 public class NetworkManager
 {
-    public static SimpleNetworkWrapper instance = NetworkRegistry.INSTANCE.newSimpleChannel(AcademyMonster.MODID);
+    private static SimpleNetworkWrapper instance = NetworkRegistry.INSTANCE.newSimpleChannel(AcademyMonster.MODID);
     private static int nextID = 0;
     public static void init(FMLPreInitializationEvent event)
     {
@@ -35,11 +35,22 @@ public class NetworkManager
         instance.registerMessage(messageHandler, requestMessageType, nextID++, side);
     }
 
-    public static void sendSoundTo(String sound, EntityPlayerMP player)
+    public static void sendSoundTo(String sound,EntityLivingBase source,float vol, EntityPlayerMP player)
     {
         if(!player.getEntityWorld().isRemote)
         {
-            MessageSound msg = new MessageSound(sound);
+            MessageSound msg = new MessageSound(sound,source,vol);
+            instance.sendTo(msg, player);
+        }
+        else
+            throw new IllegalStateException("Wrong context side!");
+    }
+
+    public static void sendSoundTo(String sound,double x,double y,double z,float vol,float pitch, EntityPlayerMP player)
+    {
+        if(!player.getEntityWorld().isRemote)
+        {
+            MessageSound msg = new MessageSound(sound,x,y,z,vol,pitch);
             instance.sendTo(msg, player);
         }
         else

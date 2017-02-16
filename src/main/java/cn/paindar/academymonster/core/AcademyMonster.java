@@ -107,7 +107,7 @@ public class AcademyMonster
            return;
         List<Class<? extends BaseSkill>> tempList= new ArrayList<>(skillList);
         List<Float> tempProbList=new ArrayList<>(probList);
-        float prob=1f;
+        float prob=0.3f;
         float factor=0.5f;
         float tempSum=sumWeight;
 

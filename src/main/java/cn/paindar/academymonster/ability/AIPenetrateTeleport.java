@@ -42,7 +42,7 @@ public class AIPenetrateTeleport extends BaseSkill
             for(Entity e:list)
             {
 
-                NetworkManager.sendSoundTo("tp.tp",(EntityPlayerMP)e);
+                NetworkManager.sendSoundTo("tp.tp",speller,.5f,(EntityPlayerMP)e);
             }
         }
         super.spell();

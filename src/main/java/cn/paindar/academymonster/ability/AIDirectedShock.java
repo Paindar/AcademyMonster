@@ -6,6 +6,7 @@ import cn.lambdalib.util.mc.Raytrace;
 import cn.lambdalib.util.mc.WorldUtils;
 import cn.paindar.academymonster.network.NetworkManager;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.MovingObjectPosition;
@@ -56,7 +57,7 @@ public class AIDirectedShock extends BaseSkill
                 List<Entity> list= WorldUtils.getEntities(speller, 25, EntitySelectors.player());
                 for(Entity e:list)
                 {
-                    NetworkManager.sendSoundTo("vecmanip.directed_shock",(EntityPlayerMP)e);
+                    NetworkManager.sendSoundTo("vecmanip.directed_shock",(EntityLivingBase) speller,0.5f,(EntityPlayerMP)e);
                 }
             }
         }

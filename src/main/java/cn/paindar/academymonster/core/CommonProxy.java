@@ -1,10 +1,8 @@
 package cn.paindar.academymonster.core;
 
-import cn.academy.core.AcademyCraft;
 import cn.academy.crafting.ModuleCrafting;
 import cn.academy.terminal.AppRegistry;
 import cn.academy.terminal.item.ItemApp;
-import cn.lambdalib.crafting.RecipeRegistry;
 import cn.paindar.academymonster.core.support.terminal.AppAIMScanner;
 import cn.paindar.academymonster.entity.EntityLoader;
 import cn.paindar.academymonster.network.NetworkManager;
@@ -13,7 +11,6 @@ import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
 
