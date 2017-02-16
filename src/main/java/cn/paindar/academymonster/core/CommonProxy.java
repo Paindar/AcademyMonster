@@ -3,6 +3,7 @@ package cn.paindar.academymonster.core;
 import cn.academy.crafting.ModuleCrafting;
 import cn.academy.terminal.AppRegistry;
 import cn.academy.terminal.item.ItemApp;
+import cn.paindar.academymonster.config.AMConfig;
 import cn.paindar.academymonster.core.support.terminal.AppAIMScanner;
 import cn.paindar.academymonster.entity.EntityLoader;
 import cn.paindar.academymonster.network.NetworkManager;
@@ -22,6 +23,8 @@ public class CommonProxy
     public void preInit(FMLPreInitializationEvent event)
     {
         new EntityLoader();
+        AMConfig.init(event);
+        AcademyMonster.instance.initSkill();
         NetworkManager.init(event);
         AppRegistry.register(AppAIMScanner.instance);
     }

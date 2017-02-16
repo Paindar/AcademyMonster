@@ -2,9 +2,11 @@ package cn.paindar.academymonster.core;
 
 import cn.lambdalib.util.generic.RandUtils;
 import cn.paindar.academymonster.ability.*;
+import cn.paindar.academymonster.config.AMConfig;
 import cn.paindar.academymonster.core.command.CommandTest;
 import cn.paindar.academymonster.entity.SkillExtendedEntityProperties;
 import cn.paindar.academymonster.entity.ai.*;
+import com.typesafe.config.Config;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
@@ -16,7 +18,6 @@ import net.minecraft.entity.IEntityOwnable;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.monster.IMob;
-import net.minecraftforge.common.IExtendedEntityProperties;
 import net.minecraftforge.common.config.Configuration;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -43,7 +44,6 @@ public class AcademyMonster
     @SidedProxy(clientSide = "cn.paindar.academymonster.core.ClientProxy",
             serverSide = "cn.paindar.academymonster.core.CommonProxy")
     public static CommonProxy proxy;
-    public static Configuration config;
     @Instance
     public static AcademyMonster instance;
     private static List<Class<? extends BaseSkill>> skillList=new ArrayList<>();
@@ -54,28 +54,30 @@ public class AcademyMonster
 
 
 
-    private static void registerSkill(Class<? extends BaseSkill> skill,float prob,Class<? extends EntityAIBase> aiClass,int aiLevel)
+    private static void registerSkill(Class<? extends BaseSkill> skill,float defaultProb,Class<? extends EntityAIBase> aiClass,int aiLevel)
     {
         skillList.add(skill);
-        probList.add(prob);
+        float prob=(float)AMConfig.getDouble("am.skill"+skill.getSimpleName().substring(2)+".prob",defaultProb);
+        probList.add(prob);//getSimpleName().substring(2)
         aiList.add(aiClass);
         aiLevelList.add(aiLevel);
         sumWeight+=prob;
     }
-    static
+    void initSkill()
     {
-        registerSkill(AIBodyIntensify.class,1,EntityAIBodyIntensify.class,5);
-        registerSkill(AIDirectedShock.class,2,EntityAIDirectedShock.class,5);
-        registerSkill(AIElectronBomb.class,1,EntityAIElectronBomb.class,5);
-        registerSkill(AIFleshRipping.class,1,EntityAIFleshRipping.class,5);
-        registerSkill(AIPenetrateTeleport.class,1,EntityAIPenetrateTeleport.class,4);
-        registerSkill(AIRailgun.class,0.2f,EntityAIRailgun.class,5);
+        registerSkill(AIBodyIntensify.class, 1,EntityAIBodyIntensify.class,5);
+        registerSkill(AIDirectedShock.class, 2,EntityAIDirectedShock.class,5);
+        registerSkill(AIElectronBomb.class, 1,EntityAIElectronBomb.class,5);
+        registerSkill(AIFleshRipping.class, 1,EntityAIFleshRipping.class,5);
+        registerSkill(AIPenetrateTeleport.class, 2,EntityAIPenetrateTeleport.class,4);
+        registerSkill(AIRailgun.class, 0.5f,EntityAIRailgun.class,5);
     }
 
     @EventHandler
     public void preInit(FMLPreInitializationEvent event)
     {
         proxy.preInit(event);
+
 
     }
 
@@ -107,14 +109,14 @@ public class AcademyMonster
            return;
         List<Class<? extends BaseSkill>> tempList= new ArrayList<>(skillList);
         List<Float> tempProbList=new ArrayList<>(probList);
-        float prob=0.3f;
-        float factor=0.5f;
+        double prob=AMConfig.getDouble("am.skill.prob",0.3f);
+        double factor=AMConfig.getDouble("am.skill.factor",0.5f);
         float tempSum=sumWeight;
+        List<String> banList=AMConfig.getStringArray("am.monster."+entity.getClass().getSimpleName()+".ban",new ArrayList<>());
 
         String string = entity.getEntityData().getString(MODID);
         while(RandUtils.nextFloat()<=prob && tempList.size()>0)
         {
-
             float rand=RandUtils.nextFloat()*tempSum;
             int id=-1;
             for(int i=0;i<tempProbList.size();i++)
@@ -122,12 +124,19 @@ public class AcademyMonster
                 if(rand<tempProbList.get(i))
                 {
                     id=skillList.indexOf(tempList.get(i));
-                    tempSum-=tempProbList.get(i);
-                    tempList.remove(i);tempProbList.remove(i);//抽取一个技能并且不放回
+                    if(banList.indexOf(skillList.get(id).getSimpleName().substring(2))==-1)
+                    {
+                        tempSum -= tempProbList.get(i);
+                        id=-1;
+                    }
+                    tempList.remove(i);
+                    tempProbList.remove(i);//抽取一个技能并且不放回
                     break;
                 }
                 rand-=tempProbList.get(i);
             }
+            if(id==-1)
+                continue;
             Class<? extends BaseSkill> elem=skillList.get(id);
             Constructor constructor;
             BaseSkill skill;
@@ -251,9 +260,9 @@ public class AcademyMonster
         return false;
     }
 
-    private boolean checkEntityClassAllowed(EntityLivingBase entity)
+    private boolean checkEntityClassAllowed(EntityLiving entity)
     {
-        return true;
+        return entity instanceof EntityMob;
     }
 
 
