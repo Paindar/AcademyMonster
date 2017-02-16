@@ -34,9 +34,18 @@ public class AMConfig
             try
             {
                 Files.copy(RegistryUtils.getResourceStream(defaultRes), customFile.toPath());
-            } catch (IOException ex) {
+            } catch (IOException ex)
+            {
                 log.error("Error when copying config template to config folder", ex);
             }
+        }
+
+        try
+        {
+            Config ex = ConfigFactory.parseFile(customFile);
+            config = ex.withFallback(config);
+        } catch (RuntimeException exception) {
+            log.error("An error occured parsing custom config", exception);
         }
     }
 

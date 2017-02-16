@@ -57,7 +57,7 @@ public class AcademyMonster
     private static void registerSkill(Class<? extends BaseSkill> skill,float defaultProb,Class<? extends EntityAIBase> aiClass,int aiLevel)
     {
         skillList.add(skill);
-        float prob=(float)AMConfig.getDouble("am.skill"+skill.getSimpleName().substring(2)+".prob",defaultProb);
+        float prob=(float)AMConfig.getDouble("am.skill."+skill.getSimpleName().substring(2)+".prob",defaultProb);
         probList.add(prob);//getSimpleName().substring(2)
         aiList.add(aiClass);
         aiLevelList.add(aiLevel);
@@ -127,6 +127,9 @@ public class AcademyMonster
                     if(banList.indexOf(skillList.get(id).getSimpleName().substring(2))==-1)
                     {
                         tempSum -= tempProbList.get(i);
+                    }
+                    else
+                    {
                         id=-1;
                     }
                     tempList.remove(i);
