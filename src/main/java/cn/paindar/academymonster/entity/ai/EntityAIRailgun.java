@@ -34,7 +34,7 @@ public class EntityAIRailgun extends EntityAIBase
         if (target==null)
             return false;
         double dist=speller.getDistanceSqToEntity(target);
-        return !skill.isSkillInCooldown() && dist >= 2.25 && dist <= skill.getMaxDistance() * skill.getMaxDistance();
+        return this.speller.getAttackTarget().isEntityAlive() && !skill.isSkillInCooldown() && dist >= 2.25 && dist <= skill.getMaxDistance() * skill.getMaxDistance();
     }
 
 
@@ -63,7 +63,6 @@ public class EntityAIRailgun extends EntityAIBase
         if(!skill.isSkillInCooldown())
         {
             skill.spell();
-            AcademyMonster.log.info("spell.");
         }
     }
 }

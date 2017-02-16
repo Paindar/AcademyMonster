@@ -28,7 +28,7 @@ public class EntityAIPenetrateTeleport  extends EntityAIBase
     public boolean shouldExecute() {
 
         //&& this.speller.getDistanceSqToEntity(this.speller.getAttackTarget())<=skill.getMaxDistance()
-        return this.speller.getAttackTarget() != null && !skill.isSkillInCooldown();
+        return this.speller.getAttackTarget() != null && !skill.isSkillInCooldown() && this.speller.getAttackTarget().isEntityAlive();
     }
 
     /**
