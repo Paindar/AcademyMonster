@@ -105,7 +105,7 @@ public class AcademyMonster
 
     public void addSkill(EntityLiving entity)
     {
-        if(entity.worldObj.isRemote)
+        if(entity.worldObj.isRemote ||!isClassAllowed(entity))
            return;
         List<Class<? extends BaseSkill>> tempList= new ArrayList<>(skillList);
         List<Float> tempProbList=new ArrayList<>(probList);
@@ -206,7 +206,7 @@ public class AcademyMonster
                         try
                         {
                             constructor = skillClass.getConstructor(EntityLivingBase.class, float.class);
-                            skill = (BaseSkill) constructor.newInstance(entity, randExp * randExp);
+                            skill = (BaseSkill) constructor.newInstance(entity, randExp);
 
                             aClass = aiList.get(id);
 
@@ -252,7 +252,7 @@ public class AcademyMonster
             {
                 return false;
             }
-            if (instance.checkEntityClassAllowed(entity))
+            if (checkEntityClassAllowed(entity))
             {
                 return true;
             }
