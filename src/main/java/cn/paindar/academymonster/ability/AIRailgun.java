@@ -1,10 +1,6 @@
 package cn.paindar.academymonster.ability;
 
-import cn.academy.ability.api.AbilityPipeline;
-import cn.academy.core.entity.EntityRayBase;
 import cn.academy.core.event.BlockDestroyEvent;
-import cn.academy.core.util.Plotter;
-import cn.academy.core.util.RangedRayDamage;
 import cn.academy.vanilla.electromaster.skill.Railgun;
 import cn.lambdalib.util.generic.MathUtils;
 import cn.lambdalib.util.generic.RandUtils;
@@ -12,8 +8,7 @@ import cn.lambdalib.util.generic.VecUtils;
 import cn.lambdalib.util.helper.Motion3D;
 import cn.lambdalib.util.mc.EntitySelectors;
 import cn.lambdalib.util.mc.WorldUtils;
-import cn.paindar.academymonster.core.AcademyMonster;
-import cn.paindar.academymonster.entity.ai.EntityCoinThrowingNative;
+import cn.paindar.academymonster.entity.EntityCoinThrowingNative;
 import cn.paindar.academymonster.network.NetworkManager;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
@@ -21,14 +16,11 @@ import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.Vec3;
-import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.util.ForgeDirection;
 
 import java.util.HashSet;
 import java.util.List;
