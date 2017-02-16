@@ -23,7 +23,7 @@ public class AppAIMScanner extends App
 
     private AppAIMScanner()
     {
-        super("AIM_Scanner");
+        super("aim_scanner");
     }
 
     @Override
