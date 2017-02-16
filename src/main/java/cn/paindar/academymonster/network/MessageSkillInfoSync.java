@@ -1,7 +1,7 @@
 package cn.paindar.academymonster.network;
 
-import cn.academy.vanilla.electromaster.entity.EntityRailgunFX;
-import cn.paindar.academymonster.entity.ai.EntityRailgunFXNative;
+import cn.paindar.academymonster.core.AcademyMonster;
+import cn.paindar.academymonster.entity.SkillExtendedEntityProperties;
 import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
@@ -10,26 +10,26 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.nbt.NBTTagCompound;
 
+
 /**
- * Created by Paindar on 2017/2/12.
+ * Created by Paindar on 2017/2/15.
  */
-public class MessageRailgunEffect implements IMessage
+public class MessageSkillInfoSync implements IMessage
 {
-    public static class Handler implements IMessageHandler<MessageRailgunEffect, IMessage>
+    public static class Handler implements IMessageHandler<MessageSkillInfoSync, IMessage>
     {
         @Override
         @SideOnly(Side.CLIENT)
-        public IMessage onMessage(MessageRailgunEffect message, MessageContext ctx)
+        public IMessage onMessage(MessageSkillInfoSync msg, MessageContext ctx)
         {
             if (ctx.side == Side.CLIENT)
             {
-                EntityLivingBase player= (EntityLivingBase)Minecraft.getMinecraft().theWorld.getEntityByID(message.nbt.getInteger("i"));
-                int dist=message.nbt.getInteger("dst");
-                player.worldObj.spawnEntityInWorld(new EntityRailgunFXNative(player, dist));
+                EntityLiving entity= (EntityLiving) Minecraft.getMinecraft().theWorld.getEntityByID(msg.nbt.getInteger("id"));
+                SkillExtendedEntityProperties info= SkillExtendedEntityProperties.get(entity);
+                info.setSkillData(msg.nbt.getString("list"));
             }
             return null;
         }
@@ -37,20 +37,20 @@ public class MessageRailgunEffect implements IMessage
 
     NBTTagCompound nbt;
 
-    public MessageRailgunEffect(){}
+    public MessageSkillInfoSync(){}
 
-    public MessageRailgunEffect(EntityLivingBase speller,int dist)
+    public MessageSkillInfoSync(EntityLiving entity)
     {
         nbt=new NBTTagCompound();
-        nbt.setInteger("i",speller.getEntityId());
-        nbt.setInteger("dst",dist);
+        nbt.setString("list", SkillExtendedEntityProperties.get(entity).getSkillData());
+        nbt.setInteger("id",entity.getEntityId());
     }
-
     /**
      * Convert from the supplied buffer into your specific message type
      *
      * @param buf
      */
+
     @Override
     public void fromBytes(ByteBuf buf)
     {

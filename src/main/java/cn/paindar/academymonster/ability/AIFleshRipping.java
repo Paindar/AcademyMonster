@@ -17,15 +17,18 @@ import static cn.lambdalib.util.generic.MathUtils.lerpf;
 /**
  * Created by Paindar on 2017/2/11.
  */
-public class AIFleshRipping extends BaseAbility
+public class AIFleshRipping extends BaseSkill
 {
+    {
+        skillName=FleshRipping.getFullName();
+    }
     private float maxDistance;
     private float damage;
-    public AIFleshRipping(EntityLivingBase speller, float abilityExp)
+    public AIFleshRipping(EntityLivingBase speller, float skillExp)
     {
-        super(speller, (int)lerpf(90, 40, abilityExp), abilityExp);
-        maxDistance=lerpf(6, 14, abilityExp);
-        damage=lerpf(5, 12, abilityExp);
+        super(speller, (int)lerpf(90, 40, skillExp), skillExp);
+        maxDistance=lerpf(6, 14, skillExp);
+        damage=lerpf(5, 12, skillExp);
     }
 
     public float getMaxDistance(){return maxDistance;}
@@ -53,9 +56,4 @@ public class AIFleshRipping extends BaseAbility
         super.spell();
     }
 
-    @Override
-    public String getSkillName()
-    {
-        return FleshRipping.getDisplayName();
-    }
 }

@@ -41,8 +41,11 @@ import static cn.lambdalib.util.generic.VecUtils.*;
 /**
  * Created by Paindar on 2017/2/11.
  */
-public class AIRailgun extends BaseAbility
+public class AIRailgun extends BaseSkill
 {
+    {
+        skillName=Railgun.getFullName();
+    }
     static final double STEP = 0.5;
     private float damage;
     private float range =2;
@@ -176,9 +179,4 @@ public class AIRailgun extends BaseAbility
         }
     }
 
-    @Override
-    public String getSkillName()
-    {
-        return Railgun.getDisplayName();
-    }
 }

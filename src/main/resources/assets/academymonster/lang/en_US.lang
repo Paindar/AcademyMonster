@@ -1,0 +1,5 @@
+am.app.aim_scanner_no_focus.name=No Target
+am.app.aim_scanner_skill_list.name=Skill List:
+ac.settings.prop.open_aim_scanner=Open AIM Scanner
+am.aim_scanner_skill_list.notinstalled=You have not yet installed the AIM Scanner app.
+ac.app.AIM_Scanner.name=AIM Scanner

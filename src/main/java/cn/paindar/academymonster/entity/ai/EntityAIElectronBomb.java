@@ -34,11 +34,7 @@ public class EntityAIElectronBomb extends EntityAIBase
         if (target==null)
             return false;
         double dist=speller.getDistanceSqToEntity(target);
-        if(!skill.isSkillInCooldown() && dist>=2.25 && dist<=skill.getMaxDistance()*skill.getMaxDistance())
-        {
-            return true;
-        }
-        return false;
+        return !skill.isSkillInCooldown() && dist >= 2.25 && dist <= skill.getMaxDistance() * skill.getMaxDistance();
     }
 
 

@@ -25,7 +25,7 @@ public class EntityLoader
 
     public EntityLoader()
     {
-        EntityLoader.registerRenders();
+
     }
     @SideOnly(Side.CLIENT)
     public static void registerRenders()

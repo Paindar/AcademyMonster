@@ -7,6 +7,7 @@ import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import cpw.mods.fml.relauncher.Side;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.Vec3;
@@ -16,7 +17,7 @@ import net.minecraft.util.Vec3;
  */
 public class NetworkManager
 {
-    public static SimpleNetworkWrapper instance = NetworkRegistry.INSTANCE.newSimpleChannel(AcademyMonster.MODID);
+    private static SimpleNetworkWrapper instance = NetworkRegistry.INSTANCE.newSimpleChannel(AcademyMonster.MODID);
     private static int nextID = 0;
     public static void init(FMLPreInitializationEvent event)
     {
@@ -24,6 +25,7 @@ public class NetworkManager
         registerMessage(MessageMdRayEffect.Handler.class, MessageMdRayEffect.class, Side.CLIENT);
         registerMessage(MessageFleshRippingEffect.Handler.class, MessageFleshRippingEffect.class, Side.CLIENT);
         registerMessage(MessageRailgunEffect.Handler.class, MessageRailgunEffect.class, Side.CLIENT);
+        registerMessage(MessageSkillInfoSync.Handler.class, MessageSkillInfoSync.class,Side.CLIENT);
     }
 
 
@@ -33,11 +35,22 @@ public class NetworkManager
         instance.registerMessage(messageHandler, requestMessageType, nextID++, side);
     }
 
-    public static void sendSoundTo(String sound, EntityPlayerMP player)
+    public static void sendSoundTo(String sound,EntityLivingBase source,float vol, EntityPlayerMP player)
     {
         if(!player.getEntityWorld().isRemote)
         {
-            MessageSound msg = new MessageSound(sound);
+            MessageSound msg = new MessageSound(sound,source,vol);
+            instance.sendTo(msg, player);
+        }
+        else
+            throw new IllegalStateException("Wrong context side!");
+    }
+
+    public static void sendSoundTo(String sound,double x,double y,double z,float vol,float pitch, EntityPlayerMP player)
+    {
+        if(!player.getEntityWorld().isRemote)
+        {
+            MessageSound msg = new MessageSound(sound,x,y,z,vol,pitch);
             instance.sendTo(msg, player);
         }
         else
@@ -71,6 +84,17 @@ public class NetworkManager
         if(!player.getEntityWorld().isRemote)
         {
             MessageRailgunEffect msg = new MessageRailgunEffect(target,dist);
+            instance.sendTo(msg, player);
+        }
+        else
+            throw new IllegalStateException("Wrong context side!");
+    }
+
+    public static void sendEntitySkillInfoTo(EntityLiving entity, EntityPlayerMP player)
+    {
+        if(!player.getEntityWorld().isRemote)
+        {
+            MessageSkillInfoSync msg = new MessageSkillInfoSync(entity);
             instance.sendTo(msg, player);
         }
         else

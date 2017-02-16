@@ -7,21 +7,20 @@ import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.ServerTickEvent;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.StatCollector;
 
 /**
  * Created by Paindar on 2017/2/9.
  */
 
-public abstract class BaseAbility
+public abstract class BaseSkill
 {
     private int maxCooldown;
-    protected int remainCooldown=0;
+    private int remainCooldown=0;
     private float skillExp;
     protected EntityLivingBase speller;
-    protected boolean isChanting=false;
-    protected Vec3 targetPos;
-    public BaseAbility(EntityLivingBase speller,int maxCooldown,float abilityExp)
+    protected static String skillName;
+    public BaseSkill(EntityLivingBase speller,int maxCooldown,float abilityExp)
     {
         this.maxCooldown=maxCooldown;
         this.skillExp=abilityExp;
@@ -71,7 +70,8 @@ public abstract class BaseAbility
         }
         return true;
     }
-    public abstract String getSkillName();
+    public static String getUnlocalizedSkillName(){return "ac.ability." + skillName + ".name";}
+    public static String getSkillName(){return StatCollector.translateToFallback(skillName);}
 
 
 }

@@ -35,11 +35,7 @@ public class EntityAIDirectedShock extends EntityAIBase
         if (target==null)
             return false;
         double dist=speller.getDistanceSqToEntity(target);
-        if(!skill.isSkillInCooldown() && dist>=0.5 && dist<=skill.getMaxDistance()*skill.getMaxDistance())
-        {
-            return true;
-        }
-        return false;
+        return !skill.isSkillInCooldown() && dist >= 0.5 && dist <= skill.getMaxDistance() * skill.getMaxDistance();
     }
 
     /**

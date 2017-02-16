@@ -1,7 +1,7 @@
 package cn.paindar.academymonster.ability.api.event;
 
 import cn.academy.ability.api.event.CalcEvent;
-import cn.paindar.academymonster.ability.BaseAbility;
+import cn.paindar.academymonster.ability.BaseSkill;
 import cpw.mods.fml.common.eventhandler.Event;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -31,10 +31,10 @@ public class CalcEventNative<T> extends Event {
 
     public static class SkillAttack extends CalcEventNative.NativeCalcEvent<Float> {
 
-        public final BaseAbility skill;
+        public final BaseSkill skill;
         public final Entity target;
 
-        public SkillAttack(EntityLivingBase player, BaseAbility _skill, Entity _target, float initial) {
+        public SkillAttack(EntityLivingBase player, BaseSkill _skill, Entity _target, float initial) {
             super(player, initial);
             skill = _skill;
             target = _target;
