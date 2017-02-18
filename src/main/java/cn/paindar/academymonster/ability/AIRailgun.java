@@ -12,6 +12,7 @@ import cn.lambdalib.util.generic.VecUtils;
 import cn.lambdalib.util.helper.Motion3D;
 import cn.lambdalib.util.mc.EntitySelectors;
 import cn.lambdalib.util.mc.WorldUtils;
+import cn.paindar.academymonster.config.AMConfig;
 import cn.paindar.academymonster.core.AcademyMonster;
 import cn.paindar.academymonster.entity.ai.EntityCoinThrowingNative;
 import cn.paindar.academymonster.network.NetworkManager;
@@ -46,10 +47,10 @@ public class AIRailgun extends BaseSkill
     {
         skillName=Railgun.getFullName();
     }
-    static final double STEP = 0.5;
+    private static final double STEP = 0.5;
     private float damage;
     private float range =2;
-    public int maxIncrement = 25;
+    private int maxIncrement = 25;
     private EntityCoinThrowingNative coin;
     public AIRailgun(EntityLivingBase speller, float exp)
     {
@@ -123,8 +124,8 @@ public class AIRailgun extends BaseSkill
                 }
             }
         }
-        //TODO
-        if(true)
+
+        if(AMConfig.getBoolean("am.skill.Railgun.destroyBlock",true))
         {
             for(int i=1;i<maxIncrement;i++)
             {

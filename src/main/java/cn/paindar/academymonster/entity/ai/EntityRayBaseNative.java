@@ -123,7 +123,7 @@ public class EntityRayBaseNative extends EntityAdvanced implements IRay
         return life * 50;
     }
 
-    //TODO Add glow texture alpha wiggle
+
     @Override
     public double getAlpha() {
         long dt = getDeltaTime();

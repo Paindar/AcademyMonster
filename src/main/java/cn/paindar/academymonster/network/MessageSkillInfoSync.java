@@ -1,6 +1,5 @@
 package cn.paindar.academymonster.network;
 
-import cn.paindar.academymonster.core.AcademyMonster;
 import cn.paindar.academymonster.entity.SkillExtendedEntityProperties;
 import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
@@ -11,6 +10,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
 
 
@@ -39,7 +39,7 @@ public class MessageSkillInfoSync implements IMessage
 
     public MessageSkillInfoSync(){}
 
-    public MessageSkillInfoSync(EntityLiving entity)
+    public MessageSkillInfoSync(EntityLivingBase entity)
     {
         nbt=new NBTTagCompound();
         nbt.setString("list", SkillExtendedEntityProperties.get(entity).getSkillData());
