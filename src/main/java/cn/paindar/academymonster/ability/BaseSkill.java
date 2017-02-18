@@ -71,7 +71,7 @@ public abstract class BaseSkill
         return true;
     }
     public static String getUnlocalizedSkillName(){return "ac.ability." + skillName + ".name";}
-    public static String getSkillName(){return StatCollector.translateToFallback(skillName);}
+    public static String getSkillName(){return StatCollector.translateToLocal(skillName);}
 
 
 }
