@@ -8,12 +8,8 @@ import cn.lambdalib.util.generic.VecUtils;
 import cn.lambdalib.util.helper.Motion3D;
 import cn.lambdalib.util.mc.EntitySelectors;
 import cn.lambdalib.util.mc.WorldUtils;
-<<<<<<< HEAD
 import cn.paindar.academymonster.config.AMConfig;
-import cn.paindar.academymonster.entity.ai.EntityCoinThrowingNative;
-=======
 import cn.paindar.academymonster.entity.EntityCoinThrowingNative;
->>>>>>> dev
 import cn.paindar.academymonster.network.NetworkManager;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
