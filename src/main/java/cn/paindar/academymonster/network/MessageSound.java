@@ -55,7 +55,7 @@ public class MessageSound  implements IMessage
     public MessageSound(String sound,double posX,double posY,double posZ,float vol,float pitch)
     {
         nbt=new NBTTagCompound();
-        nbt.setString("msg",sound);
+        nbt.setString("sound",sound);
         nbt.setDouble("x",posX);
         nbt.setDouble("y",posY);
         nbt.setDouble("z",posZ);
@@ -65,7 +65,8 @@ public class MessageSound  implements IMessage
 
    public MessageSound(String sound, EntityLivingBase target,float vol)
     {
-        nbt.setString("msg",sound);
+        nbt=new NBTTagCompound();
+        nbt.setString("sound",sound);
         nbt.setInteger("target",target.getEntityId());
         nbt.setFloat("vol",vol);
     }

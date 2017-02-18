@@ -58,7 +58,8 @@ public class EntityAIDirectedShock extends EntityAIBase
      * Update the task.
      */
     public void updateTask(){
-        if (target!=null ) {
+        if (target!=null )
+        {
             double dist=speller.getDistanceSqToEntity(target);
             MovingObjectPosition trace = Raytrace.rayTraceBlocks(speller.worldObj,
                     Vec3.createVectorHelper(speller.posX, speller.posY + speller.getEyeHeight(), speller.posZ),

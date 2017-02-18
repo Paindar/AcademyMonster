@@ -29,12 +29,13 @@ public class EntityAIElectronBomb extends EntityAIBase
      * Returns whether the EntityAIBase should begin execution.
      */
     @Override
-    public boolean shouldExecute() {
+    public boolean shouldExecute()
+    {
         EntityLivingBase target=speller.getAttackTarget();
         if (target==null)
             return false;
         double dist=speller.getDistanceSqToEntity(target);
-        return !skill.isSkillInCooldown() && dist >= 2.25 && dist <= skill.getMaxDistance() * skill.getMaxDistance();
+        return this.speller.getAttackTarget().isEntityAlive() && !skill.isSkillInCooldown() && dist >= 2.25 && dist <= skill.getMaxDistance() * skill.getMaxDistance();
     }
 
 
@@ -57,8 +58,10 @@ public class EntityAIElectronBomb extends EntityAIBase
     /**
      * Update the task.
      */
-    public void updateTask(){
-        if (target!=null ) {
+    public void updateTask()
+    {
+        if (target!=null )
+        {
             MovingObjectPosition trace = Raytrace.rayTraceBlocks(speller.worldObj,
                     Vec3.createVectorHelper(speller.posX, speller.posY + speller.getEyeHeight(), speller.posZ),
                     Vec3.createVectorHelper(target.posX,target.posY+target.getEyeHeight(),target.posZ), BlockSelectors.filNothing

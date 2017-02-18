@@ -35,7 +35,7 @@ public class EntityAIFleshRipping extends EntityAIBase
         if (target==null)
             return false;
         double dist=speller.getDistanceSqToEntity(target);
-        return !skill.isSkillInCooldown() && dist >= 0.5 && dist <= skill.getMaxDistance() * skill.getMaxDistance();
+        return this.speller.getAttackTarget().isEntityAlive() && !skill.isSkillInCooldown() && dist >= 0.5&& dist <= skill.getMaxDistance() * skill.getMaxDistance();
     }
 
     /**
@@ -58,13 +58,14 @@ public class EntityAIFleshRipping extends EntityAIBase
      * Update the task.
      */
     public void updateTask(){
-        if (target!=null ) {
+        if (target!=null )
+        {
             double dist=speller.getDistanceSqToEntity(target);
             MovingObjectPosition trace = Raytrace.rayTraceBlocks(speller.worldObj,
                     Vec3.createVectorHelper(speller.posX, speller.posY + speller.getEyeHeight(), speller.posZ),
                     Vec3.createVectorHelper(target.posX,target.posY+target.getEyeHeight(),target.posZ), BlockSelectors.filNothing
             );
-            if(trace==null || trace.typeOfHit!= MovingObjectPosition.MovingObjectType.BLOCK)
+            if(trace!=null && (dist <= skill.getMaxDistance() * skill.getMaxDistance() )&& trace.typeOfHit!= MovingObjectPosition.MovingObjectType.BLOCK)
                 skill.spell();
         }
     }

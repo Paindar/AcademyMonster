@@ -1,9 +1,8 @@
-package cn.paindar.academymonster.entity.ai;
+package cn.paindar.academymonster.entity;
 
 import cn.academy.core.client.render.ray.RendererRayComposite;
 import cn.academy.vanilla.electromaster.client.effect.ArcFactory;
 import cn.academy.vanilla.electromaster.client.effect.SubArcHandler;
-import cn.lambdalib.util.deprecated.ViewOptimize;
 import cn.lambdalib.util.generic.MathUtils;
 import cn.lambdalib.util.generic.RandUtils;
 import cn.lambdalib.util.generic.VecUtils;
@@ -13,8 +12,6 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
 import org.lwjgl.opengl.GL11;
-
-import static cn.lambdalib.util.deprecated.ViewOptimize.fixThirdPerson;
 
 /**
  * Copied from cn.academy.core.entity.EntityRailgunFX.java

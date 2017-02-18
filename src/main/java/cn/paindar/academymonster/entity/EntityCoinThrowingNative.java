@@ -1,4 +1,4 @@
-package cn.paindar.academymonster.entity.ai;
+package cn.paindar.academymonster.entity;
 
 import cn.lambdalib.util.entityx.EntityAdvanced;
 import cn.lambdalib.util.entityx.MotionHandler;
