@@ -211,6 +211,7 @@ public class AIMScannerUI extends AuxGui
                         for(Skill skill:data.getCategory().getSkillList())
                         {
                             Widget widget = skillItem.copy().pos(30, 30 * num);
+                            num++;
                             widget.getComponent(TextBox.class).setContent(StatCollector.translateToLocal(skill.getDisplayName()));
                             existedList.add(widget);
                             list.addWidget(widget);

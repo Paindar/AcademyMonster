@@ -75,6 +75,7 @@ public class EntityAIPenetrateTeleport  extends EntityAIBase
                 if(hasPlace(world,x,y,z))
                 {
                     this.skill.spell(x,y,z);
+                    speller.getNavigator().clearPathEntity();
                     break;
                 }
                 else if(hasPlace(world,x,y+1,z))

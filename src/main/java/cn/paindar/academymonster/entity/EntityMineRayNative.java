@@ -1,25 +1,24 @@
 package cn.paindar.academymonster.entity;
 
-
-import cn.academy.core.entity.IRay;
+import cn.academy.core.client.render.ray.RendererRayComposite;
+import cn.academy.vanilla.meltdowner.client.render.MdParticleFactory;
+import cn.lambdalib.particle.Particle;
 import cn.lambdalib.util.entityx.EntityAdvanced;
 import cn.lambdalib.util.entityx.EntityCallback;
 import cn.lambdalib.util.generic.RandUtils;
+import cn.lambdalib.util.generic.VecUtils;
 import cn.lambdalib.util.helper.GameTimer;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import cn.lambdalib.util.helper.Motion3D;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 
 /**
- * Copied from cn.academy.core.entity.EntityRayBase.java
+ * Created by Paindar on 2017/2/17.
  */
-@SideOnly(Side.CLIENT)
-public class EntityRayBaseNative extends EntityAdvanced implements IRay
+public class EntityMineRayNative extends EntityAdvanced
 {
 
     EntityLivingBase spawner;
@@ -49,12 +48,12 @@ public class EntityRayBaseNative extends EntityAdvanced implements IRay
     /**
      * This just link the ray to a player. You still have to setup the view direction based on the ray type.
      */
-    public EntityRayBaseNative(EntityLivingBase player) {
-        this(player.worldObj);
-        spawner = player;
+    public EntityMineRayNative(EntityLivingBase speller) {
+        this(speller.worldObj);
+        spawner = speller;
     }
 
-    public EntityRayBaseNative(World world) {
+    public EntityMineRayNative(World world) {
         super(world);
         creationTime = GameTimer.getTime();
         ignoreFrustumCheck = true;
@@ -85,16 +84,29 @@ public class EntityRayBaseNative extends EntityAdvanced implements IRay
         }, life);
     }
 
+    @Override
+    public void onUpdate() {
+        super.onUpdate();
+        EntityLivingBase speller = this.spawner;
+        Vec3 end = new Motion3D(speller, true).move(15).getPosVec();
+        this.setFromTo(speller.posX, speller.posY +  1.6, speller.posZ, end.xCoord, end.yCoord, end.zCoord);
+        if(RandUtils.nextDouble() < 0.5) {
+            Particle p = MdParticleFactory.INSTANCE.next(worldObj,
+                    new Motion3D(this, true).move(RandUtils.ranged(0, 10)).getPosVec(),
+                    VecUtils.vec(RandUtils.ranged(-.03, .03), RandUtils.ranged(-.03, .03), RandUtils.ranged(-.03, .03)));
+            worldObj.spawnEntityInWorld(p);
+        }
+    }
+
     protected long getDeltaTime() {
         return GameTimer.getTime() - creationTime;
     }
 
-    @Override
+
     public Vec3 getPosition() {
         return Vec3.createVectorHelper(posX, posY, posZ);
     }
 
-    @Override
     public double getLength() {
         long dt = GameTimer.getTime() - creationTime;
         return (dt < blendInTime ? (double)dt / blendInTime : 1) * length;
@@ -123,15 +135,12 @@ public class EntityRayBaseNative extends EntityAdvanced implements IRay
         return life * 50;
     }
 
-
-    @Override
     public double getAlpha() {
         long dt = getDeltaTime();
         long lifeMS = getLifeMS();
         return dt > lifeMS - blendOutTime ? 1 - (double) (dt + blendOutTime - lifeMS) / blendOutTime : 1.0;
     }
 
-    @Override
     public double getWidth() {
         long dt = getDeltaTime();
         long lifeMS = getLifeMS();
@@ -139,17 +148,14 @@ public class EntityRayBaseNative extends EntityAdvanced implements IRay
                 (dt > lifeMS - widthShrinkTime ? 1 - (double) (dt + widthShrinkTime - lifeMS) / widthShrinkTime : 1.0);
     }
 
-    @Override
     public boolean needsViewOptimize() {
         return viewOptimize;
     }
 
-    @Override
     public double getStartFix() {
         return 0.0;
     }
 
-    @Override
     public void onRenderTick() {
         long time = GameTimer.getTime();
         if(lastFrame != 0) {
@@ -170,20 +176,27 @@ public class EntityRayBaseNative extends EntityAdvanced implements IRay
         lastFrame = GameTimer.getTime();
     }
 
-    @Override
     public double getGlowAlpha() {
         long dt = GameTimer.getTime() - creationTime;
         long lifeMS = getLifeMS();
         return (1 - glowWiggleRadius + glowWiggle) * getAlpha();
     }
 
-    @Override
-    public EntityPlayer getPlayer() {
-        return null;
-    }
+    public static class R extends RendererRayComposite
+    {
 
-    public EntityLivingBase getSpawner() {
-        return spawner;
-    }
+        public R() {
+            super("mdray_small");
+            this.cylinderIn.width = 0.03;
+            this.cylinderIn.color.setColor4i(216, 248, 216, 230);
 
+            this.cylinderOut.width = 0.045;
+            this.cylinderOut.color.setColor4i(106, 242, 106, 50);
+
+            this.glow.width = 0.3;
+            this.glow.color.a = 0.5;
+        }
+
+    }
 }
+

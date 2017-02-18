@@ -33,7 +33,6 @@ public class AIElectronBomb extends BaseSkill
         super(speller,(int)lerpf(40,10, abilityExp), abilityExp);
         damage=lerpf(6, 12, abilityExp);
         maxDistance=lerpf(7,15,abilityExp);
-        this.speller=speller;
     }
     public float getMaxDistance(){return maxDistance;}
 
