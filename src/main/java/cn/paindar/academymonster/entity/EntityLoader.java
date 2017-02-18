@@ -30,6 +30,7 @@ public class EntityLoader
         registerEntityRender(EntityMdBallNative.class, new EntityMdBall.R());
         registerEntityRender(EntityCoinThrowingNative.class,new RendererCoinThrowing());
         registerEntityRender(EntityRailgunFXNative.class,new EntityRailgunFXNative.R());
+        registerEntityRender(EntityArcNative.class,new EntityArcNative.Renderer());
         registerEntityRender(EntityMineRayNative.class,new EntityMineRayNative.R());
     }
 
