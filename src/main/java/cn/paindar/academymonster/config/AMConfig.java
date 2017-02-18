@@ -40,6 +40,17 @@ public class AMConfig
         }
     }
 
+    public static boolean getBoolean(String path,boolean defaultValue)
+    {
+        if(!config.hasPath(path))
+        {
+            log.warn("Cannot find path: "+path);
+            return defaultValue;
+        }
+        else
+            return config.getBoolean(path);
+    }
+
     public static double getDouble(String path,double defaultValue)
     {
         if(!config.hasPath(path))
