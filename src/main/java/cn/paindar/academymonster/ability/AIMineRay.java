@@ -19,7 +19,6 @@ import static cn.lambdalib.util.generic.MathUtils.lerpf;
  */
 public class AIMineRay extends BaseSkill
 {
-    static
     {
         skillName= "MineRay";
     }
@@ -67,6 +66,7 @@ public class AIMineRay extends BaseSkill
             if(x!=tx||y!=ty||z!=tz)
             {
                 remainHardness=block.getBlockHardness(speller.worldObj,tx,ty,tz);
+                x=tx;y=ty;z=tz;
                 if (remainHardness < 0) remainHardness = Float.MAX_VALUE;
             }
             else
@@ -90,7 +90,8 @@ public class AIMineRay extends BaseSkill
     public void stop()
     {
         isChanting=false;
-        rayEffect.setDead();
+        if(rayEffect!=null)
+            rayEffect.setDead();
 
     }
 }

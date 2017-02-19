@@ -3,3 +3,4 @@ am.app.aim_scanner_skill_list.name=技能列表:
 ac.settings.prop.open_aim_scanner=开启AIM扫描仪
 am.aim_scanner_skill_list.notinstalled=你还没有安装AIM扫描仪
 ac.app.aim_scanner.name=AIM扫描仪
+ac.ability.MineRay.name=采矿光束
