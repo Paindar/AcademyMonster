@@ -53,7 +53,7 @@ public class AMConfig
     {
         if(!config.hasPath(path))
         {
-            log.warn("Cannot find path: "+path);
+            log.debug("Cannot find path: "+path);
             return defaultValue;
         }
         else
@@ -64,7 +64,7 @@ public class AMConfig
     {
         if(!config.hasPath(path))
         {
-            log.warn("Cannot find path: "+path);
+            log.debug("Cannot find path: "+path);
             return defaultValue;
         }
         else
@@ -75,7 +75,7 @@ public class AMConfig
     {
         if(!config.hasPath(path))
         {
-            log.warn("Cannot find path: "+path);
+            log.debug("Cannot find path: "+path);
             return defaultValue;
         }
         else
