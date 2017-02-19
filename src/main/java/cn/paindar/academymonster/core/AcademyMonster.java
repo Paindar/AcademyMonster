@@ -72,6 +72,7 @@ public class AcademyMonster
         registerSkill(AIPenetrateTeleport.class, 2,EntityAIPenetrateTeleport.class,4);
         registerSkill(AIRailgun.class, 0.5f,EntityAIRailgun.class,5);
         registerSkill(AIArcGen.class,1,EntityAIArcGen.class,5);
+        registerSkill(AIMineRay.class,0.7f,EntityAIMineRay.class,5);
     }
 
     @EventHandler

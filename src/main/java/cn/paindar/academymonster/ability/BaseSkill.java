@@ -20,6 +20,7 @@ public abstract class BaseSkill
     private float skillExp;
     protected EntityLivingBase speller;
     protected static String skillName;
+    protected boolean isChanting=false;
     public BaseSkill(EntityLivingBase speller,int maxCooldown,float abilityExp)
     {
         this.maxCooldown=maxCooldown;
@@ -34,11 +35,18 @@ public abstract class BaseSkill
 
     public boolean isSkillInCooldown(){return remainCooldown!=0;}
 
+    public boolean isChanting(){return isChanting;}
     @SubscribeEvent
     public void onServerTick(ServerTickEvent event)
     {
-        if(remainCooldown>0)
+        onTick();
+        if(remainCooldown>0 && !isChanting)
             remainCooldown--;
+    }
+
+    protected void onTick()
+    {
+
     }
 
     public void spell()

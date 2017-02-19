@@ -30,7 +30,7 @@ public class EntityMineRayNative extends EntityAdvanced
     public long blendOutTime = 300;
     public long widthShrinkTime = 300;
 
-    public double length = 15.0;
+    public double length;
 
     public double widthWiggleRadius = 0.1;
     public double maxWiggleSpeed = 0.4;
@@ -48,8 +48,10 @@ public class EntityMineRayNative extends EntityAdvanced
     /**
      * This just link the ray to a player. You still have to setup the view direction based on the ray type.
      */
-    public EntityMineRayNative(EntityLivingBase speller) {
+    public EntityMineRayNative(EntityLivingBase speller,double len)
+    {
         this(speller.worldObj);
+        length=len;
         spawner = speller;
     }
 
