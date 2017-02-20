@@ -48,6 +48,7 @@ public class AIMineRay extends BaseSkill
             return;
         isChanting=true;
         rayEffect = new EntityMineRayNative(speller,maxDist);
+
         speller.worldObj.spawnEntityInWorld(rayEffect);
         super.spell();
     }
@@ -56,8 +57,12 @@ public class AIMineRay extends BaseSkill
     protected void onTick()
     {
         if(!isChanting || rayEffect==null||rayEffect.isDead|| speller.isDead||maxTime<=0)
+        {
             stop();
+            return ;
+        }
         maxTime--;
+
         MovingObjectPosition result = Raytrace.traceLiving(speller, maxDist, EntitySelectors.nothing());
         if(result!=null)
         {
@@ -79,6 +84,7 @@ public class AIMineRay extends BaseSkill
                         world.playSoundEffect(x + 0.5, y + 0.5, z + 0.5, block.stepSound.getBreakSound(), .5f, 1f);
                         block.dropBlockAsItemWithChance(world, x, y, z, world.getBlockMetadata(x, y, z),0.5f,0);
                         world.setBlock(x, y, z, Blocks.air);
+                        x=y=z=-1;
                     }
                 }
                 else

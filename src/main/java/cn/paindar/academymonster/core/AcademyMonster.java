@@ -72,7 +72,7 @@ public class AcademyMonster
         registerSkill(AIPenetrateTeleport.class, 2,EntityAIPenetrateTeleport.class,4);
         registerSkill(AIRailgun.class, 0.5f,EntityAIRailgun.class,5);
         registerSkill(AIArcGen.class,1,EntityAIArcGen.class,5);
-        registerSkill(AIMineRay.class,70f,EntityAIMineRay.class,5);
+        //registerSkill(AIMineRay.class,2f,EntityAIMineRay.class,5);
     }
 
     @EventHandler
@@ -182,7 +182,7 @@ public class AcademyMonster
         }
         SkillExtendedEntityProperties info= SkillExtendedEntityProperties.get(entity);
         info.setSkillData(string);
-        AcademyMonster.log.info("entity "+entity+" have ability:" +info.getSkillData());
+        //AcademyMonster.log.info("entity "+entity+" have ability:" +info.getSkillData());
     }
 
     public void refreshSkills(EntityLiving entity,String skillStr)

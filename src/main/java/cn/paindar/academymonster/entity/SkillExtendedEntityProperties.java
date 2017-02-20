@@ -19,8 +19,8 @@ import net.minecraftforge.common.util.Constants;
  */
 public class SkillExtendedEntityProperties implements IExtendedEntityProperties
 {
-    public static final String PROP_NAME= AcademyMonster.MODID;
-    private String skillData=new String();
+    private static final String PROP_NAME= AcademyMonster.MODID;
+    private String skillData="";
 
     public static SkillExtendedEntityProperties get(Entity e)
     {
