@@ -126,14 +126,11 @@ public class AIMScannerUI extends AuxGui
     long createTime;
     long lastFrameTime;
 
-    int selection = 0;
-    List<String> skillList = new ArrayList<>();
 
     public AIMScannerUI() {
         gui = new CGui();
         gui.addWidget(root = loaded.getWidget("backBroad").copy());
         requireTicking=true;
-        //MinecraftForge.EVENT_BUS.register(this);
 
         initGui();
     }
@@ -208,8 +205,9 @@ public class AIMScannerUI extends AuxGui
                         root.getWidget("monsterName").getComponent(TextBox.class).setContent(tPlayer.getDisplayName()+" "+data.getCategory().getDisplayName() +" Level "+data.getLevel());
                         Widget list = root.getWidget("skill");
                         int num = 1;
-                        for(Skill skill:data.getCategory().getSkillList())
+                        for(Skill skill:data.getLearnedSkillList())
                         {
+
                             Widget widget = skillItem.copy().pos(30, 30 * num);
                             num++;
                             widget.getComponent(TextBox.class).setContent(StatCollector.translateToLocal(skill.getDisplayName()));
