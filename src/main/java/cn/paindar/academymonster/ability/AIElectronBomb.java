@@ -23,16 +23,13 @@ import static cn.lambdalib.util.generic.MathUtils.lerpf;
  */
 public class AIElectronBomb extends BaseSkill
 {
-    {
-        skillName=ElectronBomb.getFullName();
-    }
     private float maxDistance;
     private float damage;
 
-    public AIElectronBomb(EntityLivingBase speller,float abilityExp) {
-        super(speller,(int)lerpf(40,10, abilityExp), abilityExp);
-        damage=lerpf(6, 12, abilityExp);
-        maxDistance=lerpf(7,15,abilityExp);
+    public AIElectronBomb(EntityLivingBase speller,float exp) {
+        super(speller,(int)lerpf(40,10, exp), exp,ElectronBomb.getFullName());
+        damage=lerpf(6, 12, exp);
+        maxDistance=lerpf(7,15,exp);
     }
     public float getMaxDistance(){return maxDistance;}
 

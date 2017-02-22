@@ -19,13 +19,14 @@ public abstract class BaseSkill
     private int remainCooldown=0;
     private float skillExp;
     protected EntityLivingBase speller;
-    protected static String skillName;
-    protected boolean isChanting=false;
-    public BaseSkill(EntityLivingBase speller,int maxCooldown,float abilityExp)
+    protected String skillName;
+    boolean isChanting=false;
+    public BaseSkill(EntityLivingBase speller,int maxCooldown,float abilityExp,String name)
     {
         this.maxCooldown=maxCooldown;
         this.skillExp=abilityExp;
         this.speller=speller;
+        this.skillName=name;
         FMLCommonHandler.instance().bus().register(this);
     }
 
@@ -78,8 +79,8 @@ public abstract class BaseSkill
         }
         return true;
     }
-    public static String getUnlocalizedSkillName(){return "ac.ability." + skillName + ".name";}
-    public static String getSkillName(){return StatCollector.translateToLocal(skillName);}
+    public String getUnlocalizedSkillName(){return "ac.ability." + skillName + ".name";}
+    public String getSkillName(){return StatCollector.translateToLocal(skillName);}
 
 
 }

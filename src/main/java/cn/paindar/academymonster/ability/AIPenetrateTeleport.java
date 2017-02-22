@@ -17,12 +17,9 @@ import static cn.lambdalib.util.generic.MathUtils.lerpf;
  */
 public class AIPenetrateTeleport extends BaseSkill
 {
-    {
-        skillName=PenetrateTeleport.getFullName();
-    }
     private float maxDistance;
-    public AIPenetrateTeleport(EntityLivingBase speller,float abilityExp) {
-        super(speller,(int)lerpf(200, 100, abilityExp), abilityExp);
+    public AIPenetrateTeleport(EntityLivingBase speller,float exp) {
+        super(speller,(int)lerpf(200, 100, exp), exp,PenetrateTeleport.getFullName());
         maxDistance=lerpf(3,10, getSkillExp());
     }
 

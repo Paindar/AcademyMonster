@@ -19,9 +19,6 @@ import static cn.lambdalib.util.generic.MathUtils.lerpf;
  */
 public class AIMineRay extends BaseSkill
 {
-    {
-        skillName= "MineRay";
-    }
 
     private float maxDist;
     private EntityMineRayNative rayEffect;
@@ -31,7 +28,7 @@ public class AIMineRay extends BaseSkill
     private int x=0,y=0,z=0;
     public AIMineRay(EntityLivingBase speller, float exp)
     {
-        super(speller, (int)lerpf(10,5,exp), exp);
+        super(speller, (int)lerpf(10,5,exp), exp,"MineRay");
         maxDist=lerpf(7,15,exp);
         maxTime=(int)lerp(5,10,exp);
         spd=lerpf(0.3f,0.7f,exp);

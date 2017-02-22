@@ -21,15 +21,13 @@ import static cn.lambdalib.util.generic.MathUtils.lerpf;
  */
 public class AIDirectedShock extends BaseSkill
 {
-    {
-        skillName=DirectedShock.getFullName();
-    }
+
     private final float maxDistance=3;
     private float damage;
-    public AIDirectedShock(EntityLivingBase speller, float abilityExp)
+    public AIDirectedShock(EntityLivingBase speller, float exp)
     {
-        super(speller, (int)lerpf(60, 20, abilityExp), abilityExp);
-        damage=lerpf(7, 15,abilityExp);
+        super(speller, (int)lerpf(60, 20, exp), exp,DirectedShock.getFullName());
+        damage=lerpf(7, 15,exp);
     }
 
     private void knockback(Entity targ)
@@ -38,7 +36,7 @@ public class AIDirectedShock extends BaseSkill
         {
             Vec3 slope=speller.getLookVec();
             targ.setPosition(targ.posX, targ.posY + 0.1, targ.posZ);
-            targ.setVelocity(slope.xCoord*3f,slope.yCoord*3f,slope.zCoord*3f);
+            if(targ.worldObj.isRemote)targ.setVelocity(slope.xCoord*3f,slope.yCoord*3f,slope.zCoord*3f);
         }
     }
 

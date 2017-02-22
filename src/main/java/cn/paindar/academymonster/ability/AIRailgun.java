@@ -36,9 +36,6 @@ import static cn.lambdalib.util.generic.VecUtils.*;
  */
 public class AIRailgun extends BaseSkill
 {
-    {
-        skillName=Railgun.getFullName();
-    }
     private static final double STEP = 0.5;
     private float damage;
     private float range =2;
@@ -46,7 +43,7 @@ public class AIRailgun extends BaseSkill
     private EntityCoinThrowingNative coin;
     public AIRailgun(EntityLivingBase speller, float exp)
     {
-        super(speller, (int)lerpf(800, 600, exp), exp);
+        super(speller, (int)lerpf(800, 600, exp), exp,Railgun.getFullName());
         maxIncrement=(int)lerpf(12,25,exp);
         damage=lerpf(20, 50, exp);
     }
