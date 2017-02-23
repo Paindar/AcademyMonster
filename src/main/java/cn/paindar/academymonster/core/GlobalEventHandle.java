@@ -41,7 +41,6 @@ public class GlobalEventHandle
 
             for (EntityPlayer entityPlayer : tracker.getTrackingPlayers(event.entity)) {
                 NetworkManager.sendEntitySkillInfoTo((EntityLiving)event.entity, (EntityPlayerMP)entityPlayer);
-                AcademyMonster.log.info(" send "+event.entity+" to "+entityPlayer);
             }
         }
     }

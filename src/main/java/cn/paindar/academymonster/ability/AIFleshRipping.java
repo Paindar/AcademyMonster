@@ -19,14 +19,11 @@ import static cn.lambdalib.util.generic.MathUtils.lerpf;
  */
 public class AIFleshRipping extends BaseSkill
 {
-    {
-        skillName=FleshRipping.getFullName();
-    }
     private float maxDistance;
     private float damage;
     public AIFleshRipping(EntityLivingBase speller, float skillExp)
     {
-        super(speller, (int)lerpf(90, 40, skillExp), skillExp);
+        super(speller, (int)lerpf(90, 40, skillExp), skillExp,FleshRipping.getFullName());
         maxDistance=lerpf(2, 5, skillExp);
         damage=lerpf(5, 12, skillExp);
     }

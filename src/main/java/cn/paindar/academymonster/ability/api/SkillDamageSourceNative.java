@@ -24,7 +24,7 @@ public class SkillDamageSourceNative extends EntityDamageSource {
         return new ChatComponentTranslation("death.attack.ac_skill",
                 target.getCommandSenderName(),
                 this.damageSourceEntity.getCommandSenderName(),
-                BaseSkill.getSkillName());
+                skill.getSkillName());
     }
 
 }

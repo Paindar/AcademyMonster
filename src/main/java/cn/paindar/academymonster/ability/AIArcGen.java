@@ -27,16 +27,14 @@ import static cn.lambdalib.util.generic.MathUtils.lerpf;
  */
 public class AIArcGen extends BaseSkill
 {
-    {
-        skillName= ArcGen.getFullName();
-    }
+
     private float damage;
     private float range ;
     private float prob;
     private float slowdown;
     public AIArcGen(EntityLivingBase speller, float exp)
     {
-        super(speller, (int)lerpf(40,20,exp), exp);
+        super(speller, (int)lerpf(40,20,exp), exp,ArcGen.getFullName());
         damage=lerpf(5,9,exp);
         range=lerpf(6,15,exp);
         prob=lerpf(0,0.6f,exp);

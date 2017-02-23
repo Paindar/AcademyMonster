@@ -3,3 +3,4 @@ am.app.aim_scanner_skill_list.name=Skill List:
 ac.settings.prop.open_aim_scanner=Open AIM Scanner
 am.aim_scanner_skill_list.notinstalled=You have not yet installed the AIM Scanner app.
 ac.app.aim_scanner.name=AIM Scanner
+ac.ability.MineRay.name=Mine Ray

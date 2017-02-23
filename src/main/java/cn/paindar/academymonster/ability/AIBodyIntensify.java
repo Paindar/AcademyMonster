@@ -13,12 +13,9 @@ import static cn.lambdalib.util.generic.MathUtils.lerpf;
  */
 public class AIBodyIntensify extends BaseSkill
 {
+    public AIBodyIntensify(EntityLivingBase speller, float exp)
     {
-        skillName=BodyIntensify.getFullName();
-    }
-    public AIBodyIntensify(EntityLivingBase speller, float abilityExp)
-    {
-        super(speller, (int)lerpf(900, 600,abilityExp), abilityExp);
+        super(speller, (int)lerpf(300, 100,exp), exp,BodyIntensify.getFullName());
     }
 
 
