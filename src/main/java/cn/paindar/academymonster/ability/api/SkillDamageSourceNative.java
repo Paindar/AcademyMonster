@@ -5,6 +5,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.EntityDamageSource;
 import net.minecraft.util.IChatComponent;
+import net.minecraft.util.StatCollector;
 
 /**
  * Created by Paindar on 2017/2/10.
@@ -24,7 +25,7 @@ public class SkillDamageSourceNative extends EntityDamageSource {
         return new ChatComponentTranslation("death.attack.ac_skill",
                 target.getCommandSenderName(),
                 this.damageSourceEntity.getCommandSenderName(),
-                skill.getSkillName());
+                StatCollector.translateToLocal(skill.getUnlocalizedSkillName()));
     }
 
 }
