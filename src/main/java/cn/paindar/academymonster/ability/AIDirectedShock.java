@@ -21,7 +21,6 @@ import static cn.lambdalib.util.generic.MathUtils.lerpf;
  */
 public class AIDirectedShock extends BaseSkill
 {
-
     private final float maxDistance=3;
     private float damage;
     public AIDirectedShock(EntityLivingBase speller, float exp)
@@ -55,7 +54,7 @@ public class AIDirectedShock extends BaseSkill
                 List<Entity> list= WorldUtils.getEntities(speller, 25, EntitySelectors.player());
                 for(Entity e:list)
                 {
-                    NetworkManager.sendSoundTo("vecmanip.directed_shock",(EntityLivingBase) speller,0.5f,(EntityPlayerMP)e);
+                    NetworkManager.sendSoundTo("vecmanip.directed_shock",speller,0.5f,(EntityPlayerMP)e);
                 }
             }
         }

@@ -29,7 +29,7 @@ public class MessageSound  implements IMessage
         {
             if (ctx.side == Side.CLIENT)
             {
-                if(msg.nbt.hasKey("target"))
+                if(msg.nbt.hasKey("target")&&Minecraft.getMinecraft().theWorld.getEntityByID(msg.nbt.getInteger("target"))!=null)
                     ACSounds.playClient(Minecraft.getMinecraft().theWorld.getEntityByID(msg.nbt.getInteger("target"))
                             ,msg.nbt.getString("sound")
                             ,msg.nbt.getFloat("vol"));
