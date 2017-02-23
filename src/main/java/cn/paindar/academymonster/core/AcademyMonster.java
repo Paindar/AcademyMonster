@@ -65,13 +65,15 @@ public class AcademyMonster
     }
     void initSkill()
     {
+        registerSkill(AIArcGen.class,1,EntityAIArcGen.class,5);
         registerSkill(AIBodyIntensify.class, 1,EntityAIBodyIntensify.class,5);
         registerSkill(AIDirectedShock.class, 2,EntityAIDirectedShock.class,5);
         registerSkill(AIElectronBomb.class, 1,EntityAIElectronBomb.class,5);
         registerSkill(AIFleshRipping.class, 1,EntityAIFleshRipping.class,5);
         registerSkill(AIPenetrateTeleport.class, 2,EntityAIPenetrateTeleport.class,4);
-        registerSkill(AIRailgun.class, 0.5f,EntityAIRailgun.class,5);
-        registerSkill(AIArcGen.class,1,EntityAIArcGen.class,5);
+        registerSkill(AIRailgun.class, 0.3f,EntityAIRailgun.class,5);
+        registerSkill(AIThunderClap.class,0.4f,EntityAIThunderClap.class,5);
+
         //registerSkill(AIMineRay.class,2f,EntityAIMineRay.class,5);
     }
 
