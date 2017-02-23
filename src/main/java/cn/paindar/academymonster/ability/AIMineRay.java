@@ -3,6 +3,7 @@ package cn.paindar.academymonster.ability;
 import cn.academy.core.event.BlockDestroyEvent;
 import cn.lambdalib.util.mc.EntitySelectors;
 import cn.lambdalib.util.mc.Raytrace;
+import cn.paindar.academymonster.ability.effect.EffectManager;
 import cn.paindar.academymonster.entity.EntityMineRayNative;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityLivingBase;
@@ -26,6 +27,7 @@ public class AIMineRay extends BaseSkill
     private float spd;
     private float remainHardness;
     private int x=0,y=0,z=0;
+    private int effectId;
     public AIMineRay(EntityLivingBase speller, float exp)
     {
         super(speller, (int)lerpf(10,5,exp), exp,"MineRay");
@@ -45,7 +47,7 @@ public class AIMineRay extends BaseSkill
             return;
         isChanting=true;
         rayEffect = new EntityMineRayNative(speller,maxDist);
-
+        effectId= EffectManager.addEffect(rayEffect);
         speller.worldObj.spawnEntityInWorld(rayEffect);
         super.spell();
     }
@@ -93,6 +95,7 @@ public class AIMineRay extends BaseSkill
     public void stop()
     {
         isChanting=false;
+        EffectManager.removeEffect(effectId);
         if(rayEffect!=null)
             rayEffect.setDead();
 

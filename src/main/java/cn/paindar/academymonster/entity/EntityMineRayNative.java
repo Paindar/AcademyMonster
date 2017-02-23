@@ -114,6 +114,7 @@ public class EntityMineRayNative extends Entity
         posX = tag.getDouble("x");
         posY = tag.getDouble("y");
         posZ = tag.getDouble("z");
+        spawner=(EntityLivingBase) this.worldObj.getEntityByID(tag.getInteger("spawnId"));
     }
 
     @Override
@@ -121,6 +122,7 @@ public class EntityMineRayNative extends Entity
         tag.setDouble("x", posX);
         tag.setDouble("y", posY);
         tag.setDouble("z", posZ);
+        tag.setInteger("spawnId",spawner.getEntityId());
     }
 
     public long getLifeMS() {
