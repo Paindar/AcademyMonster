@@ -2,6 +2,8 @@ package cn.paindar.academymonster.entity;
 
 import cn.academy.vanilla.electromaster.client.renderer.RendererCoinThrowing;
 import cn.academy.vanilla.meltdowner.entity.EntityMdBall;
+import cn.academy.vanilla.meltdowner.entity.EntityMineRayBasic;
+import cn.academy.vanilla.meltdowner.entity.EntityMineRayExpert;
 import cn.paindar.academymonster.core.AcademyMonster;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.common.registry.EntityRegistry;
@@ -32,6 +34,11 @@ public class EntityLoader
         registerEntityRender(EntityRailgunFXNative.class,new EntityRailgunFXNative.R());
         registerEntityRender(EntityArcNative.class,new EntityArcNative.Renderer());
         registerEntityRender(EntityMineRayNative.class,new EntityMineRayNative.R());
+    }
+
+    public static void registerEntity()
+    {
+        registerEntity(EntityMineRayNative.class,"am_mine_ray_eff",15,5,true);
     }
 
     @SideOnly(Side.CLIENT)

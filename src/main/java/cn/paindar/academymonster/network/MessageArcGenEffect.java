@@ -4,6 +4,7 @@ package cn.paindar.academymonster.network;
 import cn.academy.core.client.sound.ACSounds;
 import cn.academy.vanilla.electromaster.client.effect.ArcPatterns;
 import cn.lambdalib.util.entityx.handlers.Life;
+import cn.paindar.academymonster.core.AcademyMonster;
 import cn.paindar.academymonster.entity.EntityArcNative;
 import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
@@ -32,8 +33,13 @@ public class MessageArcGenEffect implements IMessage
             if (ctx.side == Side.CLIENT)
             {
                 World world=Minecraft.getMinecraft().theWorld;
-                EntityLivingBase target=(EntityLivingBase) world.getEntityByID(msg.nbt.getInteger("id"));
-                EntityArcNative arc = new EntityArcNative(target, ArcPatterns.weakArc);
+                EntityLivingBase speller=(EntityLivingBase) world.getEntityByID(msg.nbt.getInteger("id"));
+                if(speller==null)
+                {
+                    AcademyMonster.log.warn(msg.nbt.getInteger("id")+" is a invalid entity id.");
+                    return null;
+                }
+                EntityArcNative arc = new EntityArcNative(speller, ArcPatterns.weakArc);
                 arc.texWiggle = 0.7;
                 arc.showWiggle = 0.1;
                 arc.hideWiggle = 0.4;
@@ -42,7 +48,7 @@ public class MessageArcGenEffect implements IMessage
                 arc.length = msg.nbt.getFloat("range");
 
                 world.spawnEntityInWorld(arc);
-                ACSounds.playClient(target, "em.arc_weak", 0.5f);
+                ACSounds.playClient(speller, "em.arc_weak", 0.5f);
             }
             return null;
         }

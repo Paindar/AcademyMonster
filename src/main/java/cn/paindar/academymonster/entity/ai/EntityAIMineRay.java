@@ -6,11 +6,11 @@ import cn.lambdalib.util.mc.EntitySelectors;
 import cn.lambdalib.util.mc.Raytrace;
 import cn.paindar.academymonster.ability.AIMineRay;
 import net.minecraft.block.Block;
-import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.Vec3;
 import net.minecraftforge.common.MinecraftForge;
 
 /**
@@ -34,7 +34,7 @@ public class EntityAIMineRay extends EntityAIBase
     public boolean shouldExecute()
     {
         EntityLivingBase target=speller.getAttackTarget();
-        return target!=null&&!skill.isSkillInCooldown()&&speller.getNavigator().noPath();
+        return target!=null&&skill.available()&&speller.getNavigator().noPath();
     }
 
     public void startExecuting()
@@ -44,9 +44,14 @@ public class EntityAIMineRay extends EntityAIBase
 
     public void resetTask()
     {
-        if(skill.isChanting())
+        MovingObjectPosition trace = Raytrace.rayTraceBlocks(speller.worldObj, Vec3.createVectorHelper(speller.posX,speller.posY,speller.posZ),
+                Vec3.createVectorHelper(target.posX,target.posY,target.posZ),BlockSelectors.filNormal);
+        if(trace==null)
+        {
             skill.stop();
-        this.target = null;
+            this.target = null;
+        }
+
     }
 
     public void updateTask(){
@@ -56,12 +61,10 @@ public class EntityAIMineRay extends EntityAIBase
             if(trace==null)
                 return ;
             Block block=speller.worldObj.getBlock(trace.blockX,trace.blockY,trace.blockZ);
-            if(!MinecraftForge.EVENT_BUS.post(new BlockDestroyEvent(speller.worldObj, trace.blockX,trace.blockY,trace.blockZ))&&!skill.isChanting())
+            if(!MinecraftForge.EVENT_BUS.post(new BlockDestroyEvent(speller.worldObj, trace.blockX,trace.blockY,trace.blockZ))&&skill.available())
             {
                 skill.spell();
             }
-            else
-            if(skill.isChanting())skill.stop();
         }
     }
 }

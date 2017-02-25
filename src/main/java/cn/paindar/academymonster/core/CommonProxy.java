@@ -23,6 +23,7 @@ public class CommonProxy
     public void preInit(FMLPreInitializationEvent event)
     {
         new EntityLoader();
+        EntityLoader.registerEntity();
         AMConfig.init(event);
         AcademyMonster.instance.initSkill();
         NetworkManager.init(event);

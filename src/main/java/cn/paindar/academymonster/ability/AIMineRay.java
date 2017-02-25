@@ -1,7 +1,7 @@
 package cn.paindar.academymonster.ability;
 
 import cn.academy.core.event.BlockDestroyEvent;
-import cn.lambdalib.util.mc.EntitySelectors;
+import cn.lambdalib.util.mc.BlockSelectors;
 import cn.lambdalib.util.mc.Raytrace;
 import cn.paindar.academymonster.entity.EntityMineRayNative;
 import net.minecraft.block.Block;
@@ -19,20 +19,19 @@ import static cn.lambdalib.util.generic.MathUtils.lerpf;
  */
 public class AIMineRay extends BaseSkill
 {
-
     private float maxDist;
     private EntityMineRayNative rayEffect;
     private int maxTime;
+    private int time;
     private float spd;
     private float remainHardness;
     private int x=0,y=0,z=0;
-    private int effectId;
     public AIMineRay(EntityLivingBase speller, float exp)
     {
-        super(speller, (int)lerpf(10,5,exp), exp,"MineRay");
-        maxDist=lerpf(7,15,exp);
-        maxTime=(int)lerp(5,10,exp);
-        spd=lerpf(0.3f,0.7f,exp);
+        super(speller, (int)lerpf(20,10,exp), exp,"MineRay");
+        maxDist=lerpf(3,7,exp);
+        maxTime=(int)lerp(200,400,exp);
+        spd=lerpf(0.1f,0.4f,exp);
     }
 
     public float getMaxDistance()
@@ -47,20 +46,25 @@ public class AIMineRay extends BaseSkill
         isChanting=true;
         rayEffect = new EntityMineRayNative(speller,maxDist);
         speller.worldObj.spawnEntityInWorld(rayEffect);
-        super.spell();
+        time=0;
     }
 
     @Override
     protected void onTick()
     {
-        if(!isChanting || rayEffect==null||rayEffect.isDead|| speller.isDead||maxTime<=0)
+        if(!isChanting)
+            return;
+        if( rayEffect==null||rayEffect.isDead|| speller.isDead||maxTime<=time)
         {
-            stop();
+            if(isChanting)
+            {
+                stop();
+            }
             return ;
         }
-        maxTime--;
+        time++;
 
-        MovingObjectPosition result = Raytrace.traceLiving(speller, maxDist, EntitySelectors.nothing());
+        MovingObjectPosition result = Raytrace.traceLiving(speller, maxDist,null, BlockSelectors.filNormal);
         if(result!=null)
         {
             int tx=result.blockX,ty=result.blockY,tz=result.blockZ;
@@ -93,8 +97,8 @@ public class AIMineRay extends BaseSkill
     public void stop()
     {
         isChanting=false;
+        super.spell();
         if(rayEffect!=null)
             rayEffect.setDead();
-
     }
 }
