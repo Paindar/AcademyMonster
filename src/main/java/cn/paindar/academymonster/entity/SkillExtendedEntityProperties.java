@@ -43,7 +43,13 @@ public class SkillExtendedEntityProperties implements IExtendedEntityProperties
     @Override
     public void saveNBTData(NBTTagCompound compound)
     {
-        NBTTagCompound propertyData = new NBTTagCompound();
+        NBTTagCompound propertyData;
+        if(compound.hasKey(PROP_NAME, Constants.NBT.TAG_COMPOUND))
+        {
+            propertyData = compound.getCompoundTag(PROP_NAME);
+        }
+        else
+            propertyData = new NBTTagCompound();
         propertyData.setString(AcademyMonster.MODID,skillData)  ;
         compound.setTag(PROP_NAME, propertyData);
     }

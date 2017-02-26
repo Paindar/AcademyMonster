@@ -8,6 +8,7 @@ import net.minecraft.entity.EntityTracker;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.world.WorldServer;
+import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 
@@ -22,12 +23,19 @@ public class GlobalEventHandle
     }
 
     @SubscribeEvent
+    public void onEntityConstruct(EntityEvent.EntityConstructing event)
+    {
+        SkillExtendedEntityProperties data = SkillExtendedEntityProperties.get(event.entity);
+    }
+
+    @SubscribeEvent
     public void onEntityJoinedWorld(EntityJoinWorldEvent  event)
     {
         if(!event.world.isRemote && event.entity instanceof EntityLiving)
         {
             SkillExtendedEntityProperties data = SkillExtendedEntityProperties.get(event.entity);
             String savedSkills=data.getSkillData();
+            //AcademyMonster.log.info("entity "+event.entity+" have skills:"+savedSkills);
             if(savedSkills.equals(""))
             {
                 AcademyMonster.instance.addSkill((EntityLiving)event.entity);
