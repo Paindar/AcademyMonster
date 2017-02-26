@@ -40,7 +40,7 @@ public class EntityLoader
 
     public static void registerEntity()
     {
-        registerEntity(EntityMineRayNative.class,"am_mine_ray_eff",15,5,true);
+        registerEntity(EntityMineRayNative.class,"am_mine_ray_eff",15,1,true);
         registerEntity(EntityLightShield.class,"am_light_shield_eff",15,1,true);
     }
 
