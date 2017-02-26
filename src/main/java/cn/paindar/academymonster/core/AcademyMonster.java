@@ -24,6 +24,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +44,7 @@ public class AcademyMonster
     public static final Logger log = LogManager.getLogger("AcademyMonster");
     @SidedProxy(clientSide = "cn.paindar.academymonster.core.ClientProxy",
             serverSide = "cn.paindar.academymonster.core.CommonProxy")
-    public static CommonProxy proxy;
+    private static CommonProxy proxy;
     @Instance
     public static AcademyMonster instance;
     private static List<Class<? extends BaseSkill>> skillList=new ArrayList<>();
@@ -70,11 +71,11 @@ public class AcademyMonster
         registerSkill(AIDirectedShock.class, 2,EntityAIDirectedShock.class,5);
         registerSkill(AIElectronBomb.class, 1,EntityAIElectronBomb.class,5);
         registerSkill(AIFleshRipping.class, 1,EntityAIFleshRipping.class,5);
+        registerSkill(AIMineRay.class,0.7f,EntityAIMineRay.class,5);
         registerSkill(AIPenetrateTeleport.class, 2,EntityAIPenetrateTeleport.class,4);
         registerSkill(AIRailgun.class, 0.3f,EntityAIRailgun.class,5);
         registerSkill(AIThunderClap.class,0.4f,EntityAIThunderClap.class,5);
 
-        //registerSkill(AIMineRay.class,2f,EntityAIMineRay.class,5);
     }
 
     @EventHandler
@@ -195,9 +196,33 @@ public class AcademyMonster
         {
             try
             {
+                String name="";
+                try
+                {
+                    Constructor constructor;
+                    BaseSkill skill;
+                    Constructor[] tempConstructor;
+                    Class[] parameterTypes;
+                    float randExp=RandUtils.rangef(0, 1);
+                    try
+                    {
+                        constructor = skillClass.getConstructor(EntityLivingBase.class, float.class);
+                        skill = (BaseSkill) constructor.newInstance(null,0);
+                        name=skill.getUnlocalizedSkillName();
 
-                Method method=skillClass.getMethod("getUnlocalizedSkillName");
-                String name=(String) method.invoke(skillClass);
+                    }
+                    catch(Exception e)
+                    {
+                        AcademyMonster.log.error("No such constructor: (EntityLivingBase.class, float.class)");
+                        e.printStackTrace();
+                        throw new RuntimeException();
+                    }
+
+                }
+                catch(Exception e)
+                {
+                    e.printStackTrace();
+                }
                 for(String item:strList)
                 {
                     String[] skillInfo=item.split("~");
@@ -244,7 +269,6 @@ public class AcademyMonster
             catch (Exception e)
             {
                 e.printStackTrace();
-                throw new RuntimeException();
             }
 
         }

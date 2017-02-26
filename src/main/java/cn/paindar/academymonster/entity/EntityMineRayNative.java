@@ -1,9 +1,6 @@
 package cn.paindar.academymonster.entity;
 
-import cn.academy.core.client.render.RendererList;
 import cn.academy.core.client.render.ray.RendererRayComposite;
-import cn.academy.core.client.render.ray.RendererRayCylinder;
-import cn.academy.core.client.render.ray.RendererRayGlow;
 import cn.academy.core.entity.IRay;
 import cn.academy.vanilla.meltdowner.client.render.MdParticleFactory;
 import cn.lambdalib.particle.Particle;
@@ -13,29 +10,34 @@ import cn.lambdalib.util.generic.RandUtils;
 import cn.lambdalib.util.generic.VecUtils;
 import cn.lambdalib.util.helper.GameTimer;
 import cn.lambdalib.util.helper.Motion3D;
-import cn.paindar.academymonster.core.AcademyMonster;
+import cn.lambdalib.util.mc.BlockSelectors;
+import cn.lambdalib.util.mc.Raytrace;
+import cpw.mods.fml.common.network.ByteBufUtils;
+import cpw.mods.fml.common.registry.IEntityAdditionalSpawnData;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 
 /**
  * Created by Paindar on 2017/2/17.
  */
-public class EntityMineRayNative extends Entity
+public class EntityMineRayNative extends EntityAdvanced implements IRay,IEntityAdditionalSpawnData
 {
 
     private EntityLivingBase spawner;
-
-    private int life = 30;
 
     private long blendInTime = 100;
 
     private long blendOutTime = 300;
     private long widthShrinkTime = 300;
-
+    private double maxDist;
     private double length;
 
     private double widthWiggleRadius = 0.1;
@@ -48,23 +50,27 @@ public class EntityMineRayNative extends Entity
 
     private long lastFrame = 0;
     private long creationTime;
+    private int life=23333333;
 
 
     public EntityMineRayNative(EntityLivingBase speller,double len)
     {
         this(speller.worldObj);
-        length=len;
+        maxDist=len;
         spawner = speller;
         this.setPositionAndRotation(speller.posX,speller.posY,speller.posZ,0f,0f);
         this.blendInTime = 200;
         this.blendOutTime = 400;
-        this.life = 233333;
     }
 
-    public EntityMineRayNative(World world) {
+    public EntityMineRayNative(World world)
+    {
         super(world);
         creationTime = GameTimer.getTime();
-        ignoreFrustumCheck = false;
+        ignoreFrustumCheck = true;
+    }
+    public void setFromTo(Vec3 from, Vec3 to) {
+        setFromTo(from.xCoord, from.yCoord, from.zCoord, to.xCoord, to.yCoord, to.zCoord);
     }
 
     public void setFromTo(double x0, double y0, double z0, double x1, double y1, double z1) {
@@ -78,30 +84,29 @@ public class EntityMineRayNative extends Entity
         length = Math.sqrt(dxzsq + dy * dy);
     }
 
-    protected void entityInit()
-    {
-        this.dataWatcher.addObject(7, Integer.valueOf(0));
-        this.dataWatcher.addObject(8, Byte.valueOf((byte)0));
-        this.dataWatcher.addObject(9, Byte.valueOf((byte)0));
-        this.dataWatcher.addObject(6, Float.valueOf(1.0F));
-    }
-
-    public void onUpdate() {
-        super.onUpdate();
-        EntityLivingBase speller = this.spawner;
-        Vec3 end = new Motion3D(speller, true).move(15).getPosVec();
-        this.setFromTo(speller.posX, speller.posY +  1.6, speller.posZ, end.xCoord, end.yCoord, end.zCoord);
-        this.dataWatcher.updateObject(6, Float.valueOf(1.0F));
-        if(RandUtils.nextDouble() < 0.5) {
-            Particle p = MdParticleFactory.INSTANCE.next(worldObj,
-                    new Motion3D(this, true).move(RandUtils.ranged(0, 10)).getPosVec(),
-                    VecUtils.vec(RandUtils.ranged(-.03, .03), RandUtils.ranged(-.03, .03), RandUtils.ranged(-.03, .03)));
-            worldObj.spawnEntityInWorld(p);
-        }
+    @Override
+    protected void onFirstUpdate() {
+        executeAfter(new EntityCallback() {
+            @Override
+            public void execute(Entity target) {
+                setDead();
+            }
+        }, life);
     }
 
     protected long getDeltaTime() {
         return GameTimer.getTime() - creationTime;
+    }
+
+    @Override
+    public Vec3 getPosition() {
+        return Vec3.createVectorHelper(posX, posY, posZ);
+    }
+
+    @Override
+    public double getLength() {
+        long dt = GameTimer.getTime() - creationTime;
+        return (dt < blendInTime ? (double)dt / blendInTime : 1) * length;
     }
 
     @Override
@@ -114,7 +119,6 @@ public class EntityMineRayNative extends Entity
         posX = tag.getDouble("x");
         posY = tag.getDouble("y");
         posZ = tag.getDouble("z");
-        spawner=(EntityLivingBase) this.worldObj.getEntityByID(tag.getInteger("spawnId"));
     }
 
     @Override
@@ -122,22 +126,41 @@ public class EntityMineRayNative extends Entity
         tag.setDouble("x", posX);
         tag.setDouble("y", posY);
         tag.setDouble("z", posZ);
-        tag.setInteger("spawnId",spawner.getEntityId());
     }
 
     public long getLifeMS() {
         return life * 50;
     }
 
+    //TODO Add glow texture alpha wiggle
+    @Override
     public double getAlpha() {
         long dt = getDeltaTime();
         long lifeMS = getLifeMS();
         return dt > lifeMS - blendOutTime ? 1 - (double) (dt + blendOutTime - lifeMS) / blendOutTime : 1.0;
     }
 
-    void onRenderTick() {
+    @Override
+    public double getWidth() {
+        long dt = getDeltaTime();
+        long lifeMS = getLifeMS();
+        return widthWiggle +
+                (dt > lifeMS - widthShrinkTime ? 1 - (double) (dt + widthShrinkTime - lifeMS) / widthShrinkTime : 1.0);
+    }
+
+    @Override
+    public boolean needsViewOptimize() {
+        return false;
+    }
+
+    @Override
+    public double getStartFix() {
+        return 0.0;
+    }
+
+    @Override
+    public void onRenderTick() {
         long time = GameTimer.getTime();
-        AcademyMonster.log.info("render.");
         if(lastFrame != 0) {
             long dt = time - lastFrame;
             widthWiggle += dt * RandUtils.ranged(-maxWiggleSpeed, maxWiggleSpeed) / 1000.0;
@@ -156,41 +179,99 @@ public class EntityMineRayNative extends Entity
         lastFrame = GameTimer.getTime();
     }
 
-    public static class R extends RendererList
-    {
-        RendererRayGlow glow;
-        RendererRayCylinder cylinderIn, cylinderOut;
+    @Override
+    public double getGlowAlpha() {
+        long dt = GameTimer.getTime() - creationTime;
+        long lifeMS = getLifeMS();
+        return (1 - glowWiggleRadius + glowWiggle) * getAlpha();
+    }
 
-        R() {
-            append(glow = RendererRayGlow.createFromName("mdray_small"));
-            append(cylinderIn = new RendererRayCylinder(0.05f));
-            append(cylinderOut = new RendererRayCylinder(0.08f));
-            cylinderIn.headFix = 0.98;
-            this.cylinderIn.width = 0.03;
+
+    @SideOnly(Side.CLIENT)
+    public void onUpdate()
+    {
+        EntityLivingBase speller = this.spawner;
+        if(speller==null)
+        {
+            setDead();
+            return;
+        }
+        MovingObjectPosition result = Raytrace.traceLiving(speller, maxDist,null, BlockSelectors.filNormal);
+        Vec3 str=Vec3.createVectorHelper(speller.posX, speller.posY +  1.6, speller.posZ);
+        Vec3 end=VecUtils.add(str,VecUtils.multiply(speller.getLookVec(),maxDist));
+        if(result!=null)
+        {
+            end=Vec3.createVectorHelper(result.blockX,result.blockY,result.blockZ);
+        }
+        this.setFromTo(str,end);
+        if(RandUtils.nextDouble() < 0.5)
+        {
+            Particle p = MdParticleFactory.INSTANCE.next(worldObj,
+                    new Motion3D(this, true).move(RandUtils.ranged(0, 10)).getPosVec(),
+                    VecUtils.vec(RandUtils.ranged(-.03, .03), RandUtils.ranged(-.03, .03), RandUtils.ranged(-.03, .03)));
+            worldObj.spawnEntityInWorld(p);
+        }
+    }
+
+    @Override
+    public EntityPlayer getPlayer()
+    {
+        return null;
+    }
+
+
+    @Override
+    public void writeSpawnData(ByteBuf buf)
+    {
+        NBTTagCompound nbt=new NBTTagCompound();
+        if(spawner!=null)
+            nbt.setInteger("id",spawner.getEntityId());
+        nbt.setDouble("len",length);
+        nbt.setDouble("maxDist",maxDist);
+        ByteBufUtils.writeTag(buf, nbt);
+    }
+
+
+    @Override
+    public void readSpawnData(ByteBuf buf)
+    {
+        NBTTagCompound nbt= ByteBufUtils.readTag(buf);
+        spawner=(EntityLivingBase) worldObj.getEntityByID(nbt.getInteger("id"));
+        length=nbt.getDouble("len");
+        maxDist=nbt.getDouble("maxDist");
+        if(spawner==null)
+            setDead();
+    }
+
+    @SideOnly(Side.CLIENT)
+    static class R extends RendererRayComposite
+    {
+
+        public R()
+        {
+            super("mdray_expert");
+            this.cylinderIn.width = 0.045;
             this.cylinderIn.color.setColor4i(216, 248, 216, 230);
 
-            this.cylinderOut.width = 0.045;
+            this.cylinderOut.width = 0.056;
             this.cylinderOut.color.setColor4i(106, 242, 106, 50);
 
-            this.glow.width = 0.3;
-            this.glow.color.a = 0.5;
-        }
-        public void doRender(Entity ent, double x,
-                             double y, double z, float a, float b) {
-            ((EntityMineRayNative)ent).onRenderTick();
-            super.doRender(ent, x, y, z, a, b);
-        }
-
-        public void plainDoRender(Entity ent, double x,
-                                  double y, double z, float a, float b) {
-            super.doRender(ent, x, y, z, a, b);
+            this.glow.width = 0.5;
+            this.glow.color.a = 0.7;
         }
 
         @Override
-        protected ResourceLocation getEntityTexture(Entity p_110775_1_) {
-            return null;
-        }
+        public void doRender(Entity ent, double x,
+                             double y, double z, float a, float b) {
+            this.cylinderIn.width = 0.045;
+            this.cylinderIn.color.setColor4i(216, 248, 216, 180);
 
+            this.cylinderOut.width = 0.056;
+            this.cylinderOut.color.setColor4i(106, 242, 106, 50);
+
+            this.glow.color.a = 0.5;
+            super.doRender(ent, x, y, z, a ,b);
+        }
     }
 }
 

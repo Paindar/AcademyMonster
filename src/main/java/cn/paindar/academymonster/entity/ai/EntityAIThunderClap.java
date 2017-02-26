@@ -8,6 +8,7 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.Vec3;
 
 /**
  * Created by Paindar on 2017/2/23.
@@ -48,7 +49,7 @@ public class EntityAIThunderClap extends EntityAIBase
     {
         if(!skill.isSkillInCooldown()&&target!=null)
         {
-            MovingObjectPosition result= Raytrace.rayTraceBlocks(speller.worldObj,speller.getPosition(1), target.getPosition(1), BlockSelectors.filNormal);
+            MovingObjectPosition result= Raytrace.rayTraceBlocks(speller.worldObj, Vec3.createVectorHelper(speller.posX, speller.posY, speller.posZ),  Vec3.createVectorHelper(target.posX, target.posY, target.posZ), BlockSelectors.filNormal);
             if(result==null) skill.spell(target.posX,target.posY,target.posZ);
         }
 

@@ -19,7 +19,7 @@ public abstract class BaseSkill
     private int remainCooldown=0;
     private float skillExp;
     protected EntityLivingBase speller;
-    protected String skillName;
+    private String skillName;
     boolean isChanting=false;
     public BaseSkill(EntityLivingBase speller,int maxCooldown,float abilityExp,String name)
     {
@@ -30,7 +30,7 @@ public abstract class BaseSkill
         FMLCommonHandler.instance().bus().register(this);
     }
 
-    public float getSkillExp(){return skillExp;}
+    float getSkillExp(){return skillExp;}
 
     protected int getMaxCooldown(){return maxCooldown;}
 
@@ -58,7 +58,7 @@ public abstract class BaseSkill
         return damage;
     }
 
-    public boolean attack(EntityLivingBase target,float damage)
+    boolean attack(EntityLivingBase target,float damage)
     {
         damage = CalcEvent.calc(new CalcEventNative.SkillAttack(speller, this, target, damage));
 
@@ -69,7 +69,7 @@ public abstract class BaseSkill
         return true;
     }
 
-    public boolean attackIgnoreArmor(EntityLivingBase target,float damage)
+    boolean attackIgnoreArmor(EntityLivingBase target,float damage)
     {
         damage = CalcEvent.calc(new CalcEventNative.SkillAttack(speller, this, target, damage));
 
@@ -79,6 +79,12 @@ public abstract class BaseSkill
         }
         return true;
     }
+
+    public boolean available()
+    {
+        return !(isChanting||isSkillInCooldown());
+    }
+
     public String getUnlocalizedSkillName(){return "ac.ability." + skillName + ".name";}
     public String getSkillName(){return StatCollector.translateToLocal(skillName);}
 
