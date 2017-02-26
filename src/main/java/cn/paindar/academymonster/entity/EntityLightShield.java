@@ -55,7 +55,6 @@ public class EntityLightShield extends EntityAdvanced implements IEntityAddition
             return;
         }
         Motion3D mo = new Motion3D(spawner, true).move(1);
-        AcademyMonster.log.info("update.");
         mo.py -= 0.5;
         setPosition(mo.px, mo.py, mo.pz);
 
