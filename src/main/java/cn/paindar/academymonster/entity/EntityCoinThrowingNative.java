@@ -153,16 +153,12 @@ public class EntityCoinThrowingNative extends EntityAdvanced implements IEntityA
                              float var8, float var9) {
             EntityCoinThrowingNative etc = (EntityCoinThrowingNative) var1;
             EntityLivingBase player = etc.speller;
-            AcademyMonster.log.info("test 0.");
             double dt = GameTimer.getTime() % 150;
-            AcademyMonster.log.info("test 1.");
             if(player == null)
                 return;
-            AcademyMonster.log.info("test 2.");
             //If syncedSingle and in client computer, do not render
             if(etc.posY < player.posY)
                 return;
-            AcademyMonster.log.info("test 3.");
             GL11.glPushMatrix(); {
                 //x = player.posX - RenderManager.renderPosX;
                 //y = etc.posY - RenderManager.renderPosY;
