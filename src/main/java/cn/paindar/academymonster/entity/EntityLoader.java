@@ -31,7 +31,7 @@ public class EntityLoader
     public static void registerRenders()
     {
         registerEntityRender(EntityMdBallNative.class, new EntityMdBall.R());
-        registerEntityRender(EntityCoinThrowingNative.class,new RendererCoinThrowing());
+        registerEntityRender(EntityCoinThrowingNative.class,new EntityCoinThrowingNative.R());
         registerEntityRender(EntityRailgunFXNative.class,new EntityRailgunFXNative.R());
         registerEntityRender(EntityArcNative.class,new EntityArcNative.Renderer());
         registerEntityRender(EntityMineRayNative.class,new EntityMineRayNative.R());
@@ -42,6 +42,7 @@ public class EntityLoader
     {
         registerEntity(EntityMineRayNative.class,"am_mine_ray_eff",15,1,true);
         registerEntity(EntityLightShield.class,"am_light_shield_eff",15,1,true);
+        registerEntity(EntityCoinThrowingNative.class,"am_coin_throwing_eff",15,1,true);
     }
 
     @SideOnly(Side.CLIENT)
