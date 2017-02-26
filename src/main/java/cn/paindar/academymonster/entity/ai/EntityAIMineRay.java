@@ -57,7 +57,7 @@ public class EntityAIMineRay extends EntityAIBase
     public void updateTask(){
         if (target!=null )
         {
-            MovingObjectPosition trace = Raytrace.traceLiving(speller,skill.getMaxDistance(), EntitySelectors.nothing());
+            MovingObjectPosition trace = Raytrace.traceLiving(speller,skill.getMaxDistance(), EntitySelectors.nothing(),BlockSelectors.filNormal);
             if(trace==null)
                 return ;
             Block block=speller.worldObj.getBlock(trace.blockX,trace.blockY,trace.blockZ);

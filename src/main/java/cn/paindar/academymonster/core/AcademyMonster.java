@@ -71,6 +71,7 @@ public class AcademyMonster
         registerSkill(AIDirectedShock.class, 2,EntityAIDirectedShock.class,5);
         registerSkill(AIElectronBomb.class, 1,EntityAIElectronBomb.class,5);
         registerSkill(AIFleshRipping.class, 1,EntityAIFleshRipping.class,5);
+        registerSkill(AILightShield.class,70f,EntityAILightShield.class,5);
         registerSkill(AIMineRay.class,0.7f,EntityAIMineRay.class,5);
         registerSkill(AIPenetrateTeleport.class, 2,EntityAIPenetrateTeleport.class,4);
         registerSkill(AIRailgun.class, 0.3f,EntityAIRailgun.class,5);
