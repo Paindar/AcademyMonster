@@ -1,6 +1,7 @@
 package cn.paindar.academymonster.ability;
 
 import cn.academy.vanilla.meltdowner.skill.LightShield;
+import cn.lambdalib.util.entityx.EntityAdvanced;
 import cn.lambdalib.util.generic.MathUtils;
 import cn.lambdalib.util.mc.EntitySelectors;
 import cn.lambdalib.util.mc.WorldUtils;
@@ -9,6 +10,8 @@ import cn.paindar.academymonster.entity.EntityLightShield;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.IProjectile;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 
 import java.util.List;
@@ -52,7 +55,6 @@ public class AILightShield extends BaseSkill
         shield = new EntityLightShield(speller);
         speller.worldObj.spawnEntityInWorld(shield);
         time=0;
-        AcademyMonster.log.info("spell");
     }
 
     protected void onTick()
@@ -79,10 +81,9 @@ public class AILightShield extends BaseSkill
                     attack((EntityLivingBase)e, touchDamage);
                 }
             }
-            else
+            else if(e instanceof IProjectile || e instanceof EntityItem)
             {
                 e.setDead();
-                AcademyMonster.log.info("set "+e+" death.");
             }
         }
     }
@@ -110,7 +111,6 @@ public class AILightShield extends BaseSkill
     {
         isChanting=false;
         super.spell();
-        AcademyMonster.log.info("stop");
         if(shield!=null)
             shield.setDead();
     }

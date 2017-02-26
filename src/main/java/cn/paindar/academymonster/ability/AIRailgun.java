@@ -1,6 +1,9 @@
 package cn.paindar.academymonster.ability;
 
 import cn.academy.core.event.BlockDestroyEvent;
+import cn.academy.crafting.ModuleCrafting;
+import cn.academy.vanilla.ModuleVanilla;
+import cn.academy.vanilla.electromaster.item.ItemCoin;
 import cn.academy.vanilla.electromaster.skill.Railgun;
 import cn.lambdalib.util.generic.MathUtils;
 import cn.lambdalib.util.generic.RandUtils;
@@ -18,6 +21,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
@@ -53,7 +57,7 @@ public class AIRailgun extends BaseSkill
         Block block = world.getBlock(x, y, z);
         float hardness = block.getBlockHardness(world, x, y, z);
         if(hardness < 0)
-            hardness = 233333;
+            return ;
         if(!MinecraftForge.EVENT_BUS.post(new BlockDestroyEvent(world, x, y, z)))
         {
             if(block.getMaterial() != Material.air) {
@@ -149,8 +153,14 @@ public class AIRailgun extends BaseSkill
         if(isSkillInCooldown())
             return;
         super.spell();
+        ItemStack stack=speller.getEquipmentInSlot(0);
+        if(stack==null || !(stack.getItem()instanceof ItemCoin))
+            speller.setCurrentItemOrArmor(0,new ItemStack(ModuleVanilla.coin,RandUtils.nextInt(7)));
+        else
+            speller.setCurrentItemOrArmor(0,new ItemStack(ModuleVanilla.coin,stack.stackSize-1));
         coin=new EntityCoinThrowingNative(speller);
         speller.worldObj.spawnEntityInWorld(coin);
+        speller.playSound("academy:entity.flipcoin", 0.5F, 1.0F);
     }
 
     @SubscribeEvent

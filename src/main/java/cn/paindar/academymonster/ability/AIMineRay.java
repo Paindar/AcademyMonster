@@ -56,10 +56,7 @@ public class AIMineRay extends BaseSkill
             return;
         if( rayEffect==null||rayEffect.isDead|| speller.isDead||maxTime<=time)
         {
-            if(isChanting)
-            {
-                stop();
-            }
+            stop();
             return ;
         }
         time++;
