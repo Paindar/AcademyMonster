@@ -46,7 +46,7 @@ public class AIElectronBomb extends BaseSkill
              Vec3 str= VecUtils.vec(ball.posX, ball.posY, ball.posZ),
              end=getDest(speller);
              MovingObjectPosition trace = Raytrace.perform(speller.worldObj,str,end
-                    , EntitySelectors.exclude(speller).and(EntitySelectors.of(EntityMdBallNative.class).negate()));
+                    , EntitySelectors.exclude(speller).and(EntitySelectors.living()));
             if (trace != null && trace.entityHit != null)
             {
                 attack((EntityLivingBase) trace.entityHit, damage);
