@@ -27,6 +27,7 @@ configurations {
     deployerJars
 }
 
+apply plugin: 'scala'
 apply plugin: 'forge'
 apply plugin: 'idea'
 
@@ -50,6 +51,7 @@ minecraft {
     // Replacing stuff in the source
     replace "@VERSION@", config.mod_ver
     replace "@LL_VERSION@", config.lambdalib_ver
+    replace "@AC_VERSION@", config.academycraft_ver
     replace "@MC_VERSION@", config.mc_ver
 }
 
