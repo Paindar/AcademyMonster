@@ -35,7 +35,7 @@ import java.util.List;
  */
 
 @Mod(modid =AcademyMonster.MODID , name = AcademyMonster.NAME, version = AcademyMonster.VERSION,
-        dependencies = "required-after:LambdaLib@@LL_VERSION@") // LambdaLib is currently unstable. Supports only one version.
+        dependencies = "required-after:academy-craft@@AC_VERSION@") // LambdaLib is currently unstable. Supports only one version.
 public class AcademyMonster
 {
     public static final String MODID = "academy-monster";
@@ -139,7 +139,7 @@ public class AcademyMonster
                         id=-1;
                     }
                     tempList.remove(i);
-                    tempProbList.remove(i);//抽取一个技能并且不放回
+                    tempProbList.remove(i);
                     break;
                 }
                 rand-=tempProbList.get(i);
@@ -180,7 +180,7 @@ public class AcademyMonster
                 e.printStackTrace();
                 throw new RuntimeException();
             }
-            entity.tasks.addTask(aiLevelList.get(id),baseAI);//加入怪物AI至任务
+            entity.tasks.addTask(aiLevelList.get(id),baseAI);
             string+= skill.getUnlocalizedSkillName()+"~"+randExp+"-";
             prob*=factor;
         }
@@ -263,7 +263,7 @@ public class AcademyMonster
                             e.printStackTrace();
                             throw new RuntimeException();
                         }
-                        entity.tasks.addTask(aiLevelList.get(id),baseAI);//加入怪物AI至任务
+                        entity.tasks.addTask(aiLevelList.get(id),baseAI);
                     }
                 }
             }
