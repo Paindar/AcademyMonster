@@ -23,7 +23,7 @@ public class AIFleshRipping extends BaseSkill
     private float damage;
     public AIFleshRipping(EntityLivingBase speller, float skillExp)
     {
-        super(speller, (int)lerpf(90, 40, skillExp), skillExp,FleshRipping.getFullName());
+        super(speller, (int)lerpf(90, 40, skillExp), skillExp,"flesh_ripping");
         maxDistance=lerpf(2, 5, skillExp);
         damage=lerpf(5, 12, skillExp);
     }

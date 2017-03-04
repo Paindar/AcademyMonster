@@ -15,7 +15,7 @@ public class AIBodyIntensify extends BaseSkill
 {
     public AIBodyIntensify(EntityLivingBase speller, float exp)
     {
-        super(speller, (int)lerpf(300, 100,exp), exp,BodyIntensify.getFullName());
+        super(speller, (int)lerpf(300, 100,exp), exp,"body_intensify");
     }
 
 
