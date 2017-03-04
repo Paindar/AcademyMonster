@@ -32,7 +32,7 @@ public class AILightShield extends BaseSkill
 
     public AILightShield(EntityLivingBase speller, float exp)
     {
-        super(speller, (int)lerpf(100,40,exp), exp, "light_shield");
+        super(speller, (int)lerpf(100,40,exp), exp, "meltdowner.light_shield");
         maxTime=(int)lerpf(100,300,exp);
         touchDamage=lerpf(2, 6, exp);
         absorbDamage=lerpf(150,300,exp);

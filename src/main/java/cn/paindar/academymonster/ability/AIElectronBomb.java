@@ -27,7 +27,7 @@ public class AIElectronBomb extends BaseSkill
     private float damage;
 
     public AIElectronBomb(EntityLivingBase speller,float exp) {
-        super(speller,(int)lerpf(40,10, exp), exp,"electron_bomb");
+        super(speller,(int)lerpf(40,10, exp), exp,"meltdowner.electron_bomb");
         damage=lerpf(6, 12, exp);
         maxDistance=lerpf(7,15,exp);
     }

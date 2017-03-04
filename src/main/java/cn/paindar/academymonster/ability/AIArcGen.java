@@ -34,7 +34,7 @@ public class AIArcGen extends BaseSkill
     private float slowdown;
     public AIArcGen(EntityLivingBase speller, float exp)
     {
-        super(speller, (int)lerpf(40,20,exp), exp,"arc_gen");
+        super(speller, (int)lerpf(40,20,exp), exp,"electromaster.arc_gen");
         damage=lerpf(5,9,exp);
         range=lerpf(6,15,exp);
         prob=lerpf(0,0.6f,exp);
