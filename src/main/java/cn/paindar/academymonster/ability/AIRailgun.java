@@ -47,7 +47,7 @@ public class AIRailgun extends BaseSkill
     private EntityCoinThrowingNative coin;
     public AIRailgun(EntityLivingBase speller, float exp)
     {
-        super(speller, (int)lerpf(800, 600, exp), exp,Railgun.getFullName());
+        super(speller, (int)lerpf(800, 600, exp), exp,"railgun");
         maxIncrement=(int)lerpf(12,25,exp);
         damage=lerpf(20, 50, exp);
     }

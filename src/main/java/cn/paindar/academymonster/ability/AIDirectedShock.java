@@ -25,7 +25,7 @@ public class AIDirectedShock extends BaseSkill
     private float damage;
     public AIDirectedShock(EntityLivingBase speller, float exp)
     {
-        super(speller, (int)lerpf(60, 20, exp), exp,DirectedShock.getFullName());
+        super(speller, (int)lerpf(60, 20, exp), exp,"dir_shock");
         damage=lerpf(7, 15,exp);
     }
 
