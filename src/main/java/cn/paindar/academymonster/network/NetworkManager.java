@@ -7,10 +7,13 @@ import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import cpw.mods.fml.relauncher.Side;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.Vec3;
+
+import java.util.List;
 
 /**
  * Created by Paindar on 2017/2/9.
@@ -27,6 +30,7 @@ public class NetworkManager
         registerMessage(MessageRailgunEffect.Handler.class, MessageRailgunEffect.class, Side.CLIENT);
         registerMessage(MessageSkillInfoSync.Handler.class, MessageSkillInfoSync.class,Side.CLIENT);
         registerMessage(MessageArcGenEffect.Handler.class, MessageArcGenEffect.class,Side.CLIENT);
+        registerMessage(MessageThunderBolt.Handler.class, MessageThunderBolt.class,Side.CLIENT);
     }
 
 
@@ -107,6 +111,17 @@ public class NetworkManager
         if(!player.getEntityWorld().isRemote)
         {
             MessageArcGenEffect msg = new MessageArcGenEffect(speller,range);
+            instance.sendTo(msg, player);
+        }
+        else
+            throw new IllegalStateException("Wrong context side!");
+    }
+
+    public static void sendThunderBoltTo(EntityLivingBase ori,EntityLivingBase target,List<Entity> list, EntityPlayerMP player)
+    {
+        if(!player.getEntityWorld().isRemote)
+        {
+            MessageThunderBolt msg = new MessageThunderBolt(ori,target,list);
             instance.sendTo(msg, player);
         }
         else

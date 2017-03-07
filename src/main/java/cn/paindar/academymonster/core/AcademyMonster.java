@@ -16,6 +16,7 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.IEntityOwnable;
 import net.minecraft.entity.ai.EntityAIBase;
+import net.minecraft.entity.boss.IBossDisplayData;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.monster.IMob;
 import net.minecraftforge.common.config.Configuration;
@@ -71,10 +72,11 @@ public class AcademyMonster
         registerSkill(AIDirectedShock.class, 2,EntityAIDirectedShock.class,5);
         registerSkill(AIElectronBomb.class, 1,EntityAIElectronBomb.class,5);
         registerSkill(AIFleshRipping.class, 1,EntityAIFleshRipping.class,5);
-        registerSkill(AILightShield.class,70f,EntityAILightShield.class,5);
+        registerSkill(AILightShield.class,1f,EntityAILightShield.class,5);
         registerSkill(AIMineRay.class,0.7f,EntityAIMineRay.class,5);
         registerSkill(AIPenetrateTeleport.class, 2,EntityAIPenetrateTeleport.class,4);
         registerSkill(AIRailgun.class, 0.3f,EntityAIRailgun.class,5);
+        registerSkill(AIThunderBolt.class,70f,EntityAIThunderBlot.class,5);
         registerSkill(AIThunderClap.class,0.4f,EntityAIThunderClap.class,5);
 
     }
