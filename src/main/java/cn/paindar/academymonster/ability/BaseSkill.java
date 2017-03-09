@@ -30,7 +30,7 @@ public abstract class BaseSkill
         FMLCommonHandler.instance().bus().register(this);
     }
 
-    float getSkillExp(){return skillExp;}
+    public float getSkillExp(){return skillExp;}
 
     protected int getMaxCooldown(){return maxCooldown;}
 
@@ -87,6 +87,5 @@ public abstract class BaseSkill
 
     public String getUnlocalizedSkillName(){return "ac.ability." + skillName + ".name";}
     public String getSkillName(){return StatCollector.translateToLocal(skillName);}
-
 
 }

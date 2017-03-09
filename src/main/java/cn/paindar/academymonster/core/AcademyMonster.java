@@ -113,7 +113,7 @@ public class AcademyMonster
 
     public void addSkill(EntityLiving entity)
     {
-        if(entity.worldObj.isRemote ||!isClassAllowed(entity))
+        if(entity.worldObj.isRemote)
            return;
         List<Class<? extends BaseSkill>> tempList= new ArrayList<>(skillList);
         List<Float> tempProbList=new ArrayList<>(probList);
@@ -236,7 +236,16 @@ public class AcademyMonster
                         Class<? extends EntityAIBase> aClass;
                         Constructor[] tempConstructor;
                         Class[] parameterTypes;
-                        float randExp=Float.parseFloat(skillInfo[1]);
+                        float randExp=0;
+                        try
+                        {
+                            randExp=Float.parseFloat(skillInfo[1]);
+                        }
+                        catch(NumberFormatException e)
+                        {
+                            System.out.println("Failed to translate "+entity + " in "+skillStr);
+                            e.printStackTrace();
+                        }
                         int id=skillList.indexOf(skillClass);
                         try
                         {
@@ -278,7 +287,7 @@ public class AcademyMonster
     }
 
 
-    private boolean isClassAllowed(EntityLiving entity)
+    static boolean isClassAllowed(EntityLiving entity)
     {
         if (entity instanceof EntityMob || (entity instanceof IMob))
         {
@@ -286,7 +295,7 @@ public class AcademyMonster
             {
                 return false;
             }
-            if (checkEntityClassAllowed(entity))
+            if (!checkEntityClassAllowed(entity))
             {
                 return true;
             }
@@ -294,9 +303,9 @@ public class AcademyMonster
         return false;
     }
 
-    private boolean checkEntityClassAllowed(EntityLiving entity)
+    private static boolean checkEntityClassAllowed(EntityLiving entity)
     {
-        return entity instanceof EntityMob;
+        return entity instanceof IBossDisplayData;
     }
 
 
