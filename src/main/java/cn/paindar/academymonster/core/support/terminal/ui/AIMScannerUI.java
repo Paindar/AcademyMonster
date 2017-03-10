@@ -168,6 +168,12 @@ public class AIMScannerUI extends AuxGui
     public void tick()
     {
         EntityClientPlayerMP player=Minecraft.getMinecraft().thePlayer;
+        if(Minecraft.getMinecraft().theWorld==null)
+        {
+            current.dispose();
+            current=null;
+            return ;
+        }
         if(player == null)
             return ;
         MovingObjectPosition trace=Raytrace.traceLiving(player,20, EntitySelectors.living().and(EntitySelectors.exclude(player)));
