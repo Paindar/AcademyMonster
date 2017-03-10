@@ -51,12 +51,12 @@ public class BossHealthBar extends AuxGui
         loaded=new WidgetContainer();
         Widget board=new Widget().size(1200,400);
         loaded.addWidget("backBroad",board,true);
-        Widget skillList=new Widget(550,-430,1000,125);
-        healWidget=new Widget(700,70) .addComponent(new TextBox(
-                new IFont.FontOption(50, IFont.FontAlign.CENTER,new Color(1,1,1,0.6))).setContent("A Test Skill"));
+        Widget skillList=new Widget(350,-480,1000,125);
+        healWidget=new Widget(900,133) .addComponent(new TextBox(
+                new IFont.FontOption(50, IFont.FontAlign.CENTER,new Color(1,0,0,0.8))).setContent("A Test Skill"));
 
-        Widget healBar= new Widget(700,70).pos(30,60).addComponent(new TextBox(new IFont.FontOption(40, IFont.FontAlign.CENTER,new Color(1,1,1,0.6))).setContent("A Test Health"));
-        Widget barTextures=new Widget(700,70).pos(0,10).addComponent(new DrawTexture(new ResourceLocation("academymonster:textures/gui/hp_bar.png")).setColor(new Color(1,1,1,0.6)));
+        Widget healBar= new Widget(900,100).pos(30,60).addComponent(new TextBox(new IFont.FontOption(40, IFont.FontAlign.CENTER,new Color(1,1,1,0.6))).setContent("A Test Health"));
+        Widget barTextures=new Widget(900,53).pos(30,22).addComponent(new DrawHealBar(new ResourceLocation("academymonster:textures/gui/hp_bar.png")).setColor(new Color(1,1,1,0.6)));
         healBar.addWidget("textures",barTextures);
         healWidget.addWidget("heal_bar",healBar);
         skillList.addWidget("skillItem",healWidget);
@@ -91,17 +91,18 @@ public class BossHealthBar extends AuxGui
         {
             widget.dispose();
         }
+
         existedList.clear();
         Widget widget = root.getWidget("skill");
         int i=0;
         for(IBossDisplayData entity:list)
         {
-            Widget w=healWidget.copy().pos(30,30+150*i);
+            Widget w=healWidget.copy().pos(30,30+130*i);
             w.getComponent(TextBox.class).setContent(((Entity)entity).getCommandSenderName());
             float per=entity.getHealth()/entity.getMaxHealth();
             Widget healBar=w.getWidget("heal_bar");
             healBar.getComponent(TextBox.class).setContent(String.format("%.2f/%.2f",entity.getHealth(),entity.getMaxHealth()));
-            healBar.getWidget("textures").size(700*per,50);
+            healBar.getWidget("textures").getComponent(DrawHealBar.class).setDrawLen(per);
             i++;
             existedList.add(w);
             widget.addWidget(w);
