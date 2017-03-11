@@ -1,11 +1,9 @@
 package cn.paindar.academymonster.ability;
 
-import cn.academy.vanilla.meltdowner.skill.LightShield;
-import cn.lambdalib.util.entityx.EntityAdvanced;
+
 import cn.lambdalib.util.generic.MathUtils;
 import cn.lambdalib.util.mc.EntitySelectors;
 import cn.lambdalib.util.mc.WorldUtils;
-import cn.paindar.academymonster.core.AcademyMonster;
 import cn.paindar.academymonster.entity.EntityLightShield;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.entity.Entity;
@@ -15,7 +13,6 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 
 import java.util.List;
-import java.util.function.Predicate;
 
 import static cn.lambdalib.util.generic.MathUtils.lerpf;
 

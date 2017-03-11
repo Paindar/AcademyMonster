@@ -1,12 +1,9 @@
 package cn.paindar.academymonster.entity.boss;
 
 import cn.academy.ability.ModuleAbility;
-import cn.academy.ability.item.ItemInductionFactor;
-import cn.academy.crafting.ModuleCrafting;
 import cn.academy.vanilla.ModuleVanilla;
 import cn.lambdalib.util.generic.RandUtils;
 import cn.paindar.academymonster.ability.*;
-import cn.paindar.academymonster.entity.SkillExtendedEntityProperties;
 import cn.paindar.academymonster.entity.ai.EntityAIFakeRailgunAttack;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -17,14 +14,10 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.stats.AchievementList;
 import net.minecraft.world.World;
-import net.minecraftforge.common.ForgeModContainer;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 /**
