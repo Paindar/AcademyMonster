@@ -49,6 +49,7 @@ public class EntityAIFakeRailgunAttack extends EntityAIBase
         tick=(tick++)%10;
         if(tick>=3)
             return;
+        boolean success=false;
         for(BaseSkill skill:list)
         {
             if(skill.available())
@@ -58,11 +59,23 @@ public class EntityAIFakeRailgunAttack extends EntityAIBase
                         Vec3.createVectorHelper(target.posX, target.posY, target.posZ), BlockSelectors.filNormal);
                 if(skill instanceof AIThunderClap)
                 {
-                    if(result==null) ((AIThunderClap)skill).spell(target.posX,target.posY,target.posZ);
+                    if(result==null)
+                    {
+                        ((AIThunderClap) skill).spell(target.posX, target.posY, target.posZ);
+                        success=true;
+                    }
                 }
                 else if(skill instanceof AIRailgun)
                 {
-                    skill.spell();
+                    MovingObjectPosition trace = Raytrace.traceLiving(speller,((AIRailgun)skill).getMaxDistance(), EntitySelectors.living(), BlockSelectors.filNothing);
+                    if (trace != null && trace.typeOfHit== MovingObjectPosition.MovingObjectType.ENTITY)
+                    {
+                        if(trace.entityHit==target)
+                        {
+                            skill.spell();
+                            success=true;
+                        }
+                    }
                 }
                 else if(skill instanceof AIThunderBolt)
                 {
@@ -72,12 +85,14 @@ public class EntityAIFakeRailgunAttack extends EntityAIBase
                         if(trace.entityHit==target)
                         {
                             skill.spell();
+                            success=true;
                         }
                     }
                 }
                 else if(skill instanceof AIBodyIntensify)
                 {
                     skill.spell();
+                    success=true;
                 }
                 else if (skill instanceof AIArcGen)
                 {
@@ -86,6 +101,7 @@ public class EntityAIFakeRailgunAttack extends EntityAIBase
                         if(result.entityHit==target)
                         {
                             skill.spell();
+                            success=true;
                         }
                     }
                     else if (result != null && result.typeOfHit== MovingObjectPosition.MovingObjectType.BLOCK)
@@ -94,10 +110,12 @@ public class EntityAIFakeRailgunAttack extends EntityAIBase
                         if(block.getMaterial()== Material.wood)
                         {
                             skill.spell();
+                            success=true;
                         }
                     }
                 }
-                break;
+                if(success)
+                    break;
             }
         }
     }

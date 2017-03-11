@@ -25,7 +25,7 @@ public class AIBodyIntensify extends BaseSkill
     }
     private int getBuffTime()
     {
-        return (int)lerpf(3f,10f, getSkillExp());
+        return (int)lerpf(30f,100f, getSkillExp());
     }
     private int getBuffLevel()
     {

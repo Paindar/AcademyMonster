@@ -39,28 +39,30 @@ public class EntityFakeRaingun extends EntityMob implements IBossDisplayData
         this.setHealth(this.getMaxHealth());
         this.getNavigator().setCanSwim(true);
         this.tasks.addTask(0, new EntityAISwimming(this));
+        this.tasks.addTask(2, new EntityAIAttackOnCollide(this, EntityPlayer.class, 8.0D, false));
         this.tasks.addTask(4, new EntityAIFakeRailgunAttack(this));
         this.tasks.addTask(5, new EntityAIWander(this, 1.0D));
         this.tasks.addTask(6, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
         this.tasks.addTask(7, new EntityAILookIdle(this));
-        this.targetTasks.addTask(1, new EntityAINearestAttackableTarget(this, EntityPlayer.class, 0, true));
+        this.targetTasks.addTask(1, new EntityAINearestAttackableTarget(this, EntityPlayer.class, 8, true));
         this.targetTasks.addTask(2, new EntityAIHurtByTarget(this, false));
         this.experienceValue = 50;
-        skillList.add(new AIThunderClap(this,0.5f+ RandUtils.rangef(0,0.5f)));
+
+        skillList.add(new AIArcGen(this,0.5f+ RandUtils.rangef(0,0.5f)));
+        skillList.add(new AIBodyIntensify(this,0.5f+ RandUtils.rangef(0,0.5f)));
         skillList.add(new AIRailgun(this,0.5f+ RandUtils.rangef(0,0.5f)));
         skillList.add(new AIThunderBolt(this,0.5f+ RandUtils.rangef(0,0.5f)));
-        skillList.add(new AIBodyIntensify(this,0.5f+ RandUtils.rangef(0,0.5f)));
-        skillList.add(new AIArcGen(this,0.5f+ RandUtils.rangef(0,0.5f)));
+        skillList.add(new AIThunderClap(this,0.5f+ RandUtils.rangef(0,0.5f)));
     }
 
     public void writeEntityToNBT(NBTTagCompound nbt)
     {
         super.writeEntityToNBT(nbt);
-        nbt.setFloat("ThunderClap",skillList.get(0).getSkillExp());
-        nbt.setFloat("Railgun",skillList.get(1).getSkillExp());
-        nbt.setFloat("ThunderBolt",skillList.get(2).getSkillExp());
-        nbt.setFloat("BodyIntensify",skillList.get(3).getSkillExp());
-        nbt.setFloat("ArcGen",skillList.get(4).getSkillExp());
+        nbt.setFloat("ArcGen",skillList.get(0).getSkillExp());
+        nbt.setFloat("BodyIntensify",skillList.get(1).getSkillExp());
+        nbt.setFloat("Railgun",skillList.get(2).getSkillExp());
+        nbt.setFloat("ThunderBolt",skillList.get(3).getSkillExp());
+        nbt.setFloat("ThunderClap",skillList.get(4).getSkillExp());
     }
 
 
@@ -68,11 +70,11 @@ public class EntityFakeRaingun extends EntityMob implements IBossDisplayData
     {
         super.readEntityFromNBT(nbt);
         skillList.clear();
-        skillList.add(new AIThunderClap(this,nbt.getFloat("ThunderClap")));
-        skillList.add(new AIRailgun(this,nbt.getFloat("Railgun")));
-        skillList.add(new AIThunderBolt(this,nbt.getFloat("ThunderBolt")));
-        skillList.add(new AIBodyIntensify(this,nbt.getFloat("BodyIntensify")));
         skillList.add(new AIArcGen(this,nbt.getFloat("ArcGen")));
+        skillList.add(new AIBodyIntensify(this,nbt.getFloat("BodyIntensify")));
+        skillList.add(new AIThunderBolt(this,nbt.getFloat("ThunderBolt")));
+        skillList.add(new AIRailgun(this,nbt.getFloat("Railgun")));
+        skillList.add(new AIThunderClap(this,nbt.getFloat("ThunderClap")));
     }
 
     public int getTotalArmorValue()

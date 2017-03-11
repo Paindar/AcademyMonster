@@ -9,6 +9,8 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.world.World;
 
+import static java.lang.Math.sqrt;
+
 /**
  * Created by voidcl on 2017/3/10.
  */
@@ -59,15 +61,15 @@ public class EntityAIFlashing extends EntityAIBase{
 
     public void updateTask()
     {
-        double dist=Math.sqrt(this.speller.getDistanceSqToEntity(target));
-        double distBtwEntitys=dist;
+        double dist=sqrt(this.speller.getDistanceSqToEntity(target));
+        double distBtwEntities=dist;
         dist=skill.getMaxDistance();
-        if(target!=null && skill.available()&&distBtwEntitys>=3)
+        if(target!=null && skill.available()&&distBtwEntities>=3)
         {
 
-            double dx= (target.posX-speller.posX)/distBtwEntitys,
-                    dy=(target.posY-speller.posY)/distBtwEntitys,
-                    dz=(target.posZ-speller.posZ)/distBtwEntitys;
+            double dx= (target.posX-speller.posX)/distBtwEntities,
+                    dy=(target.posY-speller.posY)/distBtwEntities,
+                    dz=(target.posZ-speller.posZ)/distBtwEntities;
             World world=speller.worldObj;
             double x = speller.posX + dx * dist;
             double y = speller.posY + dy * dist;

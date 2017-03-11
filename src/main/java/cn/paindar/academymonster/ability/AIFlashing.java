@@ -18,35 +18,43 @@ public class AIFlashing extends BaseSkill{
     private float maxDistance;
     private int time;
     private int maxtime;
+    private int ilCD=0;
     public AIFlashing(EntityLivingBase speller, float exp) {
         super(speller,(int)lerpf(200, 100, exp), exp,"teleporter.flashing");
-        isChanting=true;
         time=0;
-        maxtime=20;
+        maxtime=60;
         maxDistance=lerpf(3,10, getSkillExp());
     }
 
     public float getMaxDistance(){return maxDistance;}
 
+    @Override
+    public boolean available()
+    {
+        return isChanting || !isSkillInCooldown();
+    }
+
     public void spell(double x, double y, double z)
     {
-        if(isSkillInCooldown())
+        if((!isChanting && isSkillInCooldown())||ilCD>0)
             return;
         if(speller.isRiding())
             speller.mountEntity(null);
         speller.setPositionAndUpdate(x,y,z);
-        isChanting=true;
+        if(!isChanting){
+            isChanting=true;
+            time=0;
+        }
         speller.fallDistance = 0;
+        ilCD=5;
         if(!speller.worldObj.isRemote)
         {
             List<Entity> list= WorldUtils.getEntities(speller, 25, EntitySelectors.player());
             for(Entity e:list)
             {
-
                 NetworkManager.sendSoundTo("tp.tp",speller,.5f,(EntityPlayerMP)e);
             }
         }
-        time=0;
     }
     @Override
     protected void onTick()
@@ -58,8 +66,10 @@ public class AIFlashing extends BaseSkill{
         if(time>=maxtime)
         {
             isChanting=false;
+            super.spell();
             return;
         }
+        if(ilCD>0) ilCD--;
         time ++;
     }
 }
