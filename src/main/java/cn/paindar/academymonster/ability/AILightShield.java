@@ -53,6 +53,7 @@ public class AILightShield extends BaseSkill
             return;
         isChanting=true;
         shield = new EntityLightShield(speller);
+        shield.setPosition(speller.posX,speller.posY,speller.posZ);
         speller.worldObj.spawnEntityInWorld(shield);
         time=0;
     }
