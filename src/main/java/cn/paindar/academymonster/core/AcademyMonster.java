@@ -78,6 +78,7 @@ public class AcademyMonster
         registerSkill(AIThunderBolt.class,0.7f,EntityAIThunderBlot.class,5);
         registerSkill(AIThunderClap.class,0.4f,EntityAIThunderClap.class,5);
         registerSkill(AIVecReflect.class, 0.3f,null,5);
+        registerSkill(AIScatterBomb.class,70f,EntityAIScatterBomb.class,5);
     }
 
     @EventHandler
@@ -249,7 +250,7 @@ public class AcademyMonster
                         }
                         catch(NumberFormatException e)
                         {
-                           log.warn("Failed to translate "+entity + " in "+skillStr);
+                           //log.warn("Failed to translate "+entity + " in "+skillStr);
                             randExp=0;
                         }
                         int id=skillList.indexOf(skillClass);
