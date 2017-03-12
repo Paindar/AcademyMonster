@@ -69,6 +69,7 @@ public class AcademyMonster
         registerSkill(AIBodyIntensify.class, 1,EntityAIBodyIntensify.class,5);
         registerSkill(AIDirectedShock.class, 2,EntityAIDirectedShock.class,5);
         registerSkill(AIElectronBomb.class, 1,EntityAIElectronBomb.class,5);
+        registerSkill(AIElectronMissile.class,0.1f,EntityAIElectronMissile.class,5);
         registerSkill(AIFlashing.class,0.2f,EntityAIFlashing.class,5);
         registerSkill(AIFleshRipping.class, 1,EntityAIFleshRipping.class,5);
         registerSkill(AILightShield.class,1f,EntityAILightShield.class,5);
@@ -78,7 +79,7 @@ public class AcademyMonster
         registerSkill(AIThunderBolt.class,0.7f,EntityAIThunderBlot.class,5);
         registerSkill(AIThunderClap.class,0.4f,EntityAIThunderClap.class,5);
         registerSkill(AIVecReflect.class, 0.3f,null,5);
-        registerSkill(AIScatterBomb.class,70f,EntityAIScatterBomb.class,5);
+        registerSkill(AIScatterBomb.class,0.5f,EntityAIScatterBomb.class,5);
     }
 
     @EventHandler
