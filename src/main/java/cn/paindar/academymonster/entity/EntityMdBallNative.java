@@ -1,5 +1,10 @@
 package cn.paindar.academymonster.entity;
 
+import cn.academy.core.Resources;
+import cn.academy.core.client.ACRenderingHelper;
+import cn.lambdalib.template.client.render.entity.RenderIcon;
+import cn.lambdalib.util.client.RenderUtils;
+import cn.lambdalib.util.client.shader.ShaderSimple;
 import cn.lambdalib.util.entityx.EntityAdvanced;
 import cn.lambdalib.util.entityx.EntityCallback;
 import cn.lambdalib.util.generic.MathUtils;
@@ -7,11 +12,16 @@ import cn.lambdalib.util.generic.RandUtils;
 import cn.lambdalib.util.helper.GameTimer;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.MathHelper;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL20;
 
 /**
  * Created by Paindar on 2017/2/10.
@@ -232,5 +242,66 @@ public class EntityMdBallNative extends EntityAdvanced {
         posZ = spawner.posZ + subZ;
     }
 
+    @SideOnly(Side.CLIENT)
+    public static class R extends RenderIcon
+    {
+
+        ResourceLocation[] textures;
+        ResourceLocation glowTexture;
+
+        public R() {
+            super(null);
+            textures = Resources.getEffectSeq("mdball", MAX_TETXURES);
+            glowTexture = Resources.getTexture("effects/mdball/glow");
+            //this.minTolerateAlpha = 0.05f;
+            this.shadowOpaque = 0;
+        }
+
+        @Override
+        public void doRender(Entity par1Entity, double x, double y,
+                             double z, float par8, float par9) {
+            if(RenderUtils.isInShadowPass()) {
+                return;
+            }
+
+            EntityMdBallNative ent = (EntityMdBallNative) par1Entity;
+            if(!ent.updateRenderTick())
+                return;
+
+            EntityPlayer clientPlayer = Minecraft.getMinecraft().thePlayer;
+
+            //HACK: Force set the render pos to prevent glitches
+            {
+                x = ent.posX - clientPlayer.posX;
+                y = ent.posY - clientPlayer.posY;
+                z = ent.posZ - clientPlayer.posZ;
+                y += 1.6;
+            }
+
+            GL11.glPushMatrix();
+            {
+                ShaderSimple.instance().useProgram();
+                GL11.glTranslated(ent.offsetX, ent.offsetY, ent.offsetZ);
+
+                double alpha = ent.getAlpha();
+                float size = ent.getSize();
+
+                //Glow texture
+                this.color.a = alpha * (0.3 + ent.alphaWiggle * 0.7);
+                this.icon = glowTexture;
+                this.setSize(0.7f * size);
+                super.doRender(par1Entity, x, y, z, par8, par9);
+
+                //Core
+                this.color.a = alpha * (0.8 + 0.2 * ent.alphaWiggle);
+                this.icon = textures[ent.texID];
+                this.setSize(0.5f * size);
+                super.doRender(par1Entity, x, y, z, par8, par9);
+                GL20.glUseProgram(0);
+            }
+            GL11.glPopMatrix();
+        }
+
+    }
 
 }

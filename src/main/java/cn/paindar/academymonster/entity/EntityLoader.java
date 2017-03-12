@@ -28,7 +28,7 @@ public class EntityLoader
     @SideOnly(Side.CLIENT)
     public static void registerRenders()
     {
-        registerEntityRender(EntityMdBallNative.class, new EntityMdBall.R());
+        registerEntityRender(EntityMdBallNative.class, new EntityMdBallNative.R());
         registerEntityRender(EntityCoinThrowingNative.class,new EntityCoinThrowingNative.R());
         registerEntityRender(EntityRailgunFXNative.class,new EntityRailgunFXNative.R());
         registerEntityRender(EntityArcNative.class,new EntityArcNative.Renderer());
@@ -42,6 +42,7 @@ public class EntityLoader
         registerEntity(EntityMineRayNative.class,"am_mine_ray_eff",15,1,true);
         registerEntity(EntityLightShield.class,"am_light_shield_eff",15,1,true);
         registerEntity(EntityCoinThrowingNative.class,"am_coin_throwing_eff",15,1,true);
+        registerEntity(EntityMdBallNative.class,"am_meltdown_ball_eff",15,1,true);
         registerEntity(EntityFakeRaingun.class,"am_fake_railgun",40,1,true);
         for(BiomeGenBase biome:BiomeGenBase.getBiomeGenArray())
         {
