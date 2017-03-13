@@ -80,6 +80,7 @@ public class AcademyMonster
         registerSkill(AIThunderClap.class,0.4f,EntityAIThunderClap.class,5);
         registerSkill(AIVecReflect.class, 0.3f,null,5);
         registerSkill(AIScatterBomb.class,0.5f,EntityAIScatterBomb.class,5);
+        registerSkill(AIMeltdowner.class,0.1f,EntityAIMeltdowner.class,5);
     }
 
     @EventHandler

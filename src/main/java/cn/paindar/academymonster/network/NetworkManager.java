@@ -28,6 +28,7 @@ public class NetworkManager
         registerMessage(MessageMdRayEffect.Handler.class, MessageMdRayEffect.class, Side.CLIENT);
         registerMessage(MessageFleshRippingEffect.Handler.class, MessageFleshRippingEffect.class, Side.CLIENT);
         registerMessage(MessageRailgunEffect.Handler.class, MessageRailgunEffect.class, Side.CLIENT);
+        registerMessage(MessageMeltdownerEffect.Handler.class, MessageMeltdownerEffect.class, Side.CLIENT);
         registerMessage(MessageSkillInfoSync.Handler.class, MessageSkillInfoSync.class,Side.CLIENT);
         registerMessage(MessageArcGenEffect.Handler.class, MessageArcGenEffect.class,Side.CLIENT);
         registerMessage(MessageThunderBolt.Handler.class, MessageThunderBolt.class,Side.CLIENT);
@@ -89,6 +90,17 @@ public class NetworkManager
         if(!player.getEntityWorld().isRemote)
         {
             MessageRailgunEffect msg = new MessageRailgunEffect(target,dist);
+            instance.sendTo(msg, player);
+        }
+        else
+            throw new IllegalStateException("Wrong context side!");
+    }
+
+    public static void sendMeltdownerEffectTo(EntityLivingBase target,int dist, EntityPlayerMP player)
+    {
+        if(!player.getEntityWorld().isRemote)
+        {
+            MessageMeltdownerEffect msg = new MessageMeltdownerEffect(target,dist);
             instance.sendTo(msg, player);
         }
         else
