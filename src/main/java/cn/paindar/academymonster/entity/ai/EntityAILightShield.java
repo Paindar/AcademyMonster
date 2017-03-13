@@ -1,7 +1,6 @@
 package cn.paindar.academymonster.entity.ai;
 
 import cn.paindar.academymonster.ability.AILightShield;
-import cn.paindar.academymonster.core.AcademyMonster;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIBase;

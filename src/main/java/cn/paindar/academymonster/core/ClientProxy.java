@@ -1,6 +1,7 @@
 package cn.paindar.academymonster.core;
 
 import cn.paindar.academymonster.core.support.terminal.ui.AIMScannerUI;
+import cn.paindar.academymonster.core.support.terminal.ui.BossHealthBar;
 import cn.paindar.academymonster.entity.EntityLoader;
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
@@ -17,6 +18,7 @@ public class ClientProxy extends CommonProxy
     public void preInit(FMLPreInitializationEvent event)
     {
         super.preInit(event);
+        BossHealthBar.preInit();
         EntityLoader.registerRenders();
     }
 

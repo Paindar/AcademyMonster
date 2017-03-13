@@ -15,7 +15,7 @@ public class AIBodyIntensify extends BaseSkill
 {
     public AIBodyIntensify(EntityLivingBase speller, float exp)
     {
-        super(speller, (int)lerpf(300, 100,exp), exp,BodyIntensify.getFullName());
+        super(speller, (int)lerpf(300, 100,exp), exp,"electromaster.body_intensify");
     }
 
 
@@ -25,7 +25,7 @@ public class AIBodyIntensify extends BaseSkill
     }
     private int getBuffTime()
     {
-        return (int)lerpf(3f,10f, getSkillExp());
+        return (int)lerpf(30f,100f, getSkillExp());
     }
     private int getBuffLevel()
     {

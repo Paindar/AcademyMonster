@@ -9,7 +9,6 @@ import cn.lambdalib.util.entityx.EntityAdvanced;
 import cn.lambdalib.util.generic.MathUtils;
 import cn.lambdalib.util.helper.GameTimer;
 import cn.lambdalib.util.helper.Motion3D;
-import cn.paindar.academymonster.core.AcademyMonster;
 import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.common.registry.IEntityAdditionalSpawnData;
 import io.netty.buffer.ByteBuf;

@@ -21,7 +21,7 @@ public class AIThunderClap extends BaseSkill
     private float distance=15;
     public AIThunderClap(EntityLivingBase speller,  float exp)
     {
-        super(speller,(int) lerpf(600,300,exp), exp, ThunderClap.getFullName());
+        super(speller,(int) lerpf(600,300,exp), exp,"electromaster.thunder_clap");
         damage=lerpf(18,120,exp);
         range=lerpf(10,25,exp);
     }

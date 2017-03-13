@@ -1,11 +1,9 @@
 package cn.paindar.academymonster.entity;
 
-import cn.academy.vanilla.electromaster.client.renderer.RendererCoinThrowing;
-import cn.academy.vanilla.meltdowner.client.render.RenderMdShield;
 import cn.academy.vanilla.meltdowner.entity.EntityMdBall;
-import cn.academy.vanilla.meltdowner.entity.EntityMineRayBasic;
-import cn.academy.vanilla.meltdowner.entity.EntityMineRayExpert;
 import cn.paindar.academymonster.core.AcademyMonster;
+import cn.paindar.academymonster.entity.boss.EntityFakeRaingun;
+import cn.paindar.academymonster.entity.boss.render.RenderFakeRailgun;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.common.registry.EntityRegistry;
 import cpw.mods.fml.relauncher.Side;
@@ -30,12 +28,14 @@ public class EntityLoader
     @SideOnly(Side.CLIENT)
     public static void registerRenders()
     {
-        registerEntityRender(EntityMdBallNative.class, new EntityMdBall.R());
+        registerEntityRender(EntityMdBallNative.class, new EntityMdBallNative.R());
         registerEntityRender(EntityCoinThrowingNative.class,new EntityCoinThrowingNative.R());
         registerEntityRender(EntityRailgunFXNative.class,new EntityRailgunFXNative.R());
+        registerEntityRender(EntityMDRayNative.class,new EntityMDRayNative.R());
         registerEntityRender(EntityArcNative.class,new EntityArcNative.Renderer());
         registerEntityRender(EntityMineRayNative.class,new EntityMineRayNative.R());
         registerEntityRender(EntityLightShield.class,new EntityLightShield.R());
+        registerEntityRender(EntityFakeRaingun.class,new RenderFakeRailgun());
     }
 
     public static void registerEntity()
@@ -43,6 +43,13 @@ public class EntityLoader
         registerEntity(EntityMineRayNative.class,"am_mine_ray_eff",15,1,true);
         registerEntity(EntityLightShield.class,"am_light_shield_eff",15,1,true);
         registerEntity(EntityCoinThrowingNative.class,"am_coin_throwing_eff",15,1,true);
+        registerEntity(EntityMdBallNative.class,"am_meltdown_ball_eff",15,1,true);
+        registerEntity(EntityFakeRaingun.class,"am_fake_railgun",40,1,true);
+        for(BiomeGenBase biome:BiomeGenBase.getBiomeGenArray())
+        {
+            if(biome != null && biome != BiomeGenBase.sky && biome !=BiomeGenBase.hell)
+                registerEntitySpawn(EntityFakeRaingun.class,100,1,1,EnumCreatureType.monster,biome);
+        }
     }
 
     @SideOnly(Side.CLIENT)

@@ -8,6 +8,7 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.ServerTickEvent;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.StatCollector;
+import net.minecraftforge.event.entity.living.LivingDeathEvent;
 
 /**
  * Created by Paindar on 2017/2/9.
@@ -30,7 +31,7 @@ public abstract class BaseSkill
         FMLCommonHandler.instance().bus().register(this);
     }
 
-    float getSkillExp(){return skillExp;}
+    public float getSkillExp(){return skillExp;}
 
     protected int getMaxCooldown(){return maxCooldown;}
 
@@ -88,5 +89,10 @@ public abstract class BaseSkill
     public String getUnlocalizedSkillName(){return "ac.ability." + skillName + ".name";}
     public String getSkillName(){return StatCollector.translateToLocal(skillName);}
 
+    @SubscribeEvent
+    public void onSpellerDeath(LivingDeathEvent event)
+    {
 
+        FMLCommonHandler.instance().bus().unregister(this);
+    }
 }

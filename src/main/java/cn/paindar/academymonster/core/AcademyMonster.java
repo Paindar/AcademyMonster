@@ -6,7 +6,6 @@ import cn.paindar.academymonster.config.AMConfig;
 import cn.paindar.academymonster.core.command.CommandTest;
 import cn.paindar.academymonster.entity.SkillExtendedEntityProperties;
 import cn.paindar.academymonster.entity.ai.*;
-import com.typesafe.config.Config;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
@@ -16,9 +15,9 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.IEntityOwnable;
 import net.minecraft.entity.ai.EntityAIBase;
+import net.minecraft.entity.boss.IBossDisplayData;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.monster.IMob;
-import net.minecraftforge.common.config.Configuration;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -70,13 +69,18 @@ public class AcademyMonster
         registerSkill(AIBodyIntensify.class, 1,EntityAIBodyIntensify.class,5);
         registerSkill(AIDirectedShock.class, 2,EntityAIDirectedShock.class,5);
         registerSkill(AIElectronBomb.class, 1,EntityAIElectronBomb.class,5);
+        registerSkill(AIElectronMissile.class,0.1f,EntityAIElectronMissile.class,5);
+        registerSkill(AIFlashing.class,0.2f,EntityAIFlashing.class,5);
         registerSkill(AIFleshRipping.class, 1,EntityAIFleshRipping.class,5);
-        registerSkill(AILightShield.class,70f,EntityAILightShield.class,5);
+        registerSkill(AILightShield.class,1f,EntityAILightShield.class,5);
         registerSkill(AIMineRay.class,0.7f,EntityAIMineRay.class,5);
-        registerSkill(AIPenetrateTeleport.class, 2,EntityAIPenetrateTeleport.class,4);
+        registerSkill(AIPenetrateTeleport.class, 1,EntityAIPenetrateTeleport.class,4);
         registerSkill(AIRailgun.class, 0.3f,EntityAIRailgun.class,5);
+        registerSkill(AIThunderBolt.class,0.7f,EntityAIThunderBlot.class,5);
         registerSkill(AIThunderClap.class,0.4f,EntityAIThunderClap.class,5);
-
+        registerSkill(AIVecReflect.class, 0.3f,null,5);
+        registerSkill(AIScatterBomb.class,0.5f,EntityAIScatterBomb.class,5);
+        registerSkill(AIMeltdowner.class,0.1f,EntityAIMeltdowner.class,5);
     }
 
     @EventHandler
@@ -111,7 +115,7 @@ public class AcademyMonster
 
     public void addSkill(EntityLiving entity)
     {
-        if(entity.worldObj.isRemote ||!isClassAllowed(entity))
+        if(entity.worldObj.isRemote)
            return;
         List<Class<? extends BaseSkill>> tempList= new ArrayList<>(skillList);
         List<Float> tempProbList=new ArrayList<>(probList);
@@ -151,18 +155,20 @@ public class AcademyMonster
             BaseSkill skill;
             Class<? extends EntityAIBase> aClass;
             Constructor[] tempConstructor;
-            Class[] parameterTypes;
+            Class[] parameterTypes=new Class[2];
             float randExp=RandUtils.rangef(0, 1);
             try
             {
                 constructor = elem.getConstructor(EntityLivingBase.class, float.class);
-                skill = (BaseSkill) constructor.newInstance(entity, randExp * randExp);
+                skill = (BaseSkill) constructor.newInstance(entity, 1- randExp * randExp);
 
                 aClass = aiList.get(id);
-
-                tempConstructor = aClass.getDeclaredConstructors();
-                parameterTypes = tempConstructor[0].getParameterTypes();
-                constructor = aClass.getConstructor(parameterTypes[0], parameterTypes[1]);
+                if(aClass!=null)
+                {
+                    tempConstructor = aClass.getDeclaredConstructors();
+                    parameterTypes = tempConstructor[0].getParameterTypes();
+                    constructor = aClass.getConstructor(parameterTypes[0], parameterTypes[1]);
+                }
 
             }
             catch(Exception e)
@@ -172,15 +178,20 @@ public class AcademyMonster
                 throw new RuntimeException();
             }
             EntityAIBase baseAI;
-            try{baseAI=(EntityAIBase)constructor.newInstance(entity,skill);}
-            catch (Exception e)
+            if(aClass!=null)
             {
-                AcademyMonster.log.error("param1: " + parameterTypes[0] + " , param2:" + parameterTypes[1]);
-                AcademyMonster.log.error("Argument: " + entity + " , " + skill);
-                e.printStackTrace();
-                throw new RuntimeException();
+                try
+                {
+                    baseAI = (EntityAIBase) constructor.newInstance(entity, skill);
+                } catch (Exception e)
+                {
+                    AcademyMonster.log.error("param1: " + parameterTypes[0] + " , param2:" + parameterTypes[1]);
+                    AcademyMonster.log.error("Argument: " + entity + " , " + skill);
+                    e.printStackTrace();
+                    throw new RuntimeException();
+                }
+                entity.tasks.addTask(aiLevelList.get(id), baseAI);
             }
-            entity.tasks.addTask(aiLevelList.get(id),baseAI);
             string+= skill.getUnlocalizedSkillName()+"~"+randExp+"-";
             prob*=factor;
         }
@@ -233,8 +244,17 @@ public class AcademyMonster
                         BaseSkill skill;
                         Class<? extends EntityAIBase> aClass;
                         Constructor[] tempConstructor;
-                        Class[] parameterTypes;
-                        float randExp=Float.parseFloat(skillInfo[1]);
+                        Class[] parameterTypes=new Class[2];
+                        float randExp=0;
+                        try
+                        {
+                            randExp=Float.parseFloat(skillInfo[1]);
+                        }
+                        catch(NumberFormatException e)
+                        {
+                           //log.warn("Failed to translate "+entity + " in "+skillStr);
+                            randExp=0;
+                        }
                         int id=skillList.indexOf(skillClass);
                         try
                         {
@@ -242,10 +262,12 @@ public class AcademyMonster
                             skill = (BaseSkill) constructor.newInstance(entity, randExp);
 
                             aClass = aiList.get(id);
-
-                            tempConstructor = aClass.getDeclaredConstructors();
-                            parameterTypes = tempConstructor[0].getParameterTypes();
-                            constructor = aClass.getConstructor(parameterTypes[0], parameterTypes[1]);
+                            if(aClass!=null)
+                            {
+                                tempConstructor = aClass.getDeclaredConstructors();
+                                parameterTypes = tempConstructor[0].getParameterTypes();
+                                constructor = aClass.getConstructor(parameterTypes[0], parameterTypes[1]);
+                            }
 
                         }
                         catch(Exception e)
@@ -255,15 +277,20 @@ public class AcademyMonster
                             throw new RuntimeException();
                         }
                         EntityAIBase baseAI;
-                        try{baseAI=(EntityAIBase)constructor.newInstance(entity,skill);}
-                        catch (Exception e)
+                        if(aClass!=null)
                         {
-                            AcademyMonster.log.error("param1: " + parameterTypes[0] + " , param2:" + parameterTypes[1]);
-                            AcademyMonster.log.error("Argument: " + entity + " , " + skill);
-                            e.printStackTrace();
-                            throw new RuntimeException();
+                            try
+                            {
+                                baseAI = (EntityAIBase) constructor.newInstance(entity, skill);
+                            } catch (Exception e)
+                            {
+                                AcademyMonster.log.error("param1: " + parameterTypes[0] + " , param2:" + parameterTypes[1]);
+                                AcademyMonster.log.error("Argument: " + entity + " , " + skill);
+                                e.printStackTrace();
+                                throw new RuntimeException();
+                            }
+                            entity.tasks.addTask(aiLevelList.get(id), baseAI);
                         }
-                        entity.tasks.addTask(aiLevelList.get(id),baseAI);
                     }
                 }
             }
@@ -276,7 +303,7 @@ public class AcademyMonster
     }
 
 
-    private boolean isClassAllowed(EntityLiving entity)
+    static boolean isClassAllowed(EntityLiving entity)
     {
         if (entity instanceof EntityMob || (entity instanceof IMob))
         {
@@ -284,7 +311,7 @@ public class AcademyMonster
             {
                 return false;
             }
-            if (checkEntityClassAllowed(entity))
+            if (!checkEntityClassAllowed(entity))
             {
                 return true;
             }
@@ -292,9 +319,9 @@ public class AcademyMonster
         return false;
     }
 
-    private boolean checkEntityClassAllowed(EntityLiving entity)
+    private static boolean checkEntityClassAllowed(EntityLiving entity)
     {
-        return entity instanceof EntityMob;
+        return entity instanceof IBossDisplayData;
     }
 
 

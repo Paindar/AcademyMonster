@@ -1,13 +1,20 @@
 package cn.paindar.academymonster.core;
 
+import cn.paindar.academymonster.ability.BaseSkill;
+import cn.paindar.academymonster.core.support.terminal.ui.BossHealthBar;
 import cn.paindar.academymonster.entity.SkillExtendedEntityProperties;
+import cn.paindar.academymonster.entity.boss.EntityFakeRaingun;
 import cn.paindar.academymonster.network.NetworkManager;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityTracker;
+import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.world.WorldServer;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
@@ -31,12 +38,23 @@ public class GlobalEventHandle
     @SubscribeEvent
     public void onEntityJoinedWorld(EntityJoinWorldEvent  event)
     {
-        if(!event.world.isRemote && event.entity instanceof EntityLiving)
+        if(!event.world.isRemote && event.entity instanceof EntityLiving && event.entity instanceof EntityMob)
         {
             SkillExtendedEntityProperties data = SkillExtendedEntityProperties.get(event.entity);
             String savedSkills=data.getSkillData();
-            //AcademyMonster.log.info("entity "+event.entity+" have skills:"+savedSkills);
-            if(savedSkills.equals(""))
+            if(event.entity instanceof EntityFakeRaingun)
+            {
+                String string="";
+                if(data.getSkillData().equals(""))
+                {
+                    for (BaseSkill skill : ((EntityFakeRaingun) event.entity).skillList)
+                    {
+                        string += skill.getUnlocalizedSkillName() + "~" + skill.getSkillExp() + "-";
+                    }
+                    data.setSkillData(string);
+                }
+            }
+            else if(savedSkills.equals(""))
             {
                 AcademyMonster.instance.addSkill((EntityLiving)event.entity);
             }
@@ -64,6 +82,13 @@ public class GlobalEventHandle
             }
 
         }
+    }
+
+    @SubscribeEvent
+    @SideOnly(Side.CLIENT)
+    public void onPreRenderGameOverlay(RenderGameOverlayEvent.Pre event)
+    {
+        BossHealthBar.flushHealthBar(event);
     }
 
 }

@@ -1,11 +1,9 @@
 package cn.paindar.academymonster.ability;
 
-import cn.academy.vanilla.meltdowner.skill.LightShield;
-import cn.lambdalib.util.entityx.EntityAdvanced;
+
 import cn.lambdalib.util.generic.MathUtils;
 import cn.lambdalib.util.mc.EntitySelectors;
 import cn.lambdalib.util.mc.WorldUtils;
-import cn.paindar.academymonster.core.AcademyMonster;
 import cn.paindar.academymonster.entity.EntityLightShield;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.entity.Entity;
@@ -15,7 +13,6 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 
 import java.util.List;
-import java.util.function.Predicate;
 
 import static cn.lambdalib.util.generic.MathUtils.lerpf;
 
@@ -32,7 +29,7 @@ public class AILightShield extends BaseSkill
 
     public AILightShield(EntityLivingBase speller, float exp)
     {
-        super(speller, (int)lerpf(100,40,exp), exp, LightShield.getFullName());
+        super(speller, (int)lerpf(100,40,exp), exp, "meltdowner.light_shield");
         maxTime=(int)lerpf(100,300,exp);
         touchDamage=lerpf(2, 6, exp);
         absorbDamage=lerpf(150,300,exp);
@@ -53,6 +50,7 @@ public class AILightShield extends BaseSkill
             return;
         isChanting=true;
         shield = new EntityLightShield(speller);
+        shield.setPosition(speller.posX,speller.posY,speller.posZ);
         speller.worldObj.spawnEntityInWorld(shield);
         time=0;
     }

@@ -1,10 +1,6 @@
 package cn.paindar.academymonster.ability;
 
 import cn.academy.core.event.BlockDestroyEvent;
-import cn.academy.crafting.ModuleCrafting;
-import cn.academy.vanilla.ModuleVanilla;
-import cn.academy.vanilla.electromaster.item.ItemCoin;
-import cn.academy.vanilla.electromaster.skill.Railgun;
 import cn.lambdalib.util.generic.MathUtils;
 import cn.lambdalib.util.generic.RandUtils;
 import cn.lambdalib.util.generic.VecUtils;
@@ -12,16 +8,12 @@ import cn.lambdalib.util.helper.Motion3D;
 import cn.lambdalib.util.mc.EntitySelectors;
 import cn.lambdalib.util.mc.WorldUtils;
 import cn.paindar.academymonster.config.AMConfig;
-import cn.paindar.academymonster.entity.EntityCoinThrowingNative;
 import cn.paindar.academymonster.network.NetworkManager;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.gameevent.TickEvent;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
@@ -36,21 +28,22 @@ import static cn.lambdalib.util.generic.MathUtils.lerpf;
 import static cn.lambdalib.util.generic.VecUtils.*;
 
 /**
- * Created by Paindar on 2017/2/11.
+ * Created by Paindar on 2017/3/12.
  */
-public class AIRailgun extends BaseSkill
+public class AIMeltdowner extends BaseSkill
 {
     private static final double STEP = 0.5;
     private float damage;
     private float range =2;
-    private int maxIncrement = 25;
-    private EntityCoinThrowingNative coin;
-    public AIRailgun(EntityLivingBase speller, float exp)
+    private int maxIncrement = 16;
+    public AIMeltdowner(EntityLivingBase speller,float exp)
     {
-        super(speller, (int)lerpf(800, 600, exp), exp,"electromaster.railgun");
+        super(speller, (int)lerpf(800, 600, exp), exp,"meltdowner.meltdowner");
         maxIncrement=(int)lerpf(12,25,exp);
-        damage=lerpf(20, 50, exp);
+        damage=lerpf(40, 150, exp);
     }
+
+
     public float getMaxDistance(){return maxIncrement;}
 
     private void destroyBlock(World world, int x, int y, int z) {
@@ -68,8 +61,12 @@ public class AIRailgun extends BaseSkill
         }
     }
 
-    private void spellRailgun()
+    @Override
+    public void spell()
     {
+        if(isSkillInCooldown())
+            return;
+        super.spell();
         Motion3D motion=new Motion3D(speller, true).move(0.1).normalize();
         float yaw = -MathUtils.PI_F * 0.5f - motion.getRotationYawRadians(),
                 pitch = motion.getRotationPitchRadians();
@@ -118,7 +115,7 @@ public class AIRailgun extends BaseSkill
             }
         }
 
-        if(AMConfig.getBoolean("am.skill.Railgun.destroyBlock",true))
+        if(AMConfig.getBoolean("am.skill.meltdowner.destroyBlock",true))
         {
             for(int i=1;i<maxIncrement;i++)
             {
@@ -144,39 +141,8 @@ public class AIRailgun extends BaseSkill
             List<Entity> list=WorldUtils.getEntities(speller, 40, EntitySelectors.player());
             for(Entity e:list)
             {
-                NetworkManager.sendRailgunEffectTo(speller,maxIncrement,(EntityPlayerMP)e);
+                NetworkManager.sendMeltdownerEffectTo(speller,maxIncrement,(EntityPlayerMP)e);
             }
         }
     }
-    public void spell()
-    {
-        if(isSkillInCooldown())
-            return;
-        super.spell();
-        ItemStack stack=speller.getEquipmentInSlot(0);
-        if(stack==null || !(stack.getItem()instanceof ItemCoin))
-            speller.setCurrentItemOrArmor(0,new ItemStack(ModuleVanilla.coin,RandUtils.nextInt(7)));
-        else
-            speller.setCurrentItemOrArmor(0,new ItemStack(ModuleVanilla.coin,stack.stackSize-1));
-        coin=new EntityCoinThrowingNative(speller);
-        speller.worldObj.spawnEntityInWorld(coin);
-        speller.playSound("academy:entity.flipcoin", 0.5F, 1.0F);
-    }
-
-    @SubscribeEvent
-    @Override
-    public void onServerTick(TickEvent.ServerTickEvent event)
-    {
-        super.onServerTick(event);
-        if(coin==null || coin.isDead||speller.isDead)
-        {
-            return;
-        }
-        if(coin.getProgress()>0.9)
-        {
-            coin.setDead();
-            spellRailgun();
-        }
-    }
-
 }
