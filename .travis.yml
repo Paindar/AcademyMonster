@@ -1,0 +1,6 @@
+language: java
+
+script:
+ - ./gradlew assemble
+ - ./gradlew check
+ - ./gradlew clean build
