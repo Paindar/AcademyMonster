@@ -1,6 +1,7 @@
 package cn.paindar.academymonster.entity;
 
 import cn.academy.vanilla.meltdowner.entity.EntityMdBall;
+import cn.paindar.academymonster.config.AMConfig;
 import cn.paindar.academymonster.core.AcademyMonster;
 import cn.paindar.academymonster.entity.boss.EntityFakeRaingun;
 import cn.paindar.academymonster.entity.boss.render.RenderFakeRailgun;
@@ -48,7 +49,7 @@ public class EntityLoader
         for(BiomeGenBase biome:BiomeGenBase.getBiomeGenArray())
         {
             if(biome != null && biome != BiomeGenBase.sky && biome !=BiomeGenBase.hell)
-                registerEntitySpawn(EntityFakeRaingun.class,100,1,1,EnumCreatureType.monster,biome);
+                registerEntitySpawn(EntityFakeRaingun.class, AMConfig.getInt("am.spawn.fakerailgun",1),1,1,EnumCreatureType.monster,biome);
         }
     }
 

@@ -60,6 +60,17 @@ public class AMConfig
             return config.getBoolean(path);
     }
 
+    public static int getInt(String path,int defaultValue)
+    {
+        if(!config.hasPath(path))
+        {
+            log.debug("Cannot find path: "+path);
+            return defaultValue;
+        }
+        else
+            return config.getInt(path);
+    }
+
     public static double getDouble(String path,double defaultValue)
     {
         if(!config.hasPath(path))
