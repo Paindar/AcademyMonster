@@ -42,10 +42,10 @@ public class EntityFakeRaingun extends EntityMob implements IBossDisplayData
         this.experienceValue = 50;
 
         skillList.add(new AIArcGen(this,0.5f+ RandUtils.rangef(0,0.5f)));
-        skillList.add(new AIBodyIntensify(this,0.5f+ RandUtils.rangef(0,0.5f)));
+        skillList.add(new AIBodyIntensify(this,0.25f+ RandUtils.rangef(0,0.75f)));
         skillList.add(new AIRailgun(this,0.5f+ RandUtils.rangef(0,0.5f)));
-        skillList.add(new AIThunderBolt(this,0.5f+ RandUtils.rangef(0,0.5f)));
-        skillList.add(new AIThunderClap(this,0.5f+ RandUtils.rangef(0,0.5f)));
+        skillList.add(new AIThunderBolt(this,RandUtils.rangef(0,1f)));
+        skillList.add(new AIThunderClap(this, RandUtils.rangef(0,1f)));
     }
 
     public void writeEntityToNBT(NBTTagCompound nbt)
