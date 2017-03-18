@@ -7,6 +7,8 @@ import cn.paindar.academymonster.network.NetworkManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.potion.Potion;
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.MovingObjectPosition;
 
 
@@ -20,18 +22,20 @@ public class AIBloodRetrograde extends BaseSkill {
 
     private float damage;
     private float exp;
+    private float range;
     public AIBloodRetrograde(EntityLivingBase speller,float exp)
     {
-        super(speller,(int)lerpf(40,20,exp),exp,"vecmanip.bloodretrograde");
+        super(speller,(int)lerpf(40,20,exp),exp,"vecmanip.blood_retro");
         this.exp=exp;
-        damage=lerpf(20,30,exp);
+        damage=lerpf(7,25,exp);
+        range=lerpf(1,3,exp);
     }
 
 
 
     public void spell()
     {
-        MovingObjectPosition result=Raytrace.traceLiving(speller,2,EntitySelectors.living());
+        MovingObjectPosition result=Raytrace.traceLiving(speller,range,EntitySelectors.living());
         EntityLivingBase target=null;
         if(result!=null&&result.typeOfHit==MovingObjectPosition.MovingObjectType.ENTITY)
         {
@@ -40,10 +44,7 @@ public class AIBloodRetrograde extends BaseSkill {
         if(target!=null&&!isSkillInCooldown())
         {
             attackIgnoreArmor(target,damage);
-            float speed=target.getAIMoveSpeed();
-            System.out.println(speed);
-
-            target.setAIMoveSpeed(lerpf(speed,speed*0.08f,exp));
+            target.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 40, 2));
             List<Entity> list=WorldUtils.getEntities(speller,25,EntitySelectors.player());
             for(Entity e:list)
             {
@@ -55,5 +56,7 @@ public class AIBloodRetrograde extends BaseSkill {
         }
         super.spell();
     }
+
+    public float getMaxDistance(){return range;}
 
 }

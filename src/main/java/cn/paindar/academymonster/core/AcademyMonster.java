@@ -67,6 +67,7 @@ public class AcademyMonster
     {
         registerSkill(AIArcGen.class,1,EntityAIArcGen.class,5);
         registerSkill(AIBodyIntensify.class, 1,EntityAIBodyIntensify.class,5);
+        registerSkill(AIBloodRetrograde.class,0.7f,EntityAIBloodRetrograde.class,5);
         registerSkill(AIDirectedShock.class, 2,EntityAIDirectedShock.class,5);
         registerSkill(AIElectronBomb.class, 1,EntityAIElectronBomb.class,5);
         registerSkill(AIElectronMissile.class,0.1f,EntityAIElectronMissile.class,5);

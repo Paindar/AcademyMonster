@@ -64,7 +64,7 @@ public class EntityAIBloodRetrograde extends EntityAIBase{
                     Vec3.createVectorHelper(speller.posX, speller.posY + speller.getEyeHeight(), speller.posZ),
                     Vec3.createVectorHelper(target.posX,target.posY+target.getEyeHeight(),target.posZ), BlockSelectors.filNothing
             );
-            if(trace==null || trace.typeOfHit!= MovingObjectPosition.MovingObjectType.BLOCK)
+            if((trace==null || trace.typeOfHit!= MovingObjectPosition.MovingObjectType.BLOCK)&&dist<=skill.getMaxDistance()*skill.getMaxDistance())
                 skill.spell();
         }
     }
