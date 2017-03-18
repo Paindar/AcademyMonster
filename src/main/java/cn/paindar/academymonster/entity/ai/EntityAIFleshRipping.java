@@ -65,7 +65,7 @@ public class EntityAIFleshRipping extends EntityAIBase
                     Vec3.createVectorHelper(speller.posX, speller.posY + speller.getEyeHeight(), speller.posZ),
                     Vec3.createVectorHelper(target.posX,target.posY+target.getEyeHeight(),target.posZ), BlockSelectors.filNothing
             );
-            if(trace!=null && (dist <= skill.getMaxDistance() * skill.getMaxDistance() )&& trace.typeOfHit!= MovingObjectPosition.MovingObjectType.BLOCK)
+            if(!skill.isSkillInCooldown)
                 skill.spell();
         }
     }
