@@ -10,6 +10,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityTracker;
+import net.minecraft.entity.boss.IBossDisplayData;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -38,30 +39,21 @@ public class GlobalEventHandle
     @SubscribeEvent
     public void onEntityJoinedWorld(EntityJoinWorldEvent  event)
     {
-        if(!event.world.isRemote && event.entity instanceof EntityLiving && event.entity instanceof EntityMob)
+        if(!event.world.isRemote && event.entity instanceof EntityLiving && AcademyMonster.isClassAllowed((EntityLiving)event.entity))
         {
             SkillExtendedEntityProperties data = SkillExtendedEntityProperties.get(event.entity);
             String savedSkills=data.getSkillData();
-            if(event.entity instanceof EntityFakeRaingun)
+            if(!(event.entity instanceof IBossDisplayData))
             {
-                String string="";
-                if(data.getSkillData().equals(""))
+                if(savedSkills.equals(""))
                 {
-                    for (BaseSkill skill : ((EntityFakeRaingun) event.entity).skillList)
-                    {
-                        string += skill.getUnlocalizedSkillName() + "~" + skill.getSkillExp() + "-";
-                    }
-                    data.setSkillData(string);
+                    AcademyMonster.instance.addSkill((EntityLiving)event.entity);
                 }
-            }
-            else if(savedSkills.equals(""))
-            {
-                AcademyMonster.instance.addSkill((EntityLiving)event.entity);
-            }
-            else
-            {
-                //AcademyMonster.log.info("entity " + event.entity + " have skills:" + savedSkills);
-                AcademyMonster.instance.refreshSkills((EntityLiving)event.entity,savedSkills);
+                else
+                {
+                    //AcademyMonster.log.info("entity " + event.entity + " have skills:" + savedSkills);
+                    AcademyMonster.instance.refreshSkills((EntityLiving)event.entity,savedSkills);
+                }
             }
             EntityTracker tracker = ((WorldServer)event.world).getEntityTracker();
 
