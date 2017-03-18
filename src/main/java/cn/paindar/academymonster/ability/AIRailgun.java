@@ -12,6 +12,7 @@ import cn.lambdalib.util.helper.Motion3D;
 import cn.lambdalib.util.mc.EntitySelectors;
 import cn.lambdalib.util.mc.WorldUtils;
 import cn.paindar.academymonster.config.AMConfig;
+import cn.paindar.academymonster.core.AcademyMonster;
 import cn.paindar.academymonster.entity.EntityCoinThrowingNative;
 import cn.paindar.academymonster.network.NetworkManager;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
@@ -21,6 +22,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.item.ItemBow;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.Vec3;
@@ -154,10 +156,8 @@ public class AIRailgun extends BaseSkill
             return;
         super.spell();
         ItemStack stack=speller.getEquipmentInSlot(0);
-        if(stack==null || !(stack.getItem()instanceof ItemCoin))
+        if(stack==null)
             speller.setCurrentItemOrArmor(0,new ItemStack(ModuleVanilla.coin,RandUtils.nextInt(7)));
-        else
-            speller.setCurrentItemOrArmor(0,new ItemStack(ModuleVanilla.coin,stack.stackSize-1));
         coin=new EntityCoinThrowingNative(speller);
         speller.worldObj.spawnEntityInWorld(coin);
         speller.playSound("academy:entity.flipcoin", 0.5F, 1.0F);
