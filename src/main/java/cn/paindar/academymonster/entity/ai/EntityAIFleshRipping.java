@@ -1,6 +1,7 @@
 package cn.paindar.academymonster.entity.ai;
 
 import cn.lambdalib.util.mc.BlockSelectors;
+import cn.lambdalib.util.mc.EntitySelectors;
 import cn.lambdalib.util.mc.Raytrace;
 import cn.paindar.academymonster.ability.AIFleshRipping;
 import net.minecraft.entity.EntityLiving;
@@ -60,12 +61,8 @@ public class EntityAIFleshRipping extends EntityAIBase
     public void updateTask(){
         if (target!=null )
         {
-            double dist=speller.getDistanceSqToEntity(target);
-            MovingObjectPosition trace = Raytrace.rayTraceBlocks(speller.worldObj,
-                    Vec3.createVectorHelper(speller.posX, speller.posY + speller.getEyeHeight(), speller.posZ),
-                    Vec3.createVectorHelper(target.posX,target.posY+target.getEyeHeight(),target.posZ), BlockSelectors.filNothing
-            );
-            if(!skill.isSkillInCooldown)
+            MovingObjectPosition trace = Raytrace.traceLiving(speller, skill.getMaxDistance(), EntitySelectors.living());
+            if(!skill.isSkillInCooldown()&&(trace!=null))
                 skill.spell();
         }
     }
