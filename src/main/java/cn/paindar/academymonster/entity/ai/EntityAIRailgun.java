@@ -1,15 +1,9 @@
 package cn.paindar.academymonster.entity.ai;
 
-import cn.lambdalib.util.mc.BlockSelectors;
-import cn.lambdalib.util.mc.Raytrace;
 import cn.paindar.academymonster.ability.AIRailgun;
-import cn.paindar.academymonster.core.AcademyMonster;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.IRangedAttackMob;
 import net.minecraft.entity.ai.EntityAIBase;
-import net.minecraft.util.MovingObjectPosition;
-import net.minecraft.util.Vec3;
 
 /**
  * Created by Paindar on 2017/2/12.

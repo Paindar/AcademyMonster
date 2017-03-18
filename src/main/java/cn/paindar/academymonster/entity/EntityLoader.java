@@ -4,6 +4,7 @@ import cn.academy.vanilla.meltdowner.entity.EntityMdBall;
 import cn.paindar.academymonster.config.AMConfig;
 import cn.paindar.academymonster.core.AcademyMonster;
 import cn.paindar.academymonster.entity.boss.EntityFakeRaingun;
+import cn.paindar.academymonster.entity.boss.EntityInsaneMeltdowner;
 import cn.paindar.academymonster.entity.boss.render.RenderFakeRailgun;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.common.registry.EntityRegistry;
@@ -37,6 +38,7 @@ public class EntityLoader
         registerEntityRender(EntityMineRayNative.class,new EntityMineRayNative.R());
         registerEntityRender(EntityLightShield.class,new EntityLightShield.R());
         registerEntityRender(EntityFakeRaingun.class,new RenderFakeRailgun());
+        registerEntityRender(EntityInsaneMeltdowner.class,new RenderFakeRailgun());
     }
 
     public static void registerEntity()
@@ -46,10 +48,14 @@ public class EntityLoader
         registerEntity(EntityCoinThrowingNative.class,"am_coin_throwing_eff",15,1,true);
         registerEntity(EntityMdBallNative.class,"am_meltdown_ball_eff",15,1,true);
         registerEntity(EntityFakeRaingun.class,"am_fake_railgun",40,1,true);
+        registerEntity(EntityInsaneMeltdowner.class,"am_insane_meltdowner",40,1,true);
         for(BiomeGenBase biome:BiomeGenBase.getBiomeGenArray())
         {
-            if(biome != null && biome != BiomeGenBase.sky && biome !=BiomeGenBase.hell)
-                registerEntitySpawn(EntityFakeRaingun.class, AMConfig.getInt("am.spawn.fakerailgun",1),1,1,EnumCreatureType.monster,biome);
+            if (biome != null && biome != BiomeGenBase.sky && biome != BiomeGenBase.hell)
+            {
+                registerEntitySpawn(EntityFakeRaingun.class, AMConfig.getInt("am.monster.fakerailgun.spawn", 1), 1, 1, EnumCreatureType.monster, biome);
+                registerEntitySpawn(EntityInsaneMeltdowner.class, AMConfig.getInt("am.monster.insanemeltdowner.spawn", 1), 1, 1, EnumCreatureType.monster, biome);
+            }
         }
     }
 

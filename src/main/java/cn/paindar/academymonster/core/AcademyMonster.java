@@ -67,6 +67,7 @@ public class AcademyMonster
     {
         registerSkill(AIArcGen.class,1,EntityAIArcGen.class,5);
         registerSkill(AIBodyIntensify.class, 1,EntityAIBodyIntensify.class,5);
+        registerSkill(AIBloodRetrograde.class,0.7f,EntityAIBloodRetrograde.class,5);
         registerSkill(AIDirectedShock.class, 2,EntityAIDirectedShock.class,5);
         registerSkill(AIElectronBomb.class, 1,EntityAIElectronBomb.class,5);
         registerSkill(AIElectronMissile.class,0.1f,EntityAIElectronMissile.class,5);
@@ -124,7 +125,7 @@ public class AcademyMonster
         float tempSum=sumWeight;
         List<String> banList=AMConfig.getStringArray("am.monster."+entity.getClass().getSimpleName()+".ban",new ArrayList<>());
 
-        String string = "";
+        StringBuilder string = new StringBuilder();
         while(RandUtils.nextFloat()<=prob && tempList.size()>0)
         {
             float rand=RandUtils.nextFloat()*tempSum;
@@ -192,11 +193,11 @@ public class AcademyMonster
                 }
                 entity.tasks.addTask(aiLevelList.get(id), baseAI);
             }
-            string+= skill.getUnlocalizedSkillName()+"~"+randExp+"-";
+            string.append(skill.getUnlocalizedSkillName()).append("~").append(randExp).append("-");
             prob*=factor;
         }
         SkillExtendedEntityProperties info= SkillExtendedEntityProperties.get(entity);
-        info.setSkillData(string);
+        info.setSkillData(string.toString());
         //AcademyMonster.log.info("entity "+entity+" have ability:" +info.getSkillData());
     }
 
@@ -245,7 +246,7 @@ public class AcademyMonster
                         Class<? extends EntityAIBase> aClass;
                         Constructor[] tempConstructor;
                         Class[] parameterTypes=new Class[2];
-                        float randExp=0;
+                        float randExp;
                         try
                         {
                             randExp=Float.parseFloat(skillInfo[1]);
