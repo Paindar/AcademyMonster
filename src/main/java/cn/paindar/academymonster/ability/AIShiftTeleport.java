@@ -47,9 +47,10 @@ public class AIShiftTeleport extends BaseSkill{
         int ix=(int)target.posX+RandUtils.nextInt(1)-RandUtils.nextInt(1);int iy=(int)target.posY+1;int iz=(int)target.posZ;
         World world=speller.worldObj;
         Block b=world.getBlock((int)speller.posX,(int)speller.posY-1,(int)speller.posZ);
-        if(b.isCollidable()&&!b.getMaterial().isReplaceable()) {
+        Block tar=(Block)Block.blockRegistry.getObject("bedrock");
+        if(b.isCollidable()&&!b.getMaterial().isReplaceable()&&!b.getMaterial().equals(tar.getMaterial())) {
             world.setBlock(ix, iy, iz, b);
-            world.setBlockToAir((int) speller.posX, (int) speller.posY - 1, (int) speller.posZ);
+            world.setBlockToAir((int) speller.posX, (int) speller.posY -1, (int) speller.posZ);
             List<Entity> list = WorldUtils.getEntities(speller, 25, EntitySelectors.player());
             for (Entity e : list) {
                 NetworkManager.sendSoundTo("tp.tp", target, .5f, (EntityPlayerMP) e);
