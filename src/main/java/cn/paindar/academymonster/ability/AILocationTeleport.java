@@ -19,15 +19,16 @@ import static cn.lambdalib.util.generic.MathUtils.lerpf;
  */
 public class AILocationTeleport extends BaseSkill {
 
-    private int DropHeight=10;
+    private int dropHeight;
     private int InGround=2;
 
     public AILocationTeleport(EntityLivingBase speller,float exp)
     {
-        super(speller,(int)lerpf(60,20,exp),exp,"teleporter.location_teleport");
+        super(speller,(int)lerpf(120,60,exp),exp,"teleporter.location_teleport");
+        dropHeight=(int)lerpf(7,20,exp);
     }
 
-    public boolean hasPlace(double x,double y,double z)
+    private boolean hasPlace(double x,double y,double z)
     {
         World world=speller.worldObj;
         Block b1=world.getBlock((int)x,(int)y,(int)z);
@@ -36,15 +37,9 @@ public class AILocationTeleport extends BaseSkill {
 
     }
 
-    public boolean SkyOrGround(EntityLivingBase target)
+    private boolean SkyOrGround(EntityLivingBase target)
     {
-        if(hasPlace(target.posX,target.posY+10,target.posZ))
-        {
-            return true;
-        }else
-        {
-            return false;
-        }
+        return hasPlace(target.posX,target.posY+10,target.posZ);
     }
 
     public void spell(EntityLivingBase target)
@@ -55,8 +50,8 @@ public class AILocationTeleport extends BaseSkill {
         {
             if(SkyOrGround(target))
             {
-                speller.setPositionAndUpdate(target.posX,target.posY+DropHeight,target.posZ);
-                target.setPositionAndUpdate(target.posX+rand,target.posY+DropHeight,target.posZ+rand);
+                speller.setPositionAndUpdate(target.posX,target.posY+dropHeight,target.posZ);
+                target.setPositionAndUpdate(target.posX+rand,target.posY+dropHeight,target.posZ+rand);
             }else
             {
                 speller.setPositionAndUpdate(target.posX,target.posY-InGround,target.posZ);

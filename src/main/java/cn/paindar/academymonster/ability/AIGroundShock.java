@@ -42,7 +42,7 @@ public class AIGroundShock extends BaseSkill{
     private float ySpeed;
     public AIGroundShock(EntityLivingBase speller,float exp)
     {
-        super(speller,(int)lerpf(60,20,exp),exp,"vecmanip.ground_shock");
+        super(speller,(int)lerpf(100,40,exp),exp,"vecmanip.ground_shock");
         maxDistance=lerpf(5,12,exp);
         damage=lerpf(2,8,exp);
         canBreakBlock=AMConfig.getBoolean("am.skill.GroundShock.destroyBlock",true);

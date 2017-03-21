@@ -18,7 +18,8 @@ import static cn.lambdalib.util.generic.MathUtils.lerpf;
 /**
  * Created by voidcl on 2017/3/19.
  */
-public class AIShiftTeleport extends BaseSkill{
+public class AIShiftTeleport extends BaseSkill
+{
     private float exp;
     private float maxdistance;
     public AIShiftTeleport(EntityLivingBase speller,float exp)
