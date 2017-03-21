@@ -71,12 +71,11 @@ public class AIGroundShock extends BaseSkill{
     public void destroyBlock(Entity target)
     {
         World world=speller.worldObj;
-       // world.newExplosion(target,target.posX,target.posY-1,target.posZ,0.8f,false,true);
+
         AMSpecialExplosion explosion=new AMSpecialExplosion(world,target,target.posX,target.posY,target.posZ,0.8f);
         explosion.doExplosionA();
         explosion.SpecialDoExplosionB(true);
-        //System.out.println("dd");
-        //world.createExplosion(target,target.posX,target.posY-1,target.posZ,0.8f,true);
+
 
     }
 
