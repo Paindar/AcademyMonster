@@ -73,7 +73,10 @@ public class AcademyMonster
         registerSkill(AIElectronMissile.class,0.1f,EntityAIElectronMissile.class,5);
         registerSkill(AIFlashing.class,0.2f,EntityAIFlashing.class,5);
         registerSkill(AIFleshRipping.class, 1,EntityAIFleshRipping.class,5);
+        registerSkill(AIGroundShock.class, 1f,EntityAIGroundShock.class,5);
         registerSkill(AILightShield.class,1f,EntityAILightShield.class,5);
+        registerSkill(AILocationTeleport.class,0.7f,EntityAILocationTeleport.class,5);
+        registerSkill(AIMeltdowner.class,0.1f,EntityAIMeltdowner.class,5);
         registerSkill(AIMineRay.class,0.7f,EntityAIMineRay.class,5);
         registerSkill(AIPenetrateTeleport.class, 1,EntityAIPenetrateTeleport.class,4);
         registerSkill(AIRailgun.class, 0.3f,EntityAIRailgun.class,5);
@@ -81,7 +84,7 @@ public class AcademyMonster
         registerSkill(AIThunderClap.class,0.4f,EntityAIThunderClap.class,5);
         registerSkill(AIVecReflect.class, 0.3f,null,5);
         registerSkill(AIScatterBomb.class,0.5f,EntityAIScatterBomb.class,5);
-        registerSkill(AIMeltdowner.class,0.1f,EntityAIMeltdowner.class,5);
+        registerSkill(AIShiftTeleport.class,0.7f,EntityAIShiftTeleport.class,5);
     }
 
     @EventHandler
