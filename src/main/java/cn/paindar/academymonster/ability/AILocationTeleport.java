@@ -44,7 +44,6 @@ public class AILocationTeleport extends BaseSkill {
 
     public void spell(EntityLivingBase target)
     {
-        System.out.println("dddddd");
         int rand=RandUtils.nextInt(1)-RandUtils.nextInt(1);
         if(target!=null&&!isSkillInCooldown())
         {
