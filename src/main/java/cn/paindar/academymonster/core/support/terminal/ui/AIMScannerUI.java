@@ -7,6 +7,7 @@ import cn.academy.terminal.TerminalData;
 import cn.lambdalib.cgui.gui.CGui;
 import cn.lambdalib.cgui.gui.Widget;
 import cn.lambdalib.cgui.gui.WidgetContainer;
+import cn.lambdalib.cgui.gui.component.Component;
 import cn.lambdalib.cgui.gui.component.DrawTexture;
 import cn.lambdalib.cgui.gui.component.TextBox;
 import cn.lambdalib.cgui.xml.CGUIDocument;
@@ -185,6 +186,7 @@ public class AIMScannerUI extends AuxGui
         {
             focus=null;
         }
+        DrawTexture bg=root.getComponent(DrawTexture.class);
         if(lastFocus!=focus)
         {
             while (!existedList.isEmpty())
@@ -195,9 +197,11 @@ public class AIMScannerUI extends AuxGui
             if (focus == null)
             {
                 root.getWidget("monsterName").getComponent(TextBox.class).setContent(StatCollector.translateToLocalFormatted("am.app.aim_scanner_no_focus.name"));
+                bg.setColor4d(1,1,1,0.1);
             }
             else
             {
+                bg.setColor4d(1,1,1,0.5);
                 if( focus instanceof EntityPlayer)
                 {
                     EntityPlayer tPlayer=(EntityPlayer) focus;
