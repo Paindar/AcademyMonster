@@ -5,8 +5,10 @@ import cn.academy.terminal.AppRegistry;
 import cn.academy.terminal.item.ItemApp;
 import cn.paindar.academymonster.config.AMConfig;
 import cn.paindar.academymonster.core.support.terminal.AppAIMScanner;
+import cn.paindar.academymonster.core.support.tile.AbilityInterfManager;
 import cn.paindar.academymonster.entity.EntityLoader;
 import cn.paindar.academymonster.network.NetworkManager;
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
@@ -33,6 +35,8 @@ public class CommonProxy
     public void init(FMLInitializationEvent event)
     {
         MinecraftForge.EVENT_BUS.register(new GlobalEventHandle());
+        MinecraftForge.EVENT_BUS.register(AbilityInterfManager.instance);
+        FMLCommonHandler.instance().bus().register(AbilityInterfManager.instance);
 
     }
 

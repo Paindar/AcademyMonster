@@ -3,6 +3,7 @@ package cn.paindar.academymonster.ability;
 import cn.academy.ability.api.event.CalcEvent;
 import cn.paindar.academymonster.ability.api.SkillDamageSourceNative;
 import cn.paindar.academymonster.ability.api.event.CalcEventNative;
+import cn.paindar.academymonster.core.support.tile.AbilityInterfManager;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.ServerTickEvent;
@@ -35,13 +36,18 @@ public abstract class BaseSkill
 
     protected int getMaxCooldown(){return maxCooldown;}
 
-    public boolean isSkillInCooldown(){return remainCooldown!=0;}
+    private boolean isInterf(){return AbilityInterfManager.instance.find(speller);}
+    public boolean isSkillInCooldown(){return remainCooldown!=0||isInterf();}
 
     public boolean isChanting(){return isChanting;}
     @SubscribeEvent
     public void onServerTick(ServerTickEvent event)
     {
         onTick();
+        if(isInterf()&&isChanting)
+        {
+            isChanting=false;
+        }
         if(remainCooldown>0 && !isChanting)
             remainCooldown--;
     }
