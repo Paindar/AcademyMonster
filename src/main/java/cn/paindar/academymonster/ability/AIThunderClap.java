@@ -22,8 +22,8 @@ public class AIThunderClap extends BaseSkill
     public AIThunderClap(EntityLivingBase speller,  float exp)
     {
         super(speller,(int) lerpf(600,300,exp), exp,"electromaster.thunder_clap");
-        damage=lerpf(18,120,exp);
-        range=lerpf(10,25,exp);
+        damage=lerpf(18,60,exp);
+        range=lerpf(5,15,exp);
     }
 
     public void spell(double hitX,double hitY,double hitZ)
