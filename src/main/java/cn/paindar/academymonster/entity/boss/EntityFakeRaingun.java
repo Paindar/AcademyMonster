@@ -4,6 +4,7 @@ import cn.academy.ability.ModuleAbility;
 import cn.academy.vanilla.ModuleVanilla;
 import cn.lambdalib.util.generic.RandUtils;
 import cn.paindar.academymonster.ability.*;
+import cn.paindar.academymonster.config.AMConfig;
 import cn.paindar.academymonster.core.AcademyMonster;
 import cn.paindar.academymonster.entity.SkillExtendedEntityProperties;
 import cn.paindar.academymonster.entity.ai.EntityAIFakeRailgunAttack;
@@ -44,12 +45,17 @@ public class EntityFakeRaingun extends EntityMob implements IBossDisplayData
         this.targetTasks.addTask(1, new EntityAINearestAttackableTarget(this, EntityPlayer.class, 8, true));
         this.targetTasks.addTask(2, new EntityAIHurtByTarget(this, false));
         this.experienceValue = 50;
-
-        skillList.add(new AIArcGen(this,0.5f+ RandUtils.rangef(0,0.5f)));
-        skillList.add(new AIBodyIntensify(this,0.25f+ RandUtils.rangef(0,0.75f)));
-        skillList.add(new AIRailgun(this,0.5f+ RandUtils.rangef(0,0.5f)));
-        skillList.add(new AIThunderBolt(this,RandUtils.rangef(0,1f)));
-        skillList.add(new AIThunderClap(this, RandUtils.rangef(0,1f)));
+        List<String> banList= AMConfig.getStringArray("am.monster."+this.getClass().getSimpleName()+".ban",new ArrayList<>());
+        if(!banList.contains("ArcGen"))
+            skillList.add(new AIArcGen(this,0.5f+ RandUtils.rangef(0,0.5f)));
+        if(!banList.contains("BodyIntensify"))
+            skillList.add(new AIBodyIntensify(this,0.25f+ RandUtils.rangef(0,0.75f)));
+        if(!banList.contains("Railgun"))
+            skillList.add(new AIRailgun(this,0.5f+ RandUtils.rangef(0,0.5f)));
+        if(!banList.contains("ThunderBolt"))
+            skillList.add(new AIThunderBolt(this,RandUtils.rangef(0,1f)));
+        if(!banList.contains("ThunderClap"))
+            skillList.add(new AIThunderClap(this, RandUtils.rangef(0,1f)));
 
         StringBuilder info=new StringBuilder();
         for(BaseSkill skill:skillList)

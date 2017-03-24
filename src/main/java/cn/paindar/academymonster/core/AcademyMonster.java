@@ -56,8 +56,10 @@ public class AcademyMonster
 
     private static void registerSkill(Class<? extends BaseSkill> skill,float defaultProb,Class<? extends EntityAIBase> aiClass,int aiLevel)
     {
-        skillList.add(skill);
         float prob=(float)AMConfig.getDouble("am.skill."+skill.getSimpleName().substring(2)+".prob",defaultProb);
+        if (prob<=1e-6)
+            return ;
+        skillList.add(skill);
         probList.add(prob);//getSimpleName().substring(2)
         aiList.add(aiClass);
         aiLevelList.add(aiLevel);

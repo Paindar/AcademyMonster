@@ -4,6 +4,7 @@ import cn.academy.ability.ModuleAbility;
 import cn.academy.vanilla.ModuleVanilla;
 import cn.lambdalib.util.generic.RandUtils;
 import cn.paindar.academymonster.ability.*;
+import cn.paindar.academymonster.config.AMConfig;
 import cn.paindar.academymonster.entity.SkillExtendedEntityProperties;
 import cn.paindar.academymonster.entity.ai.EntityAIInsaneMeltdownerAttack;
 import net.minecraft.entity.Entity;
@@ -41,10 +42,17 @@ public class EntityInsaneMeltdowner extends EntityMob implements IBossDisplayDat
         this.targetTasks.addTask(2, new EntityAIHurtByTarget(this, false));
         this.experienceValue = 50;
 
-        skillList.add(new AIElectronBomb(this,0.5f+ RandUtils.rangef(0,0.5f)));
-        skillList.add(new AIScatterBomb(this,0.25f+ RandUtils.rangef(0,0.75f)));
-        skillList.add(new AIMeltdowner(this,0.5f+ RandUtils.rangef(0,0.5f)));
-        skillList.add(new AIElectronMissile(this,RandUtils.rangef(0,1f)));
+        List<String> banList= AMConfig.getStringArray("am.monster."+this.getClass().getSimpleName()+".ban",new ArrayList<>());
+
+        //never checked
+        if(!banList.contains("ElectronBomb"))
+            skillList.add(new AIElectronBomb(this,0.5f+ RandUtils.rangef(0,0.5f)));
+        if(!banList.contains("ScatterBomb"))
+            skillList.add(new AIScatterBomb(this,0.25f+ RandUtils.rangef(0,0.75f)));
+        if(!banList.contains("Meltdowner"))
+            skillList.add(new AIMeltdowner(this,0.5f+ RandUtils.rangef(0,0.5f)));
+        if(!banList.contains("ElectronMissile"))
+            skillList.add(new AIElectronMissile(this,RandUtils.rangef(0,1f)));
         StringBuilder info=new StringBuilder();
         for(BaseSkill skill:skillList)
         {
