@@ -30,7 +30,7 @@ public class EntityAIMeltdowner extends EntityAIBase
         if (target==null)
             return false;
         double dist=speller.getDistanceSqToEntity(target);
-        return this.speller.getAttackTarget().isEntityAlive() && !skill.isSkillInCooldown() && dist >= 2.25 && dist <= skill.getMaxDistance() * skill.getMaxDistance();
+        return this.speller.getAttackTarget().isEntityAlive() && !skill.isSkillInCooldown() && dist >= 2.25 && dist <= skill.getMaxDistance() * skill.getMaxDistance()/4;
     }
 
     /**
