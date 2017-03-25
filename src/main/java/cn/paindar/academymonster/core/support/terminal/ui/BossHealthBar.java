@@ -114,10 +114,6 @@ public class BossHealthBar extends AuxGui
     {
         for(Widget widget:existedList)
             widget.dispose();
-        for(Entity e:list)
-        {
-            AcademyMonster.log.info("Boss: "+list);
-        }
     }
 
     public static void flushHealthBar(RenderGameOverlayEvent.Pre event)

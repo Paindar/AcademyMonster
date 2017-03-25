@@ -34,12 +34,10 @@ public class AMWorldData extends WorldSavedData
     @Override
     public void readFromNBT(NBTTagCompound nbt)
     {
-        AcademyMonster.log.info("read from nbt.");
         int size=nbt.getInteger("AMtAIM_size");
         for(int i=0;i<size;i++)
         {
             int[] pos=nbt.getIntArray(String.valueOf(i));
-            AcademyMonster.log.info("read :."+pos);
             set.add(pos);
         }
     }

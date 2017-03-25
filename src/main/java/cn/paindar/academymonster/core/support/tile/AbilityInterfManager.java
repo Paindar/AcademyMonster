@@ -68,8 +68,6 @@ public class AbilityInterfManager
                     {
                         List<Entity> list= WorldUtils.getEntities(tAI,tAI.range(),(Entity e)->((e instanceof IMob)&& !e.isDead));
                         affectEntity.addAll(list);
-                        for(Entity e:list)
-                            AcademyMonster.log.info(e);
                     }
                 }
                 else

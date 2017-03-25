@@ -27,7 +27,7 @@ public class CommonProxy
         new EntityLoader();
         AMConfig.init(event);
         EntityLoader.registerEntity();
-        AcademyMonster.instance.initSkill();
+        SkillManager.instance.initSkill();
         NetworkManager.init(event);
         AppRegistry.register(AppAIMScanner.instance);
     }
