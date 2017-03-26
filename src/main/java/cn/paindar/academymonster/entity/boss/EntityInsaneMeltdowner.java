@@ -47,7 +47,6 @@ public class EntityInsaneMeltdowner extends EntityMob implements IBossDisplayDat
             data.list.add(new AIMeltdowner(this,0.5f+ RandUtils.rangef(0,0.5f)));
         if(!banList.contains("ElectronMissile"))
             data.list.add(new AIElectronMissile(this,RandUtils.rangef(0,1f)));
-        data.flushSkillData();
     }
 
     protected void dropFewItems(boolean p_70628_1_, int p_70628_2_)

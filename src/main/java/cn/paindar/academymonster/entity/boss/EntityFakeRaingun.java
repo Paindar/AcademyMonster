@@ -50,7 +50,6 @@ public class EntityFakeRaingun extends EntityMob implements IBossDisplayData
             data.list.add(new AIThunderBolt(this,RandUtils.rangef(0,1f)));
         if(!banList.contains("ThunderClap"))
             data.list.add(new AIThunderClap(this, RandUtils.rangef(0,1f)));
-        data.flushSkillData();
     }
 
 

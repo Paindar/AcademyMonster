@@ -13,6 +13,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityTracker;
 import net.minecraft.entity.boss.IBossDisplayData;
+import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.world.WorldServer;
@@ -46,18 +47,21 @@ public class GlobalEventHandle
                 SkillManager.instance.addSkill((EntityLiving)event.entity);
             }
             data.init();
-            boolean isAIEnabled;
+            boolean enabled;
             try
             {
-                Method method=event.entity.getClass().getMethod("isAIEnabled");
+                Method method=event.entity.getClass().getDeclaredMethod ("isAIEnabled");
                 method.setAccessible(true);
-                isAIEnabled=(Boolean) method.invoke(event.entity, (Object[]) null);
+                enabled=(boolean) method.invoke(event.entity, (Object[]) null);
             } catch (Exception e)
             {
-                isAIEnabled=false;
+                enabled=false;
             }
-            if(!isAIEnabled)
+            if(!enabled)
+            {
                 new EntitySkillAICommon((EntityLiving)event.entity);
+            }
+
 
             EntityTracker tracker = ((WorldServer)event.world).getEntityTracker();
             for (EntityPlayer entityPlayer : tracker.getTrackingPlayers(event.entity)) {

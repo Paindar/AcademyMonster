@@ -9,8 +9,10 @@ import cpw.mods.fml.common.event.*;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.IEntityOwnable;
 import net.minecraft.entity.boss.IBossDisplayData;
+import net.minecraft.entity.monster.EntityGolem;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.monster.IMob;
+import net.minecraft.entity.passive.EntityAnimal;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -65,7 +67,7 @@ public class AcademyMonster
 
     static boolean isClassAllowed(EntityLiving entity)
     {
-        if (entity instanceof EntityMob || (entity instanceof IMob))
+        if (entity instanceof EntityMob || (entity instanceof IMob)||entity instanceof EntityGolem)
         {
             if (entity instanceof IEntityOwnable)
             {
