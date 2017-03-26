@@ -24,6 +24,7 @@ public class SkillExtendedEntityProperties implements IExtendedEntityProperties
     public int level=0;
     private EntityLivingBase speller;
     public List<BaseSkill> list=new ArrayList<>();
+    public SkillManager.Catalog catalog;
 
     public static SkillExtendedEntityProperties get(Entity e)
     {

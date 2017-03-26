@@ -53,8 +53,6 @@ public class EntityInsaneMeltdowner extends EntityMob implements IBossDisplayDat
     protected void dropFewItems(boolean p_70628_1_, int p_70628_2_)
     {
         this.dropItem(ModuleVanilla.silbarn, RandUtils.nextInt(12));
-        if(RandUtils.nextFloat()<=1)
-            this.entityDropItem(ModuleAbility.inductionFactor.create(ModuleVanilla.meltdowner),1);
 
     }
 

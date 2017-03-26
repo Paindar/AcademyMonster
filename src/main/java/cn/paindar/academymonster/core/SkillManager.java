@@ -37,7 +37,7 @@ public class SkillManager
             return builder.toString();
         }
     }
-    enum Catalog{vector,meltdown,electro,teleport}
+    public enum Catalog{vector,meltdown,electro,teleport}
     public static SkillManager instance=new SkillManager();
     private static List<SkillInfo> list=new ArrayList<>();
 
@@ -188,6 +188,7 @@ public class SkillManager
         List<SkillInfo> filtList=new ArrayList<>();
         BaseSkill skill;
         SkillExtendedEntityProperties data=SkillExtendedEntityProperties.get(entity);
+        data.catalog=type;
         while(prob>=RandUtils.nextFloat())
         {
             prob*=factor;

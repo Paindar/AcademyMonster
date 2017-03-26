@@ -1,5 +1,8 @@
 package cn.paindar.academymonster.core;
 
+import cn.academy.ability.ModuleAbility;
+import cn.academy.vanilla.ModuleVanilla;
+import cn.lambdalib.util.generic.RandUtils;
 import cn.paindar.academymonster.core.support.terminal.ui.BossHealthBar;
 import cn.paindar.academymonster.entity.SkillExtendedEntityProperties;
 import cn.paindar.academymonster.entity.ai.EntitySkillAICommon;
@@ -9,11 +12,13 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityTracker;
+import net.minecraft.entity.boss.IBossDisplayData;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
+import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 
 import java.lang.reflect.Method;
@@ -71,6 +76,37 @@ public class GlobalEventHandle
                 NetworkManager.sendEntitySkillInfoTo((EntityLiving) e.target,(EntityPlayerMP) e.entityPlayer);
             }
 
+        }
+    }
+
+    @SubscribeEvent
+    public void onMonsterDied(LivingDeathEvent event)
+    {
+        if(! (event.entity instanceof EntityLiving) || event.entity instanceof IBossDisplayData)
+            return;
+        EntityLiving theDead=(EntityLiving)event.entity;
+        SkillExtendedEntityProperties data=SkillExtendedEntityProperties.get(theDead);
+        if(data.level>=3)
+        {
+            switch(data.catalog)
+            {
+                case electro:
+                    if(RandUtils.nextFloat()<=-1+data.level*0.4)
+                        theDead.entityDropItem(ModuleAbility.inductionFactor.create(ModuleVanilla.electromaster),1);
+                    break;
+                case meltdown:
+                    if(RandUtils.nextFloat()<=-1+data.level*0.4)
+                        theDead.entityDropItem(ModuleAbility.inductionFactor.create(ModuleVanilla.meltdowner),1);
+                    break;
+                case teleport:
+                    if(RandUtils.nextFloat()<=-1+data.level*0.4)
+                        theDead.entityDropItem(ModuleAbility.inductionFactor.create(ModuleVanilla.teleporter),1);
+                    break;
+                case vector:
+                    if(RandUtils.nextFloat()<=-1+data.level*0.4)
+                        theDead.entityDropItem(ModuleAbility.inductionFactor.create(ModuleVanilla.vecManip),1);
+                    break;
+            }
         }
     }
 

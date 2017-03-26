@@ -68,8 +68,6 @@ public class EntityFakeRaingun extends EntityMob implements IBossDisplayData
         this.dropItem(Items.iron_ingot, RandUtils.nextInt(5));
         this.dropItem(Item.getItemFromBlock(Blocks.iron_block), RandUtils.nextInt(2));
         this.dropItem(ModuleVanilla.coin,RandUtils.nextInt(5)+3);
-        if(RandUtils.nextFloat()<=1)
-            this.entityDropItem(ModuleAbility.inductionFactor.create(ModuleVanilla.electromaster),1);
 
     }
 
