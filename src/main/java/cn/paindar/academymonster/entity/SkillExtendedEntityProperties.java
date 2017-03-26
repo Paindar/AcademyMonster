@@ -54,6 +54,7 @@ public class SkillExtendedEntityProperties implements IExtendedEntityProperties
         for(BaseSkill skill:list)
         {
             string.append(skill.getUnlocalizedSkillName()).append('~').append(skill.getSkillExp()).append('-');
+            SkillManager.instance.addSkillAI(skill,(EntityLiving) speller);
         }
         skillData=string.toString();
     }
@@ -84,7 +85,6 @@ public class SkillExtendedEntityProperties implements IExtendedEntityProperties
             float exp;
             if(skillInfo.length!=2)
             {
-                AcademyMonster.log.warn("Entity "+speller+" has invalid skill info:"+name);
                 continue;
             }
             try

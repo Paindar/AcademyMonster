@@ -22,7 +22,6 @@ import java.util.List;
  */
 public class EntityInsaneMeltdowner extends EntityMob implements IBossDisplayData
 {
-    public List<BaseSkill> skillList=new ArrayList<>();
     public EntityInsaneMeltdowner(World world)
     {
         super(world);
@@ -48,7 +47,6 @@ public class EntityInsaneMeltdowner extends EntityMob implements IBossDisplayDat
             data.list.add(new AIMeltdowner(this,0.5f+ RandUtils.rangef(0,0.5f)));
         if(!banList.contains("ElectronMissile"))
             data.list.add(new AIElectronMissile(this,RandUtils.rangef(0,1f)));
-        StringBuilder info=new StringBuilder();
         data.flushSkillData();
     }
 

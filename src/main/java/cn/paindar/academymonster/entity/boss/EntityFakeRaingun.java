@@ -25,7 +25,6 @@ import java.util.List;
  */
 public class EntityFakeRaingun extends EntityMob implements IBossDisplayData
 {
-    public List<BaseSkill> skillList=new ArrayList<>();
     public EntityFakeRaingun(World p_i1738_1_)
     {
         super(p_i1738_1_);

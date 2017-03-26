@@ -2,6 +2,7 @@ package cn.paindar.academymonster.core;
 
 import cn.paindar.academymonster.core.support.terminal.ui.BossHealthBar;
 import cn.paindar.academymonster.entity.SkillExtendedEntityProperties;
+import cn.paindar.academymonster.entity.ai.EntitySkillAICommon;
 import cn.paindar.academymonster.network.NetworkManager;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.Side;
@@ -14,6 +15,8 @@ import net.minecraft.world.WorldServer;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
+
+import java.lang.reflect.Method;
 
 /**
  * Created by Paindar on 2017/2/12.
@@ -38,6 +41,19 @@ public class GlobalEventHandle
                 SkillManager.instance.addSkill((EntityLiving)event.entity);
             }
             data.init();
+            boolean isAIEnabled;
+            try
+            {
+                Method method=event.entity.getClass().getMethod("isAIEnabled");
+                method.setAccessible(true);
+                isAIEnabled=(Boolean) method.invoke(event.entity, (Object[]) null);
+            } catch (Exception e)
+            {
+                isAIEnabled=false;
+            }
+            if(!isAIEnabled)
+                new EntitySkillAICommon((EntityLiving)event.entity);
+
             EntityTracker tracker = ((WorldServer)event.world).getEntityTracker();
             for (EntityPlayer entityPlayer : tracker.getTrackingPlayers(event.entity)) {
                 NetworkManager.sendEntitySkillInfoTo((EntityLiving)event.entity, (EntityPlayerMP)entityPlayer);

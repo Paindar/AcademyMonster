@@ -28,7 +28,8 @@ public class MessageMeltdownerEffect implements IMessage
             {
                 EntityLivingBase player= (EntityLivingBase) Minecraft.getMinecraft().theWorld.getEntityByID(message.nbt.getInteger("i"));
                 int dist=message.nbt.getInteger("dst");
-                player.worldObj.spawnEntityInWorld(new EntityMDRayNative(player, dist));
+                if(player!=null)
+                    player.worldObj.spawnEntityInWorld(new EntityMDRayNative(player, dist));
             }
             return null;
         }
