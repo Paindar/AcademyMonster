@@ -1,9 +1,10 @@
 package cn.paindar.academymonster.entity.ai;
 
-import cn.lambdalib.util.mc.BlockSelectors;
+import cn.lambdalib.util.generic.VecUtils;
+import cn.lambdalib.util.helper.Motion3D;
 import cn.lambdalib.util.mc.EntitySelectors;
 import cn.lambdalib.util.mc.Raytrace;
-import cn.paindar.academymonster.ability.AIFleshRipping;
+import cn.paindar.academymonster.ability.AIGroundShock;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIBase;
@@ -11,32 +12,27 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 
 /**
- * Created by Paindar on 2017/2/11.
+ * Created by voidcl on 2017/3/20.
  */
-public class EntityAIFleshRipping extends EntityAIBase
-{
-    private final EntityLiving speller;
+public class EntityAIGroundShock extends EntityAIBase{
+    private EntityLiving speller;
+    private AIGroundShock skill;
     private EntityLivingBase target;
-    private AIFleshRipping skill;
 
-    public EntityAIFleshRipping(EntityLiving speller,AIFleshRipping skill)
+    public EntityAIGroundShock(EntityLiving speller,AIGroundShock skill)
     {
         this.speller=speller;
         this.skill=skill;
     }
 
-
-    /**
-     * Returns whether the EntityAIBase should begin execution.
-     */
     @Override
-    public boolean shouldExecute()
-    {
+    public boolean shouldExecute() {
         EntityLivingBase target=speller.getAttackTarget();
-        if (target==null)
+
+        if (target==null||skill.isSkillInCooldown())
             return false;
         double dist=speller.getDistanceSqToEntity(target);
-        return this.speller.getAttackTarget().isEntityAlive() && !skill.isSkillInCooldown() && dist >= 0.5&& dist <= skill.getMaxDistance() * skill.getMaxDistance();
+        return speller.onGround&&!skill.isSkillInCooldown() && dist >= 2.25 && dist <= skill.getMaxDistance() * skill.getMaxDistance();
     }
 
     /**
@@ -55,15 +51,23 @@ public class EntityAIFleshRipping extends EntityAIBase
         this.target = null;
     }
 
-    /**
-     * Update the task.
-     */
-    public void updateTask(){
+
+    private double vecMuiltply(Vec3 a,Vec3 b)
+    {
+        return a.xCoord*b.xCoord+a.yCoord*b.yCoord+a.zCoord*b.zCoord;
+    }
+    public void updateTask()
+    {
         if (target!=null )
         {
             MovingObjectPosition trace = Raytrace.traceLiving(speller, skill.getMaxDistance(), EntitySelectors.living());
-            if(!skill.isSkillInCooldown()&&(trace!=null))
+            Vec3 lookPos=speller.getLookVec().normalize(),
+                    locPos=Vec3.createVectorHelper(target.posX-speller.posX,target.posY-speller.posY,target.posZ-speller.posZ).normalize();
+            if(!skill.isSkillInCooldown()&&(trace!=null)&& vecMuiltply(lookPos,locPos)>=0.866)
+            {
+
                 skill.spell();
+            }
         }
     }
 }

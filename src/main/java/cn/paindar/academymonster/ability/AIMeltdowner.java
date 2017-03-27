@@ -36,11 +36,12 @@ public class AIMeltdowner extends BaseSkill
     private float damage;
     private float range =2;
     private int maxIncrement = 16;
+    private int tick=0;
     public AIMeltdowner(EntityLivingBase speller,float exp)
     {
         super(speller, (int)lerpf(800, 600, exp), exp,"meltdowner.meltdowner");
         maxIncrement=(int)lerpf(12,25,exp);
-        damage=lerpf(40, 150, exp);
+        damage=lerpf(7, 60, exp);
     }
 
 
@@ -61,12 +62,8 @@ public class AIMeltdowner extends BaseSkill
         }
     }
 
-    @Override
-    public void spell()
+    void spellLightgun()
     {
-        if(isSkillInCooldown())
-            return;
-        super.spell();
         Motion3D motion=new Motion3D(speller, true).move(0.1).normalize();
         float yaw = -MathUtils.PI_F * 0.5f - motion.getRotationYawRadians(),
                 pitch = motion.getRotationPitchRadians();
@@ -144,5 +141,31 @@ public class AIMeltdowner extends BaseSkill
                 NetworkManager.sendMeltdownerEffectTo(speller,maxIncrement,(EntityPlayerMP)e);
             }
         }
+    }
+
+    @Override
+    protected void onTick()
+    {
+        if(!isChanting)
+            return;
+         tick++;
+        if(tick>=60)
+        {
+            spellLightgun();
+            isChanting=false;
+            tick=0;
+        }
+    }
+
+    @Override
+    public void spell()
+    {
+        if(isSkillInCooldown())
+            return;
+        tick=0;
+        isChanting=true;
+        speller.worldObj.playSoundAtEntity(speller,"academymonster:md_charge",1,1);
+        super.spell();
+
     }
 }

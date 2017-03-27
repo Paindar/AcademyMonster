@@ -1,42 +1,35 @@
 package cn.paindar.academymonster.entity.ai;
 
-import cn.lambdalib.util.mc.BlockSelectors;
 import cn.lambdalib.util.mc.EntitySelectors;
 import cn.lambdalib.util.mc.Raytrace;
-import cn.paindar.academymonster.ability.AIFleshRipping;
+import cn.paindar.academymonster.ability.AIShiftTeleport;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.util.MovingObjectPosition;
-import net.minecraft.util.Vec3;
+
 
 /**
- * Created by Paindar on 2017/2/11.
+ * Created by voidcl on 2017/3/19.
  */
-public class EntityAIFleshRipping extends EntityAIBase
-{
-    private final EntityLiving speller;
+public class EntityAIShiftTeleport extends EntityAIBase {
+    private EntityLiving speller;
+    private AIShiftTeleport skill;
     private EntityLivingBase target;
-    private AIFleshRipping skill;
 
-    public EntityAIFleshRipping(EntityLiving speller,AIFleshRipping skill)
+    public EntityAIShiftTeleport(EntityLiving speller,AIShiftTeleport skill)
     {
         this.speller=speller;
         this.skill=skill;
     }
 
-
-    /**
-     * Returns whether the EntityAIBase should begin execution.
-     */
     @Override
-    public boolean shouldExecute()
-    {
+    public boolean shouldExecute() {
         EntityLivingBase target=speller.getAttackTarget();
-        if (target==null)
+        if (target==null||skill.isSkillInCooldown())
             return false;
         double dist=speller.getDistanceSqToEntity(target);
-        return this.speller.getAttackTarget().isEntityAlive() && !skill.isSkillInCooldown() && dist >= 0.5&& dist <= skill.getMaxDistance() * skill.getMaxDistance();
+        return !skill.isSkillInCooldown() && dist >= 2.25 && dist <= skill.getMaxdistance() * skill.getMaxdistance();
     }
 
     /**
@@ -55,13 +48,13 @@ public class EntityAIFleshRipping extends EntityAIBase
         this.target = null;
     }
 
-    /**
-     * Update the task.
-     */
-    public void updateTask(){
+
+
+    public void updateTask()
+    {
         if (target!=null )
         {
-            MovingObjectPosition trace = Raytrace.traceLiving(speller, skill.getMaxDistance(), EntitySelectors.living());
+            MovingObjectPosition trace = Raytrace.traceLiving(speller, skill.getMaxdistance(), EntitySelectors.living());
             if(!skill.isSkillInCooldown()&&(trace!=null))
                 skill.spell();
         }

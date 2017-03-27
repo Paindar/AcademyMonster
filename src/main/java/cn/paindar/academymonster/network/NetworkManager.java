@@ -1,5 +1,6 @@
 package cn.paindar.academymonster.network;
 
+import cn.academy.vanilla.vecmanip.skill.IVec;
 import cn.paindar.academymonster.core.AcademyMonster;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
@@ -32,6 +33,7 @@ public class NetworkManager
         registerMessage(MessageSkillInfoSync.Handler.class, MessageSkillInfoSync.class,Side.CLIENT);
         registerMessage(MessageArcGenEffect.Handler.class, MessageArcGenEffect.class,Side.CLIENT);
         registerMessage(MessageThunderBolt.Handler.class, MessageThunderBolt.class,Side.CLIENT);
+        registerMessage(MessageGroundShockEffect.Handler.class, MessageGroundShockEffect.class,Side.CLIENT);
     }
 
 
@@ -134,6 +136,16 @@ public class NetworkManager
         if(!player.getEntityWorld().isRemote)
         {
             MessageThunderBolt msg = new MessageThunderBolt(ori,target,list);
+            instance.sendTo(msg, player);
+        }
+        else
+            throw new IllegalStateException("Wrong context side!");
+    }
+    public static void sendGroundShockEffectTo(IVec[] vecs,EntityPlayerMP player)
+    {
+        if(!player.getEntityWorld().isRemote)
+        {
+            MessageGroundShockEffect msg = new MessageGroundShockEffect(vecs);
             instance.sendTo(msg, player);
         }
         else

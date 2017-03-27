@@ -1,32 +1,21 @@
 package cn.paindar.academymonster.core;
 
-import cn.lambdalib.util.generic.RandUtils;
-import cn.paindar.academymonster.ability.*;
-import cn.paindar.academymonster.config.AMConfig;
 import cn.paindar.academymonster.core.command.CommandTest;
-import cn.paindar.academymonster.entity.SkillExtendedEntityProperties;
-import cn.paindar.academymonster.entity.ai.*;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.*;
 import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.IEntityOwnable;
-import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.boss.IBossDisplayData;
+import net.minecraft.entity.monster.EntityGolem;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.monster.IMob;
+import net.minecraft.entity.passive.EntityAnimal;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.List;
 
 
 /**
@@ -46,50 +35,11 @@ public class AcademyMonster
     private static CommonProxy proxy;
     @Instance
     public static AcademyMonster instance;
-    private static List<Class<? extends BaseSkill>> skillList=new ArrayList<>();
-    private static List<Float> probList=new ArrayList<>();
-    private static List<Class<? extends EntityAIBase>> aiList=new ArrayList<>();
-    private static List<Integer> aiLevelList=new ArrayList<>();
-    private static float sumWeight=0f;
-
-
-
-    private static void registerSkill(Class<? extends BaseSkill> skill,float defaultProb,Class<? extends EntityAIBase> aiClass,int aiLevel)
-    {
-        skillList.add(skill);
-        float prob=(float)AMConfig.getDouble("am.skill."+skill.getSimpleName().substring(2)+".prob",defaultProb);
-        probList.add(prob);//getSimpleName().substring(2)
-        aiList.add(aiClass);
-        aiLevelList.add(aiLevel);
-        sumWeight+=prob;
-    }
-    void initSkill()
-    {
-        registerSkill(AIArcGen.class,1,EntityAIArcGen.class,5);
-        registerSkill(AIBodyIntensify.class, 1,EntityAIBodyIntensify.class,5);
-        registerSkill(AIBloodRetrograde.class,0.7f,EntityAIBloodRetrograde.class,5);
-        registerSkill(AIDirectedShock.class, 2,EntityAIDirectedShock.class,5);
-        registerSkill(AIElectronBomb.class, 1,EntityAIElectronBomb.class,5);
-        registerSkill(AIElectronMissile.class,0.1f,EntityAIElectronMissile.class,5);
-        registerSkill(AIFlashing.class,0.2f,EntityAIFlashing.class,5);
-        registerSkill(AIFleshRipping.class, 1,EntityAIFleshRipping.class,5);
-        registerSkill(AILightShield.class,1f,EntityAILightShield.class,5);
-        registerSkill(AIMineRay.class,0.7f,EntityAIMineRay.class,5);
-        registerSkill(AIPenetrateTeleport.class, 1,EntityAIPenetrateTeleport.class,4);
-        registerSkill(AIRailgun.class, 0.3f,EntityAIRailgun.class,5);
-        registerSkill(AIThunderBolt.class,0.7f,EntityAIThunderBlot.class,5);
-        registerSkill(AIThunderClap.class,0.4f,EntityAIThunderClap.class,5);
-        registerSkill(AIVecReflect.class, 0.3f,null,5);
-        registerSkill(AIScatterBomb.class,0.5f,EntityAIScatterBomb.class,5);
-        registerSkill(AIMeltdowner.class,0.1f,EntityAIMeltdowner.class,5);
-    }
 
     @EventHandler
     public void preInit(FMLPreInitializationEvent event)
     {
         proxy.preInit(event);
-
-
     }
 
     @EventHandler
@@ -114,199 +64,10 @@ public class AcademyMonster
     {
     }
 
-    public void addSkill(EntityLiving entity)
-    {
-        if(entity.worldObj.isRemote)
-           return;
-        List<Class<? extends BaseSkill>> tempList= new ArrayList<>(skillList);
-        List<Float> tempProbList=new ArrayList<>(probList);
-        double prob=AMConfig.getDouble("am.skill.prob",0.3f);
-        double factor=AMConfig.getDouble("am.skill.factor",0.5f);
-        float tempSum=sumWeight;
-        List<String> banList=AMConfig.getStringArray("am.monster."+entity.getClass().getSimpleName()+".ban",new ArrayList<>());
-
-        StringBuilder string = new StringBuilder();
-        while(RandUtils.nextFloat()<=prob && tempList.size()>0)
-        {
-            float rand=RandUtils.nextFloat()*tempSum;
-            int id=-1;
-            for(int i=0;i<tempProbList.size();i++)
-            {
-                if(rand<tempProbList.get(i))
-                {
-                    id=skillList.indexOf(tempList.get(i));
-                    if(banList.indexOf(skillList.get(id).getSimpleName().substring(2))==-1)
-                    {
-                        tempSum -= tempProbList.get(i);
-                    }
-                    else
-                    {
-                        id=-1;
-                    }
-                    tempList.remove(i);
-                    tempProbList.remove(i);
-                    break;
-                }
-                rand-=tempProbList.get(i);
-            }
-            if(id==-1)
-                continue;
-            Class<? extends BaseSkill> elem=skillList.get(id);
-            Constructor constructor;
-            BaseSkill skill;
-            Class<? extends EntityAIBase> aClass;
-            Constructor[] tempConstructor;
-            Class[] parameterTypes=new Class[2];
-            float randExp=RandUtils.rangef(0, 1);
-            try
-            {
-                constructor = elem.getConstructor(EntityLivingBase.class, float.class);
-                skill = (BaseSkill) constructor.newInstance(entity, 1- randExp * randExp);
-
-                aClass = aiList.get(id);
-                if(aClass!=null)
-                {
-                    tempConstructor = aClass.getDeclaredConstructors();
-                    parameterTypes = tempConstructor[0].getParameterTypes();
-                    constructor = aClass.getConstructor(parameterTypes[0], parameterTypes[1]);
-                }
-
-            }
-            catch(Exception e)
-            {
-                AcademyMonster.log.error("No such constructor: (EntityLivingBase.class, float.class)");
-                e.printStackTrace();
-                throw new RuntimeException();
-            }
-            EntityAIBase baseAI;
-            if(aClass!=null)
-            {
-                try
-                {
-                    baseAI = (EntityAIBase) constructor.newInstance(entity, skill);
-                } catch (Exception e)
-                {
-                    AcademyMonster.log.error("param1: " + parameterTypes[0] + " , param2:" + parameterTypes[1]);
-                    AcademyMonster.log.error("Argument: " + entity + " , " + skill);
-                    e.printStackTrace();
-                    throw new RuntimeException();
-                }
-                entity.tasks.addTask(aiLevelList.get(id), baseAI);
-            }
-            string.append(skill.getUnlocalizedSkillName()).append("~").append(randExp).append("-");
-            prob*=factor;
-        }
-        SkillExtendedEntityProperties info= SkillExtendedEntityProperties.get(entity);
-        info.setSkillData(string.toString());
-        //AcademyMonster.log.info("entity "+entity+" have ability:" +info.getSkillData());
-    }
-
-    public void refreshSkills(EntityLiving entity,String skillStr)
-    {
-        String[] strList=skillStr.split("-");
-
-        for(Class<? extends BaseSkill> skillClass:skillList)
-        {
-            try
-            {
-                String name="";
-                try
-                {
-                    Constructor constructor;
-                    BaseSkill skill;
-                    Constructor[] tempConstructor;
-                    Class[] parameterTypes;
-                    float randExp=RandUtils.rangef(0, 1);
-                    try
-                    {
-                        constructor = skillClass.getConstructor(EntityLivingBase.class, float.class);
-                        skill = (BaseSkill) constructor.newInstance(null,0);
-                        name=skill.getUnlocalizedSkillName();
-
-                    }
-                    catch(Exception e)
-                    {
-                        AcademyMonster.log.error("No such constructor: (EntityLivingBase.class, float.class)");
-                        e.printStackTrace();
-                        throw new RuntimeException();
-                    }
-
-                }
-                catch(Exception e)
-                {
-                    e.printStackTrace();
-                }
-                for(String item:strList)
-                {
-                    String[] skillInfo=item.split("~");
-                    if(skillInfo[0].equals(name))
-                    {
-                        Constructor constructor;
-                        BaseSkill skill;
-                        Class<? extends EntityAIBase> aClass;
-                        Constructor[] tempConstructor;
-                        Class[] parameterTypes=new Class[2];
-                        float randExp;
-                        try
-                        {
-                            randExp=Float.parseFloat(skillInfo[1]);
-                        }
-                        catch(NumberFormatException e)
-                        {
-                           //log.warn("Failed to translate "+entity + " in "+skillStr);
-                            randExp=0;
-                        }
-                        int id=skillList.indexOf(skillClass);
-                        try
-                        {
-                            constructor = skillClass.getConstructor(EntityLivingBase.class, float.class);
-                            skill = (BaseSkill) constructor.newInstance(entity, randExp);
-
-                            aClass = aiList.get(id);
-                            if(aClass!=null)
-                            {
-                                tempConstructor = aClass.getDeclaredConstructors();
-                                parameterTypes = tempConstructor[0].getParameterTypes();
-                                constructor = aClass.getConstructor(parameterTypes[0], parameterTypes[1]);
-                            }
-
-                        }
-                        catch(Exception e)
-                        {
-                            AcademyMonster.log.error("No such constructor: (EntityLivingBase.class, float.class)");
-                            e.printStackTrace();
-                            throw new RuntimeException();
-                        }
-                        EntityAIBase baseAI;
-                        if(aClass!=null)
-                        {
-                            try
-                            {
-                                baseAI = (EntityAIBase) constructor.newInstance(entity, skill);
-                            } catch (Exception e)
-                            {
-                                AcademyMonster.log.error("param1: " + parameterTypes[0] + " , param2:" + parameterTypes[1]);
-                                AcademyMonster.log.error("Argument: " + entity + " , " + skill);
-                                e.printStackTrace();
-                                throw new RuntimeException();
-                            }
-                            entity.tasks.addTask(aiLevelList.get(id), baseAI);
-                        }
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                e.printStackTrace();
-            }
-
-        }
-    }
-
 
     static boolean isClassAllowed(EntityLiving entity)
     {
-        if (entity instanceof EntityMob || (entity instanceof IMob))
+        if (entity instanceof EntityMob || (entity instanceof IMob)||entity instanceof EntityGolem)
         {
             if (entity instanceof IEntityOwnable)
             {

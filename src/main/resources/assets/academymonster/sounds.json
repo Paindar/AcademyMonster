@@ -1,0 +1,8 @@
+{
+	"md_charge": 
+	{"category": "master", "sounds": 
+		[
+			{"name": "md_charge", "stream": false}
+		]
+	}
+}
