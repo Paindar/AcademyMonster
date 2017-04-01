@@ -5,12 +5,16 @@ import cn.paindar.academymonster.ability.*;
 import cn.paindar.academymonster.config.AMConfig;
 import cn.paindar.academymonster.entity.SkillExtendedEntityProperties;
 import cn.paindar.academymonster.entity.ai.*;
+import cn.paindar.academymonster.entity.boss.EntityFakeRaingun;
+import cn.paindar.academymonster.entity.boss.EntityInsaneMeltdowner;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIBase;
 
 import java.lang.reflect.Constructor;
 import java.util.*;
+
+import static cn.lambdalib.util.generic.RandUtils.rangef;
 
 /**
  * Created by Paindar on 2017/3/25.
@@ -177,87 +181,106 @@ public class SkillManager
     {
         if(entity.worldObj.isRemote)
             return;
-        double prob=AMConfig.getDouble("am.skill.prob",0.3f);
-        double factor=AMConfig.getDouble("am.skill.factor",0.5f);
-        double sumWeight=0;
-
-        Catalog[] logs=Catalog.values();
-        Catalog type=logs[RandUtils.nextInt(logs.length)];
-
-        int level=1,last=0,mark=0;
-        List<SkillInfo> filtList=new ArrayList<>();
-        BaseSkill skill;
-        SkillExtendedEntityProperties data=SkillExtendedEntityProperties.get(entity);
-        data.catalog=type;
-        while(prob>=RandUtils.nextFloat())
+        List<String> banList=AMConfig.getStringArray("am.monster."+entity.getClass().getSimpleName()+".ban",new ArrayList<>());
+        StringBuilder builder=new StringBuilder();
+        if(entity instanceof EntityFakeRaingun)
         {
-            prob*=factor;
-            SkillInfo info;
-            if(level!=last)
+            SkillExtendedEntityProperties data=SkillExtendedEntityProperties.get(entity);
+            if(!banList.contains("ArcGen"))
+               builder.append("ac.ability.electromaster.arc_gen.name").append('~').append(rangef(0,0.5f)).append('-');
+            if(!banList.contains("BodyIntensify"))
+                builder.append("ac.ability.electromaster.body_intensify.name").append('~').append(0.25f+ rangef(0,0.75f)).append('-');
+            if(!banList.contains("Railgun"))
+                builder.append("ac.ability.electromaster.railgun.name").append('~').append(0.5f+ rangef(0,0.5f)).append('-');
+            if(!banList.contains("ThunderBolt"))
+                builder.append("ac.ability.electromaster.thunder_bolt.name").append('~').append(rangef(0,1f)).append('-');
+            if(!banList.contains("ThunderClap"))
+                builder.append("ac.ability.electromaster.thunder_clap.name").append('~').append(0.5f+ rangef(0,1f)).append('-');
+            data.setSkillData(builder.toString());
+        }
+        else if(entity instanceof EntityInsaneMeltdowner)
+        {
+            SkillExtendedEntityProperties data= SkillExtendedEntityProperties.get(entity);
+            //unchecked//
+            if(!banList.contains("ElectronBomb"))
+                builder.append("ac.ability.meltdowner.electron_bomb.name").append('~').append(0.5f+ rangef(0,0.5f)).append('-');
+            if(!banList.contains("BodyIntensify"))
+                builder.append("ac.ability.meltdowner.scatter_bomb.name").append('~').append(0.25f+ rangef(0,0.75f)).append('-');
+            if(!banList.contains("Railgun"))
+                builder.append("ac.ability.meltdowner.meltdowner.name").append('~').append(0.5f+ rangef(0,0.5f)).append('-');
+            if(!banList.contains("ThunderBolt"))
+                builder.append("ac.ability.meltdowner.electron_missile.name").append('~').append(rangef(0,1f)).append('-');
+            data.setSkillData(builder.toString());
+        }
+        else
+        {
+            double prob=AMConfig.getDouble("am.skill.prob",0.3f);
+            double factor=AMConfig.getDouble("am.skill.factor",0.5f);
+            double sumWeight=0;
+            Catalog[] logs = Catalog.values();
+            Catalog type = logs[RandUtils.nextInt(logs.length)];
+
+            int level = 1, last = 0, mark = 0;
+            List<SkillInfo> filtList = new ArrayList<>();
+            BaseSkill skill;
+            SkillExtendedEntityProperties data = SkillExtendedEntityProperties.get(entity);
+            data.catalog = type;
+            while (prob >= RandUtils.nextFloat())
             {
-                for(;mark<list.size();mark++)
+                prob *= factor;
+                SkillInfo info;
+                if (level != last)
                 {
-                    info=list.get(mark);
-                    if(info.type==type)
+                    for (; mark < list.size(); mark++)
                     {
-                        if(info.lvl<=level)
+                        info = list.get(mark);
+                        if (info.type == type && !banList.contains(info.klass.getSimpleName().substring(2)))
                         {
-                            filtList.add(info);
-                            sumWeight+=info.prob;
+                            if (info.lvl <= level)
+                            {
+                                filtList.add(info);
+                                sumWeight += info.prob;
+                            } else
+                                break;
                         }
-                        else
-                            break;
+                    }
+                }//flush available skill list
+                if (filtList.isEmpty())
+                {
+                    if (mark >= list.size())
+                    {
+                        break;
+                    } else
+                    {
+                        level++;
+                        prob /= factor;
+                        continue;
                     }
                 }
-            }
-            if(filtList.isEmpty())
-            {
-                if(mark>=list.size())
-                {
-                    break;
-                }
-                else
-                {
-                    level++;
-                    prob/=factor;
-                    continue;
-                }
-            }
 
-            int index=0;
-            info=filtList.get(0);
-            double p=RandUtils.ranged(0,sumWeight);
-            while(filtList.size()>index)
-            {
-                info=filtList.get(index);
-                if (p < info.prop)
-                    break;
-                p-=info.prob;
-                index++;
+                int index = 0;
+                info = filtList.get(0);
+                double p = RandUtils.ranged(0, sumWeight);
+                while (filtList.size() > index)
+                {
+                    info = filtList.get(index);
+                    if (p < info.prop)
+                        break;
+                    p -= info.prob;
+                    index++;
+                }
+                filtList.remove(index);
+                last = info.lvl;
+                if (info.lvl == level)
+                    level++;
+
+                float randExp = RandUtils.nextFloat();
+                randExp = 0.01f + randExp * randExp;
+                builder.append(info.name).append('~').append(randExp).append('-');
             }
-            filtList.remove(index);
-            last=info.lvl;
-            if(info.lvl==level)
-                level++;
-            Class<? extends BaseSkill> skillClass=info.klass;
-            if(skillClass==null)
-                continue;
-            Constructor constructor;
-            float randExp=RandUtils.nextFloat();
-            try
-            {
-                constructor = skillClass.getConstructor(EntityLivingBase.class, float.class);
-                randExp=0.01f+randExp*randExp;
-                skill = (BaseSkill) constructor.newInstance(entity,randExp);
-                data.list.add(skill);
-            }
-            catch(Exception e)
-            {
-                AcademyMonster.log.error("No such constructor: (EntityLivingBase.class, float.class)");
-                e.printStackTrace();
-            }
+            data.setSkillData(builder.toString());
+            data.level = level - 1;
         }
-        data.level=level-1;
     }
 
 }

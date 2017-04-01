@@ -65,26 +65,9 @@ public class AcademyMonster
     }
 
 
-    static boolean isClassAllowed(EntityLiving entity)
-    {
-        if (entity instanceof EntityMob || (entity instanceof IMob)||entity instanceof EntityGolem)
-        {
-            if (entity instanceof IEntityOwnable)
-            {
-                return false;
-            }
-            if (!checkEntityClassAllowed(entity))
-            {
-                return true;
-            }
-        }
-        return false;
-    }
 
-    private static boolean checkEntityClassAllowed(EntityLiving entity)
-    {
-        return entity instanceof IBossDisplayData;
-    }
+
+
 
 
 }

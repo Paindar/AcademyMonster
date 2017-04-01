@@ -4,6 +4,7 @@ import cn.academy.ability.api.event.CalcEvent;
 import cn.paindar.academymonster.ability.api.SkillDamageSourceNative;
 import cn.paindar.academymonster.ability.api.event.CalcEventNative;
 import cn.paindar.academymonster.core.support.tile.AbilityInterfManager;
+import cn.paindar.academymonster.entity.SkillExtendedEntityProperties;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.ServerTickEvent;
@@ -37,7 +38,7 @@ public abstract class BaseSkill
     protected int getMaxCooldown(){return maxCooldown;}
 
     private boolean isInterf(){return AbilityInterfManager.instance.find(speller);}
-    public boolean isSkillInCooldown(){return remainCooldown!=0||isInterf();}
+    public boolean isSkillInCooldown(){return remainCooldown!=0||isInterf() || !SkillExtendedEntityProperties.isReady(speller);}
 
     public boolean isChanting(){return isChanting;}
     @SubscribeEvent
@@ -60,6 +61,7 @@ public abstract class BaseSkill
     public void spell()
     {
         remainCooldown=maxCooldown;
+        SkillExtendedEntityProperties.get(speller).ready=5;
     }
     private float getFinalDamage(float damage) {
         return damage;

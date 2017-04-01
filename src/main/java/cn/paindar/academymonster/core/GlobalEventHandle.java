@@ -12,8 +12,11 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityTracker;
+import net.minecraft.entity.IEntityOwnable;
 import net.minecraft.entity.boss.IBossDisplayData;
-import net.minecraft.entity.monster.EntityZombie;
+import net.minecraft.entity.monster.EntityGolem;
+import net.minecraft.entity.monster.EntityMob;
+import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.world.WorldServer;
@@ -34,11 +37,15 @@ public class GlobalEventHandle
     {
     }
 
+    static boolean isClassAllowed(EntityLiving entity)
+    {
+        return (entity instanceof EntityMob || (entity instanceof IMob) || entity instanceof EntityGolem) && !(entity instanceof IEntityOwnable);
+    }
 
     @SubscribeEvent
     public void onEntityJoinedWorld(EntityJoinWorldEvent  event)
     {
-        if(!event.world.isRemote && event.entity instanceof EntityLiving && AcademyMonster.isClassAllowed((EntityLiving)event.entity))
+        if(!event.world.isRemote && event.entity instanceof EntityLiving && isClassAllowed((EntityLiving)event.entity))
         {
             SkillExtendedEntityProperties data = SkillExtendedEntityProperties.get(event.entity);
             String savedSkills=data.getSkillData();
@@ -61,7 +68,6 @@ public class GlobalEventHandle
             {
                 new EntitySkillAICommon((EntityLiving)event.entity);
             }
-
 
             EntityTracker tracker = ((WorldServer)event.world).getEntityTracker();
             for (EntityPlayer entityPlayer : tracker.getTrackingPlayers(event.entity)) {
@@ -95,7 +101,7 @@ public class GlobalEventHandle
             switch(data.catalog)
             {
                 case electro:
-                    if(RandUtils.nextFloat()<=-1+data.level*0.4)
+                    if(RandUtils.nextFloat()<=-0.35+data.level*0.15)
                         theDead.entityDropItem(ModuleAbility.inductionFactor.create(ModuleVanilla.electromaster),1);
                     break;
                 case meltdown:

@@ -3,6 +3,8 @@ package cn.paindar.academymonster.entity;
 import cn.paindar.academymonster.ability.BaseSkill;
 import cn.paindar.academymonster.core.AcademyMonster;
 import cn.paindar.academymonster.core.SkillManager;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.TickEvent;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
@@ -24,7 +26,15 @@ public class SkillExtendedEntityProperties implements IExtendedEntityProperties
     public int level=0;
     private EntityLivingBase speller;
     public List<BaseSkill> list=new ArrayList<>();
+    public int ready=20;
     public SkillManager.Catalog catalog;
+
+    @SubscribeEvent
+    public void onServerTick(TickEvent.ServerTickEvent event)
+    {
+        if(ready>0)
+            ready--;
+    }
 
     public static SkillExtendedEntityProperties get(Entity e)
     {
@@ -36,6 +46,7 @@ public class SkillExtendedEntityProperties implements IExtendedEntityProperties
         }
         return (SkillExtendedEntityProperties) info;
     }
+    public static boolean isReady(Entity e){return get(e).ready==0;}
     public SkillExtendedEntityProperties(){}
 
     SkillExtendedEntityProperties(EntityLivingBase e)
@@ -45,7 +56,6 @@ public class SkillExtendedEntityProperties implements IExtendedEntityProperties
     public void setSkillData(String data)
     {
         skillData=data;
-        init();
     }
     public String getSkillData(){return skillData;}
 
@@ -77,7 +87,6 @@ public class SkillExtendedEntityProperties implements IExtendedEntityProperties
     {
         if(speller.worldObj.isRemote)
             return;
-        flushSkillData();
         String[] strList=skillData.split("-");
         for(String name:strList)
         {
