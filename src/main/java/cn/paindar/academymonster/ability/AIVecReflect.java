@@ -133,7 +133,7 @@ public class AIVecReflect extends BaseSkill
     @SubscribeEvent
     public void onLivingHurt(LivingHurtEvent evt)
     {
-        if(isSkillInCooldown()&&!isChanting)
+        if(!evt.entity.equals(speller) ||( isSkillInCooldown()&&!isChanting))
             return;
         if(!isChanting)
         {

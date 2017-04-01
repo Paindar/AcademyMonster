@@ -7,6 +7,7 @@ import cn.paindar.academymonster.ability.AIFleshRipping;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 
@@ -33,7 +34,7 @@ public class EntityAIFleshRipping extends EntityAIBase
     public boolean shouldExecute()
     {
         EntityLivingBase target=speller.getAttackTarget();
-        if (target==null)
+        if (target==null||(target instanceof EntityPlayer && ((EntityPlayer)target).capabilities.isCreativeMode))
             return false;
         double dist=speller.getDistanceSqToEntity(target);
         return this.speller.getAttackTarget().isEntityAlive() && !skill.isSkillInCooldown() && dist >= 0.5&& dist <= skill.getMaxDistance() * skill.getMaxDistance();

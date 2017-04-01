@@ -9,6 +9,7 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 import net.minecraftforge.common.MinecraftForge;
@@ -34,7 +35,7 @@ public class EntityAIMineRay extends EntityAIBase
     public boolean shouldExecute()
     {
         EntityLivingBase target=speller.getAttackTarget();
-        return target!=null&&skill.available()&&speller.getNavigator().noPath();
+        return target!=null&&skill.available()&&(!(target instanceof EntityPlayer) || !((EntityPlayer)target).capabilities.isCreativeMode)&&speller.getNavigator().noPath();
     }
 
     public void startExecuting()

@@ -35,18 +35,6 @@ public class EntityInsaneMeltdowner extends EntityMob implements IBossDisplayDat
         this.targetTasks.addTask(1, new EntityAINearestAttackableTarget(this, EntityPlayer.class, 8, true));
         this.targetTasks.addTask(2, new EntityAIHurtByTarget(this, false));
         this.experienceValue = 50;
-
-        List<String> banList= AMConfig.getStringArray("am.monster."+this.getClass().getSimpleName()+".ban",new ArrayList<>());
-        SkillExtendedEntityProperties data= SkillExtendedEntityProperties.get(this);
-        //never checked
-        if(!banList.contains("ElectronBomb"))
-            data.list.add(new AIElectronBomb(this,0.5f+ RandUtils.rangef(0,0.5f)));
-        if(!banList.contains("ScatterBomb"))
-            data.list.add(new AIScatterBomb(this,0.25f+ RandUtils.rangef(0,0.75f)));
-        if(!banList.contains("Meltdowner"))
-            data.list.add(new AIMeltdowner(this,0.5f+ RandUtils.rangef(0,0.5f)));
-        if(!banList.contains("ElectronMissile"))
-            data.list.add(new AIElectronMissile(this,RandUtils.rangef(0,1f)));
     }
 
     protected void dropFewItems(boolean p_70628_1_, int p_70628_2_)

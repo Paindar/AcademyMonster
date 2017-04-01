@@ -7,7 +7,7 @@ import net.minecraft.entity.EntityLiving;
 
 /**
  * Created by Paindar on 2017/3/26.
- * Used to control all the skills Mob has, and
+ * In plan, it will used to control all the skills Mob has. But now it's going to control the mobs whose AI Task is unusable.
  */
 public class EntitySkillAICommon
 {

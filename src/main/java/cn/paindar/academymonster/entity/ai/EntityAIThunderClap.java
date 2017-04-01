@@ -7,6 +7,7 @@ import cn.paindar.academymonster.ability.AIThunderClap;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 
@@ -29,7 +30,7 @@ public class EntityAIThunderClap extends EntityAIBase
     public boolean shouldExecute()
     {
         EntityLivingBase target=speller.getAttackTarget();
-        if (target==null||skill.isSkillInCooldown())
+        if (target==null||skill.isSkillInCooldown()||(target instanceof EntityPlayer && ((EntityPlayer)target).capabilities.isCreativeMode))
             return false;
         double dist=speller.getDistanceSqToEntity(target);
         return dist <= skill.getMaxDistance() * skill.getMaxDistance();

@@ -4,6 +4,7 @@ import cn.paindar.academymonster.ability.AIRailgun;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIBase;
+import net.minecraft.entity.player.EntityPlayer;
 
 /**
  * Created by Paindar on 2017/2/12.
@@ -25,7 +26,7 @@ public class EntityAIRailgun extends EntityAIBase
     public boolean shouldExecute()
     {
         EntityLivingBase target=speller.getAttackTarget();
-        if (target==null)
+        if (target==null||(target instanceof EntityPlayer && ((EntityPlayer)target).capabilities.isCreativeMode))
             return false;
         double dist=speller.getDistanceSqToEntity(target);
         return this.speller.getAttackTarget().isEntityAlive() && !skill.isSkillInCooldown() && dist >= 2.25 && dist <= skill.getMaxDistance() * skill.getMaxDistance();

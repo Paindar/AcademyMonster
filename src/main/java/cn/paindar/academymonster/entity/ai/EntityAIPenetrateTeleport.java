@@ -5,6 +5,7 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 
 /**
@@ -28,7 +29,8 @@ public class EntityAIPenetrateTeleport  extends EntityAIBase
     public boolean shouldExecute() {
 
         //&& this.speller.getDistanceSqToEntity(this.speller.getAttackTarget())<=skill.getMaxDistance()
-        return this.speller.getAttackTarget() != null && !skill.isSkillInCooldown() && this.speller.getAttackTarget().isEntityAlive();
+        return this.speller.getAttackTarget() != null && !skill.isSkillInCooldown() && this.speller.getAttackTarget().isEntityAlive()
+                &&(!(target instanceof EntityPlayer) || !((EntityPlayer)target).capabilities.isCreativeMode);
     }
 
     /**

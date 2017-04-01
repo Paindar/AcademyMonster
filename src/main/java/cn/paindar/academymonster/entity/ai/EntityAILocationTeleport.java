@@ -4,6 +4,7 @@ import cn.paindar.academymonster.ability.AILocationTeleport;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.block.Block;
 import net.minecraft.world.World;
@@ -28,7 +29,7 @@ public class EntityAILocationTeleport extends EntityAIBase {
     @Override
     public boolean shouldExecute() {
         EntityLivingBase target=speller.getAttackTarget();
-        if(target==null)
+        if(target==null||(target instanceof EntityPlayer && ((EntityPlayer)target).capabilities.isCreativeMode))
             return false;
         double dist=speller.getDistanceSqToEntity(target);
         World world=speller.worldObj;

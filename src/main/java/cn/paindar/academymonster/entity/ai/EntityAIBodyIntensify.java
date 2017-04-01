@@ -5,6 +5,7 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.monster.EntityCreeper;
+import net.minecraft.entity.player.EntityPlayer;
 
 /**
  * Created by Paindar on 2017/2/10.
@@ -26,7 +27,7 @@ public class EntityAIBodyIntensify extends EntityAIBase
     @Override
     public boolean shouldExecute()
     {
-        return speller.getAttackTarget()!=null && !skill.isSkillInCooldown();
+        return speller.getAttackTarget()!=null && !skill.isSkillInCooldown()||(target instanceof EntityPlayer && !((EntityPlayer)target).capabilities.isCreativeMode);
     }
 
 

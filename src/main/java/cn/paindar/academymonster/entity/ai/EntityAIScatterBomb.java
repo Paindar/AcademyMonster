@@ -4,6 +4,7 @@ import cn.paindar.academymonster.ability.AIScatterBomb;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIBase;
+import net.minecraft.entity.player.EntityPlayer;
 
 /**
  * Created by Paindar on 2017/3/12.
@@ -24,7 +25,7 @@ public class EntityAIScatterBomb extends EntityAIBase
     public boolean shouldExecute()
     {
         EntityLivingBase target=speller.getAttackTarget();
-        if (target==null|| skill.isSkillInCooldown())
+        if (target==null|| skill.isSkillInCooldown()||(target instanceof EntityPlayer && ((EntityPlayer)target).capabilities.isCreativeMode))
             return false;
         double dist=speller.getDistanceSqToEntity(target);
         return this.speller.getAttackTarget().isEntityAlive() && !skill.isSkillInCooldown() && dist >= 2.25 && dist <= skill.getMaxDistance() * skill.getMaxDistance();
