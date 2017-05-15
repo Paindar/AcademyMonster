@@ -19,7 +19,7 @@ public class AIPenetrateTeleport extends BaseSkill
 {
     private float maxDistance;
     public AIPenetrateTeleport(EntityLivingBase speller,float exp) {
-        super(speller,(int)lerpf(200, 100, exp), exp,"teleporter.penetrate_teleport");
+        super(speller,(int)lerpf(200, 60, exp), exp,"teleporter.penetrate_teleport");
         maxDistance=lerpf(3,10, getSkillExp());
     }
 

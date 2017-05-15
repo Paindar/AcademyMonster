@@ -36,11 +36,12 @@ public class AIVecReflect extends BaseSkill
     private int time=0;
     private int maxTime;
     private float reflectRate;
+    private float maxDamage;
     public AIVecReflect(EntityLivingBase speller, float exp)
     {
         super(speller, (int)lerpf(400,300,exp), exp, "vecmanip.vec_reflection");
         maxTime=(int)lerpf(60,120,exp);
-        reflectRate=lerpf(0.3f,2f,exp);
+        maxDamage=lerpf(20,120,exp);
         MinecraftForge.EVENT_BUS.register(this);
     }
     @Override
@@ -52,11 +53,13 @@ public class AIVecReflect extends BaseSkill
     @Override
     public void onTick()
     {
-        if (time == 0)
+        if (time == 0||maxDamage<=1e-6)
         {
             if(isChanting)
             {
                 isChanting = false;
+                maxDamage=0;
+                time=0;
                 super.spell();
             }
             return;
@@ -100,23 +103,51 @@ public class AIVecReflect extends BaseSkill
      */
     private float handleAttack(DamageSource dmgSource, float dmg,Boolean passby)
     {
-
+        float refDmg=0;
         float returnRatio = reflectRate;
-        if (!passby) { // Perform the action.
+        if (!passby)
+        { // Perform the action.
             Entity sourceEntity = dmgSource.getSourceOfDamage();
 
-            if (sourceEntity != null && sourceEntity != speller) {
+            if (sourceEntity != null && sourceEntity != speller)
+            {
                 if(sourceEntity instanceof EntityLivingBase)
-                    attack((EntityLivingBase) sourceEntity, returnRatio*dmg);
+                {
+                    if(maxDamage>=returnRatio * dmg)
+                    {
+                        attack((EntityLivingBase) sourceEntity, returnRatio * dmg);
+                        refDmg=returnRatio * dmg;
+                        maxDamage-=refDmg;
+                    }
+                    else
+                    {
+                        refDmg=maxDamage;
+                        attack((EntityLivingBase) sourceEntity, refDmg);
+                        maxDamage=0;
+                    }
+
+                }
                 else
                 {
                     reflect(sourceEntity, speller);
                     EntityAffection.mark(sourceEntity);
                 }
             }
-            return Math.max(0,dmg*(1-returnRatio));
+            AcademyMonster.log.info("absorb damage = "+refDmg);
+            return Math.max(0,dmg-refDmg);
         } else {
-            return Math.max(0,dmg*(1-returnRatio));
+            if(maxDamage>=returnRatio * dmg)
+            {
+                refDmg=returnRatio * dmg;
+                maxDamage-=refDmg;
+            }
+            else
+            {
+                refDmg=maxDamage;
+                maxDamage=0;
+            }
+            AcademyMonster.log.info("absorb damage = "+refDmg);
+            return Math.max(0,dmg-refDmg);
         }
     }
 
@@ -137,7 +168,8 @@ public class AIVecReflect extends BaseSkill
             return;
         if(!isChanting)
         {
-            isChanting = true;
+            isChanting = true;//make skill available
+            reflectRate=lerpf(0.3f,2f,getSkillExp());
             time=maxTime;
         }
         if (evt.entityLiving.equals(speller))

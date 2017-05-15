@@ -63,7 +63,7 @@ public class AIFlashing extends BaseSkill{
         {
             return;
         }
-        if(time>=maxtime)
+        if(time>=maxtime||isInterf())
         {
             isChanting=false;
             super.spell();

@@ -152,7 +152,7 @@ public class AIRailgun extends BaseSkill
     }
     public void spell()
     {
-        if(isSkillInCooldown())
+        if(!canSpell())
             return;
         super.spell();
         ItemStack stack=speller.getEquipmentInSlot(0);
@@ -172,7 +172,7 @@ public class AIRailgun extends BaseSkill
         {
             return;
         }
-        if(coin.getProgress()>0.9)
+        if(coin.getProgress()>0.9&&!isInterf())
         {
             coin.setDead();
             spellRailgun();

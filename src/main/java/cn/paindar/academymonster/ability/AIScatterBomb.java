@@ -39,7 +39,7 @@ public class AIScatterBomb extends BaseSkill
     @Override
     public void spell()
     {
-        if(isSkillInCooldown())
+        if(!canSpell())
             return;
         if(isChanting)
         {
@@ -84,7 +84,7 @@ public class AIScatterBomb extends BaseSkill
             return;
 
         time++;
-        if(speller.isDead)
+        if(speller.isDead||isInterf())
         {
             isChanting=false;
             for(EntityMdBallNative ball:ballList)

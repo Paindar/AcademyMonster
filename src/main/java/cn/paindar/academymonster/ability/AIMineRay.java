@@ -41,7 +41,7 @@ public class AIMineRay extends BaseSkill
 
     public void spell()
     {
-        if(isSkillInCooldown()|| isChanting)
+        if(!canSpell())
             return;
         isChanting=true;
         rayEffect = new EntityMineRayNative(speller,maxDist);
@@ -54,7 +54,7 @@ public class AIMineRay extends BaseSkill
     {
         if(!isChanting)
             return;
-        if( rayEffect==null||rayEffect.isDead|| speller.isDead||maxTime<=time)
+        if( rayEffect==null||rayEffect.isDead|| speller.isDead||maxTime<=time||isInterf())
         {
             stop();
             return ;

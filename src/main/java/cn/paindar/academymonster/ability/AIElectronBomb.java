@@ -37,7 +37,7 @@ public class AIElectronBomb extends BaseSkill
 
     public void spell()
     {
-        if(isSkillInCooldown())
+        if(!canSpell())
             return;
         if(speller.worldObj.isRemote)
             return;

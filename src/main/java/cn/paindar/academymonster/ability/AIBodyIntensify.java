@@ -35,6 +35,8 @@ public class AIBodyIntensify extends BaseSkill
 
     public void spell()
     {
+        if(!canSpell())
+            return;
         double p = getProbability();
         int time = getBuffTime();
         int level=getBuffLevel();

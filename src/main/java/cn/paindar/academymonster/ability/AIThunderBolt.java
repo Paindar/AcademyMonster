@@ -47,6 +47,8 @@ public class AIThunderBolt extends BaseSkill
     {
         MovingObjectPosition result = Raytrace.traceLiving(speller, range);
         Vec3 end;
+        if(!canSpell())
+            return;
         if(result == null) {
             end = new Motion3D(speller).move(range).getPosVec();
         } else {

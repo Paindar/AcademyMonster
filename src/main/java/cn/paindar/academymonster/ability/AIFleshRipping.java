@@ -42,7 +42,7 @@ public class AIFleshRipping extends BaseSkill
     public void spell()
     {
         EntityLivingBase target=getAttackTarget();
-        if(target==null || isSkillInCooldown())
+        if(target==null || !canSpell())
             return;
         attackIgnoreArmor(target,damage);
         List<Entity> list= WorldUtils.getEntities(speller, 25, EntitySelectors.player());

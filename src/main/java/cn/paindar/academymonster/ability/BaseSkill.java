@@ -35,11 +35,32 @@ public abstract class BaseSkill
 
     public float getSkillExp(){return skillExp;}
 
-    protected int getMaxCooldown(){return maxCooldown;}
+    public boolean isInterf(){return AbilityInterfManager.instance.find(speller);}
+    public boolean isSkillInCooldown(){return remainCooldown!=0;}
 
-    private boolean isInterf(){return AbilityInterfManager.instance.find(speller);}
-    public boolean isSkillInCooldown(){return remainCooldown!=0||isInterf() || !SkillExtendedEntityProperties.isReady(speller);}
+    /**
+     * checked if skill can spell.
+     * Type:
+     * Cooldown Chant   Interfer    Result
+     * F        F       F           Valid(True)
+     * F        F       T           Interfered(False)
+     * F        T       F           Chanting(False)
+     * F        T       T           Interrupted(False, impossible)
+     * T        F       F           Cooldown(False)
+     * T        F       T           Interfered(False)
+     * T        T       F           Impossible(Error)
+     * T        T       T           Impossible(Error)
+     * @return nothing
+     */
+    public boolean canSpell()
+    {
+        return !isSkillInCooldown()&&!isChanting&&!isInterf();
+    }
 
+    public boolean available()
+    {
+        return !isSkillInCooldown() &&isChanting&& !isInterf();
+    }
     public boolean isChanting(){return isChanting;}
     @SubscribeEvent
     public void onServerTick(ServerTickEvent event)
@@ -87,11 +108,6 @@ public abstract class BaseSkill
             target.attackEntityFrom(new SkillDamageSourceNative(speller, this).setDamageBypassesArmor(), getFinalDamage(damage));
         }
         return true;
-    }
-
-    public boolean available()
-    {
-        return !(isChanting||isSkillInCooldown());
     }
 
     public String getUnlocalizedSkillName(){return "ac.ability." + skillName + ".name";}

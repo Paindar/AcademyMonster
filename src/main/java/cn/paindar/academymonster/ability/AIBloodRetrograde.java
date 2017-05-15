@@ -35,6 +35,8 @@ public class AIBloodRetrograde extends BaseSkill {
 
     public void spell()
     {
+        if(!canSpell())
+            return;
         MovingObjectPosition result=Raytrace.traceLiving(speller,range,EntitySelectors.living());
         EntityLivingBase target=null;
         if(result!=null&&result.typeOfHit==MovingObjectPosition.MovingObjectType.ENTITY)

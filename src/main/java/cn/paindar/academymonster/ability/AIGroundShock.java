@@ -78,6 +78,8 @@ public class AIGroundShock extends BaseSkill{
 
     public void spell()
     {
+        if(!canSpell())
+            return;
         Vec3 planeLook = speller.getLookVec().normalize();
 
         Plotter plotter = new Plotter((int)Math.floor(speller.posX),(int)Math.floor(speller.posY) - 1,

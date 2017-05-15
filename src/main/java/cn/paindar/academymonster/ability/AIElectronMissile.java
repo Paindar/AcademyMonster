@@ -39,7 +39,7 @@ public class AIElectronMissile extends BaseSkill
     @Override
     public void spell()
     {
-        if(!available())
+        if(!canSpell()||available())
             return;
         isChanting=true;
         time=0;
@@ -52,7 +52,7 @@ public class AIElectronMissile extends BaseSkill
             return;
 
         time++;
-        if(speller.isDead || time>=maxTick)
+        if(speller.isDead || time>=maxTick||isInterf())
         {
             isChanting=false;
             super.spell();
