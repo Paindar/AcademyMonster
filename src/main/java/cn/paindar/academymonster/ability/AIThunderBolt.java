@@ -59,7 +59,7 @@ public class AIThunderBolt extends BaseSkill
         }
 
         boolean hitEntity = !(result == null || result.entityHit == null);
-        Predicate<Entity> exclusion= (hitEntity)? EntitySelectors.exclude(speller) : EntitySelectors.exclude(speller, result.entityHit);
+        Predicate<Entity> exclusion= (!hitEntity)? EntitySelectors.exclude(speller) : EntitySelectors.exclude(speller, result.entityHit);
         EntityLivingBase target = (hitEntity)? (EntityLivingBase)result.entityHit : null;
         List<Entity> aoes = WorldUtils.getEntities(
             speller.worldObj, end.xCoord, end.yCoord, end.zCoord,
@@ -86,7 +86,7 @@ public class AIThunderBolt extends BaseSkill
         List<Entity> list= WorldUtils.getEntities(speller, 40, EntitySelectors.player());
         for(Entity e:list)
         {
-            NetworkManager.sendThunderBoltTo(speller,target,aoes,(EntityPlayerMP)e);
+            NetworkManager.sendThunderBoltTo(speller,end,aoes,(EntityPlayerMP)e);
         }
 
         super.spell();
@@ -95,7 +95,7 @@ public class AIThunderBolt extends BaseSkill
     public float getMaxDistance(){return range;}
 
     @SideOnly(Side.CLIENT)
-    public static void spawnEffect(EntityLivingBase ori,EntityLivingBase target,List<Entity> aoes)
+    public static void spawnEffect(EntityLivingBase ori,Vec3 target,List<Entity> aoes)
     {
         for(int i= 0 ;i<2;i++)
         {
@@ -109,7 +109,7 @@ public class AIThunderBolt extends BaseSkill
         {
             EntityArcNative aoeArc = new EntityArcNative(ori, ArcPatterns.aoeArc);
             aoeArc.lengthFixed = false;
-            aoeArc.setFromTo(target.posX, target.posY,target.posZ,
+            aoeArc.setFromTo(target.xCoord, target.yCoord,target.zCoord,
                     e.posX, e.posY + e.getEyeHeight(), e.posZ);
             aoeArc.addMotionHandler(new Life(RandUtils.rangei(15, 25)));
             ori.worldObj.spawnEntityInWorld(aoeArc);

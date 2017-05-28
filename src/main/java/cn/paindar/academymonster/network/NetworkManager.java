@@ -131,7 +131,7 @@ public class NetworkManager
             throw new IllegalStateException("Wrong context side!");
     }
 
-    public static void sendThunderBoltTo(EntityLivingBase ori,EntityLivingBase target,List<Entity> list, EntityPlayerMP player)
+    public static void sendThunderBoltTo(EntityLivingBase ori,Vec3 target,List<Entity> list, EntityPlayerMP player)
     {
         if(!player.getEntityWorld().isRemote)
         {
