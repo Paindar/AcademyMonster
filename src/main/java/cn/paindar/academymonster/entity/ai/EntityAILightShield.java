@@ -9,6 +9,7 @@ import net.minecraft.entity.player.EntityPlayer;
 /**
  * Created by Paindar on 2017/2/26.
  */
+@Deprecated
 public class EntityAILightShield extends EntityAIBase
 {
     private final EntityLiving speller;

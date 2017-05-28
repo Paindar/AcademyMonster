@@ -1,0 +1,37 @@
+package cn.paindar.academymonster.entity.ai;
+
+import cn.lambdalib.util.mc.BlockSelectors;
+import cn.lambdalib.util.mc.Raytrace;
+import cn.paindar.academymonster.entity.SkillExtendedEntityProperties;
+import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.Vec3;
+
+/**
+ * Created by Paindar on 2017/5/13.
+ */
+public abstract class EntityAIBaseX
+{
+    EntityLiving owner;
+    SkillExtendedEntityProperties ieep;
+    EntityAIBaseX(EntityLiving owner)
+    {
+        this.owner=owner;
+        ieep=SkillExtendedEntityProperties.get(owner);
+    }
+
+    public abstract boolean execute();
+
+    boolean isTargetInHorizon(EntityLivingBase target)
+    {
+        Vec3 lookingPos=owner.getLookVec(),direct=Vec3.createVectorHelper(target.posX-owner.posX,0,target.posZ-owner.posZ).normalize();
+        lookingPos.yCoord=0;
+        lookingPos=lookingPos.normalize();
+        MovingObjectPosition trace = Raytrace.rayTraceBlocks(owner.worldObj,
+                Vec3.createVectorHelper(owner.posX, owner.posY + owner.getEyeHeight(), owner.posZ),
+                Vec3.createVectorHelper(target.posX,target.posY+target.getEyeHeight(),target.posZ), BlockSelectors.filNothing
+        );
+        return (lookingPos.xCoord*direct.xCoord+lookingPos.zCoord*direct.zCoord>=0.5)&&(trace==null || trace.typeOfHit!= MovingObjectPosition.MovingObjectType.BLOCK);
+    }
+}

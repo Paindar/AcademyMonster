@@ -3,6 +3,9 @@ package cn.paindar.academymonster.entity;
 import cn.paindar.academymonster.ability.BaseSkill;
 import cn.paindar.academymonster.core.AcademyMonster;
 import cn.paindar.academymonster.core.SkillManager;
+import cn.paindar.academymonster.entity.ai.EntityAIBaseX;
+import cn.paindar.academymonster.entity.ai.EntityAIWander;
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import net.minecraft.entity.Entity;
@@ -27,13 +30,27 @@ public class SkillExtendedEntityProperties implements IExtendedEntityProperties
     private EntityLivingBase speller;
     public List<BaseSkill> list=new ArrayList<>();
     public int ready=20;
+    private int time=0;
     public SkillManager.Catalog catalog;
+    private EntityAIBaseX ai=null;
 
     @SubscribeEvent
     public void onServerTick(TickEvent.ServerTickEvent event)
     {
+        time++;
+        if(time>=5)
+        {
+            if(ai!=null)
+                ai.execute();
+            time=0;
+        }
         if(ready>0)
             ready--;
+        if(speller==null || speller.isDead)
+        {
+            FMLCommonHandler.instance().bus().unregister(this);//free this class if possible.
+            ai=null;
+        }
     }
 
     public static SkillExtendedEntityProperties get(Entity e)
@@ -43,9 +60,17 @@ public class SkillExtendedEntityProperties implements IExtendedEntityProperties
         {
             info=new SkillExtendedEntityProperties((EntityLivingBase) e);
             e.registerExtendedProperties(PROP_NAME, info);
+            FMLCommonHandler.instance().bus().register(info);//to line 50, maybe need free
         }
         return (SkillExtendedEntityProperties) info;
     }
+
+    /**
+     * checked if speller is interfered by AbilityInterfered
+     *
+     * @param e is the speller.
+     * @return result
+     */
     public static boolean isReady(Entity e){return get(e).ready==0;}
     public SkillExtendedEntityProperties(){}
 
@@ -56,10 +81,14 @@ public class SkillExtendedEntityProperties implements IExtendedEntityProperties
     public void setSkillData(String data)
     {
         skillData=data;
+    }// used for AIM Scanner's info sync.
+    public String getSkillData(){return skillData;}// used for AIM Scanner's info sync.
+    public void setAI(EntityAIBaseX ai)//update a AI, fired in initialization and update AI action.
+    {
+        this.ai=ai;
     }
-    public String getSkillData(){return skillData;}
 
-    public void flushSkillData()
+    public void flushSkillData()//Not sure if it's useful in the future, keep it temporary.
     {
         StringBuilder string=new StringBuilder();
         for(BaseSkill skill:list)
@@ -106,9 +135,10 @@ public class SkillExtendedEntityProperties implements IExtendedEntityProperties
                 exp=0;
             }
             BaseSkill skill = SkillManager.instance.createSkillInstance(skillInfo[0],speller,exp);
-            SkillManager.instance.addSkillAI(skill,(EntityLiving) speller);
-            list.add(skill);
+            //SkillManager.instance.addSkillAI(skill,(EntityLiving) speller);
+            if(skill!=null)list.add(skill);
         }
+        setAI(new EntityAIWander((EntityLiving) speller));
     }
     /**
      * Called when the entity that this class is attached to is loaded.

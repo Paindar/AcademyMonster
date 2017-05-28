@@ -1,6 +1,7 @@
 package cn.paindar.academymonster.entity.ai;
 
 import cn.paindar.academymonster.ability.AIPenetrateTeleport;
+import cn.paindar.academymonster.ability.BaseSkill;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
@@ -11,42 +12,16 @@ import net.minecraft.world.World;
 /**
  * Created by Paindar on 2017/2/9.
  */
-public class EntityAIPenetrateTeleport  extends EntityAIBase
+public class EntityAIPenetrateTeleport extends EntityAIBaseX
 {
-    EntityLiving speller;
     AIPenetrateTeleport skill;
     EntityLivingBase target;
 
-    public EntityAIPenetrateTeleport(EntityLiving zombie,AIPenetrateTeleport skill)
+    public EntityAIPenetrateTeleport(EntityLiving owner, EntityLivingBase tgt, AIPenetrateTeleport skill)
     {
-        speller=zombie;
+        super(owner);
+        target=tgt;
         this.skill=skill;
-    }
-    /**
-     * Returns whether the EntityAIBase should begin execution.
-     */
-    @Override
-    public boolean shouldExecute() {
-
-        //&& this.speller.getDistanceSqToEntity(this.speller.getAttackTarget())<=skill.getMaxDistance()
-        return this.speller.getAttackTarget() != null && !skill.isSkillInCooldown() && this.speller.getAttackTarget().isEntityAlive()
-                &&(!(target instanceof EntityPlayer) || !((EntityPlayer)target).capabilities.isCreativeMode);
-    }
-
-    /**
-     * Execute a one shot task or start executing a continuous task
-     */
-    public void startExecuting()
-    {
-        this.target =this.speller.getAttackTarget();
-    }
-
-    /**
-     * Resets the task
-     */
-    public void resetTask()
-    {
-        this.target = null;
     }
 
     private boolean hasPlace(World world ,double  x,double y,double z)
@@ -55,29 +30,29 @@ public class EntityAIPenetrateTeleport  extends EntityAIBase
         Block b1 = world.getBlock(ix, iy, iz);
         Block b2  = world.getBlock(ix, iy + 1, iz);
         return !b1.canCollideCheck(world.getBlockMetadata(ix, iy, iz), false) && !b2.canCollideCheck(world.getBlockMetadata(ix, iy + 1, iz), false);
-}
+    }
 
-    public void updateTask()
+    public boolean execute()
     {
-        double dist=Math.sqrt(this.speller.getDistanceSqToEntity(target));
-        double distBtwEntitys=dist;
+        double dist=Math.sqrt(this.owner.getDistanceSqToEntity(target));
+        double distBtwEntitiess=dist;
         dist=dist>skill.getMaxDistance()?skill.getMaxDistance():dist;
         if(target!=null && !skill.isSkillInCooldown() && dist >=0.5)
         {
 
-            double dx= (target.posX-speller.posX)/distBtwEntitys,
-                    dy=(target.posY-speller.posY)/distBtwEntitys,
-                    dz=(target.posZ-speller.posZ)/distBtwEntitys;
-            World world=speller.worldObj;
+            double dx= (target.posX-owner.posX)/distBtwEntitiess,
+                    dy=(target.posY-owner.posY)/distBtwEntitiess,
+                    dz=(target.posZ-owner.posZ)/distBtwEntitiess;
+            World world=owner.worldObj;
             for(double d=dist;d>0;d-=1)
             {
-                double x = speller.posX + dx * d;
-                double y = speller.posY + dy * d;
-                double z = speller.posZ + dz * d;
+                double x = owner.posX + dx * d;
+                double y = owner.posY + dy * d;
+                double z = owner.posZ + dz * d;
                 if(hasPlace(world,x,y,z))
                 {
                     this.skill.spell(x,y,z);
-                    speller.getNavigator().clearPathEntity();
+                    owner.getNavigator().clearPathEntity();
                     break;
                 }
                 else if(hasPlace(world,x,y+1,z))
@@ -87,6 +62,7 @@ public class EntityAIPenetrateTeleport  extends EntityAIBase
                 }
             }
         }
-
+        ieep.setAI(new EntityAIChasing(owner,target,40));
+        return true;
     }
 }
