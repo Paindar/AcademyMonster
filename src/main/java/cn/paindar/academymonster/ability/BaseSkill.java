@@ -79,7 +79,7 @@ public abstract class BaseSkill
 
     }
 
-    public void spell()
+    void spell()
     {
         remainCooldown=maxCooldown;
         SkillExtendedEntityProperties.get(speller).ready=5;
