@@ -67,7 +67,7 @@ public class EntityFakeRaingun extends EntityMob implements IBossDisplayData
     {
         super.applyEntityAttributes();
         this.getEntityAttribute(SharedMonsterAttributes.followRange).setBaseValue(40.0D);
-        this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.20D);
+        this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.5D);
         this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(60);
     }
 
