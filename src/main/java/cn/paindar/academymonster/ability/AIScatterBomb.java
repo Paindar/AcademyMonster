@@ -41,35 +41,7 @@ public class AIScatterBomb extends BaseSkill
     {
         if(!canSpell())
             return;
-        if(isChanting)
-        {
-            List<Entity> trgList= WorldUtils.getEntities(speller,range, EntitySelectors.living().and(EntitySelectors.exclude(speller)));
-            Vec3 dst=new Motion3D(speller, 5, true).move(range).getPosVec();
-            for(EntityMdBallNative ball:ballList)
-            {
-                Vec3 str= VecUtils.vec(ball.posX, ball.posY, ball.posZ);
-                if(!trgList.isEmpty())
-                {
-                    dst=new Motion3D(trgList.get(RandUtils.nextInt(trgList.size())),5,true).getPosVec();
-                }
-                MovingObjectPosition trace = Raytrace.perform(speller.worldObj,str,dst
-                        , EntitySelectors.exclude(speller).and(EntitySelectors.living()));
-                if (trace != null && trace.entityHit != null)
-                {
-                    attack((EntityLivingBase) trace.entityHit, damage);
-                    List<Entity> list= WorldUtils.getEntities(speller, 25, EntitySelectors.player());
-                    for(Entity e:list)
-                    {
-                        NetworkManager.sendMdRayEffectTo(str,dst,(EntityPlayerMP)e);
-                    }
-                }
-                ball.setDead();
-            }
-            ballList.clear();
-            isChanting=false;
-            super.spell();
-        }
-        else
+        if (!isChanting)
         {
             isChanting=true;
             time=0;
@@ -105,6 +77,34 @@ public class AIScatterBomb extends BaseSkill
         }
     }
 
+    public void stop()
+    {
+        List<Entity> trgList= WorldUtils.getEntities(speller,range, EntitySelectors.living().and(EntitySelectors.exclude(speller)));
+        Vec3 dst=new Motion3D(speller, 5, true).move(range).getPosVec();
+        for(EntityMdBallNative ball:ballList)
+        {
+            Vec3 str= VecUtils.vec(ball.posX, ball.posY, ball.posZ);
+            if(!trgList.isEmpty())
+            {
+                dst=new Motion3D(trgList.get(RandUtils.nextInt(trgList.size())),5,true).getPosVec();
+            }
+            MovingObjectPosition trace = Raytrace.perform(speller.worldObj,str,dst
+                    , EntitySelectors.exclude(speller).and(EntitySelectors.living()));
+            if (trace != null && trace.entityHit != null)
+            {
+                attack((EntityLivingBase) trace.entityHit, damage);
+                List<Entity> list= WorldUtils.getEntities(speller, 25, EntitySelectors.player());
+                for(Entity e:list)
+                {
+                    NetworkManager.sendMdRayEffectTo(str,dst,(EntityPlayerMP)e);
+                }
+            }
+            ball.setDead();
+        }
+        ballList.clear();
+        isChanting=false;
+        super.spell();
+    }
     public int getBallSize(){return ballList.size();}
 
     public float getMaxDistance(){return range;}
