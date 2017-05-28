@@ -3,6 +3,7 @@ package cn.paindar.academymonster.ability;
 import cn.academy.vanilla.electromaster.skill.BodyIntensify;
 import cn.lambdalib.util.generic.RandUtils;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.monster.EntityCreeper;
 import net.minecraft.potion.PotionEffect;
 import scala.collection.immutable.Vector;
 
@@ -41,7 +42,10 @@ public class AIBodyIntensify extends BaseSkill
         int time = getBuffTime();
         int level=getBuffLevel();
         Vector<PotionEffect> vector=BodyIntensify.effects();
-
+        if(speller instanceof EntityCreeper)
+        {
+            speller.getDataWatcher().updateObject(17, Byte.valueOf((byte)1));
+        }
         for(int i=0;i<vector.size();i++)
         {
             if(RandUtils.ranged(0, 1+p)<p)
