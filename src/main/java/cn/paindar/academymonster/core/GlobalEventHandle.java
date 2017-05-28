@@ -3,13 +3,9 @@ package cn.paindar.academymonster.core;
 import cn.academy.ability.ModuleAbility;
 import cn.academy.vanilla.ModuleVanilla;
 import cn.lambdalib.util.generic.RandUtils;
-import cn.paindar.academymonster.core.support.terminal.ui.BossHealthBar;
 import cn.paindar.academymonster.entity.SkillExtendedEntityProperties;
-import cn.paindar.academymonster.entity.ai.EntitySkillAICommon;
 import cn.paindar.academymonster.network.NetworkManager;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityTracker;
 import net.minecraft.entity.IEntityOwnable;
@@ -20,12 +16,9 @@ import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.world.WorldServer;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
-
-import java.lang.reflect.Method;
 
 /**
  * Created by Paindar on 2017/2/12.
@@ -54,20 +47,6 @@ public class GlobalEventHandle
                 SkillManager.instance.addSkill((EntityLiving)event.entity);
             }
             data.init();
-            boolean enabled;
-            try
-            {
-                Method method=event.entity.getClass().getDeclaredMethod ("isAIEnabled");
-                method.setAccessible(true);
-                enabled=(boolean) method.invoke(event.entity, (Object[]) null);
-            } catch (Exception e)
-            {
-                enabled=false;
-            }
-            if(!enabled)
-            {
-                new EntitySkillAICommon((EntityLiving)event.entity);
-            }
 
             EntityTracker tracker = ((WorldServer)event.world).getEntityTracker();
             for (EntityPlayer entityPlayer : tracker.getTrackingPlayers(event.entity)) {
@@ -120,11 +99,11 @@ public class GlobalEventHandle
         }
     }
 
-    @SubscribeEvent
-    @SideOnly(Side.CLIENT)
-    public void onPreRenderGameOverlay(RenderGameOverlayEvent.Pre event)
-    {
-        BossHealthBar.flushHealthBar(event);
-    }
+//    @SubscribeEvent
+//    @SideOnly(Side.CLIENT)
+//    public void onPreRenderGameOverlay(RenderGameOverlayEvent.Pre event)
+//    {
+//        BossHealthBar.flushHealthBar(event);
+//    }
 
 }
