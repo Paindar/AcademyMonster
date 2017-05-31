@@ -62,7 +62,7 @@ public class AIMeltdowner extends BaseSkill
         }
     }
 
-    void spellLightgun()
+    private void spellLightgun()
     {
         Motion3D motion=new Motion3D(speller, true).move(0.1).normalize();
         float yaw = -MathUtils.PI_F * 0.5f - motion.getRotationYawRadians(),
@@ -166,7 +166,7 @@ public class AIMeltdowner extends BaseSkill
     @Override
     public void spell()
     {
-        if(canSpell())
+        if(!canSpell())
             return;
         tick=0;
         isChanting=true;
