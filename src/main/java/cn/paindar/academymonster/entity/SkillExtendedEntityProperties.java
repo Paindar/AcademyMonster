@@ -29,7 +29,6 @@ public class SkillExtendedEntityProperties implements IExtendedEntityProperties
     public int level=0;
     private EntityLivingBase speller;
     public List<BaseSkill> list=new ArrayList<>();
-    public int ready=20;
     private int time=0;
     public SkillManager.Catalog catalog;
     private EntityAIBaseX ai=null;
@@ -38,14 +37,12 @@ public class SkillExtendedEntityProperties implements IExtendedEntityProperties
     public void onServerTick(TickEvent.ServerTickEvent event)
     {
         time++;
-        if(time>=5)
+        if(time>=10)
         {
             if(ai!=null)
                 ai.execute();
             time=0;
         }
-        if(ready>0)
-            ready--;
         if(speller==null || speller.isDead)
         {
             FMLCommonHandler.instance().bus().unregister(this);//free this class if possible.
@@ -65,13 +62,6 @@ public class SkillExtendedEntityProperties implements IExtendedEntityProperties
         return (SkillExtendedEntityProperties) info;
     }
 
-    /**
-     * checked if speller is interfered by AbilityInterfered
-     *
-     * @param e is the speller.
-     * @return result
-     */
-    public static boolean isReady(Entity e){return get(e).ready==0;}
     public SkillExtendedEntityProperties(){}
 
     SkillExtendedEntityProperties(EntityLivingBase e)

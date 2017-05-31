@@ -82,7 +82,6 @@ public abstract class BaseSkill
     void spell()
     {
         remainCooldown=maxCooldown;
-        SkillExtendedEntityProperties.get(speller).ready=5;
     }
     private float getFinalDamage(float damage) {
         return damage;
