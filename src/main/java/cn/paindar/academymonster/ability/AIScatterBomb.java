@@ -31,7 +31,7 @@ public class AIScatterBomb extends BaseSkill
     private final float maxTime=240;
     public AIScatterBomb(EntityLivingBase speller, float exp)
     {
-        super(speller, (int)lerpf(160,100,exp), exp, "meltdowner.scatter_bomb");
+        super(speller, (int)lerpf(160,240,exp), exp, "meltdowner.scatter_bomb");
         damage=lerpf(3,9,exp);
         range=lerpf(5,11,exp);
     }
