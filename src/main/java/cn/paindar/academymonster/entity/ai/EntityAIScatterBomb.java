@@ -26,7 +26,7 @@ public class EntityAIScatterBomb extends EntityAIBaseX
     {
         if(skill.isSkillInCooldown())
         {
-            ieep.setAI(new EntityAIWander(owner));
+            ieep.setAI(new EntityAIRange(owner,target));
         }
         if(target!=null)
         {
@@ -50,7 +50,7 @@ public class EntityAIScatterBomb extends EntityAIBaseX
                     if(skill.getBallSize()>=7)
                     {
                         skill.stop();
-                        ieep.setAI(new EntityAIWander(owner));
+                        ieep.setAI(new EntityAIRange(owner,target));
                     }
                 }
             }
