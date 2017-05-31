@@ -3,6 +3,7 @@ package cn.paindar.academymonster.entity.ai;
 import cn.lambdalib.util.mc.BlockSelectors;
 import cn.lambdalib.util.mc.Raytrace;
 import cn.paindar.academymonster.ability.*;
+import cn.paindar.academymonster.core.AcademyMonster;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityLiving;
@@ -73,65 +74,12 @@ public class EntityAIRange extends EntityAIBaseX
                     }
                 }
             }
-            else if(skill instanceof AIElectronBomb && skill.canSpell())
-            {
-                validDist=((AIElectronBomb) skill).getMaxDistance();
-                if(validDist*validDist>=imaDist)
-                {
-                    if(isTargetInHorizon(target))
-                    {
-                        ((AIElectronBomb) skill).spell();
-                        break;
-                    }
-                }
-            }
-            else if(skill instanceof AIGroundShock && skill.canSpell())
-            {
-                validDist=((AIGroundShock) skill).getMaxDistance();
-                if(validDist*validDist>=imaDist)
-                {
-                    if(isTargetInHorizon(target))
-                    {
-                        ((AIGroundShock) skill).spell();
-                        break;
-                    }
-                }
-            }
-            else if(skill instanceof AIPenetrateTeleport && skill.canSpell())
-            {
-                ieep.setAI(new EntityAIPenetrateTeleport(owner,target, (AIPenetrateTeleport) skill));
-                break;
-            }
-            else if(skill instanceof AIFleshRipping && skill.canSpell())
-            {
-                validDist=((AIFleshRipping) skill).getMaxDistance();
-                if(validDist*validDist>=imaDist)
-                {
-                    if(isTargetInHorizon(target))
-                    {
-                        ((AIFleshRipping) skill).spell();
-                        break;
-                    }
-                }
-            }
-            else if(skill instanceof AIMeltdowner && skill.canSpell())
-            {
-                validDist=((AIMeltdowner) skill).getMaxDistance();
-                if(validDist*validDist>=imaDist)
-                {
-                    if(isTargetInHorizon(target))
-                    {
-                        ((AIMeltdowner) skill).spell();
-                        break;
-                    }
-                }
-            }
             else if(skill instanceof AIRailgun && skill.canSpell())
             {
                 validDist=((AIRailgun) skill).getMaxDistance();
                 if(validDist*validDist>=imaDist)
                 {
-                    if(isTargetInHorizon(target))
+                    if(isTargetInHorizonIgnoreBlock(target))
                     {
                         ((AIRailgun) skill).spell();
                         break;
@@ -161,6 +109,61 @@ public class EntityAIRange extends EntityAIBaseX
                         break;
                     }
                 }
+            }
+            else if(skill instanceof AIElectronBomb && skill.canSpell())
+            {
+                validDist=((AIElectronBomb) skill).getMaxDistance();
+                if(validDist*validDist>=imaDist)
+                {
+                    if(isTargetInHorizon(target))
+                    {
+                        ((AIElectronBomb) skill).spell();
+                        break;
+                    }
+                }
+            }
+            else if(skill instanceof AIMeltdowner && skill.canSpell())
+            {
+                validDist=((AIMeltdowner) skill).getMaxDistance();
+                AcademyMonster.log.info("We have it.");
+                if(validDist*validDist>=imaDist)
+                {
+                    AcademyMonster.log.info("We can spell it.");
+                    if(isTargetInHorizonIgnoreBlock(target))
+                    {
+                        ((AIMeltdowner) skill).spell();
+                        break;
+                    }
+                }
+            }
+            else if(skill instanceof AIGroundShock && skill.canSpell())
+            {
+                validDist=((AIGroundShock) skill).getMaxDistance();
+                if(validDist*validDist>=imaDist)
+                {
+                    if(isTargetInHorizon(target))
+                    {
+                        ((AIGroundShock) skill).spell();
+                        break;
+                    }
+                }
+            }
+            else if(skill instanceof AIFleshRipping && skill.canSpell())
+            {
+                validDist=((AIFleshRipping) skill).getMaxDistance();
+                if(validDist*validDist>=imaDist)
+                {
+                    if(isTargetInHorizon(target))
+                    {
+                        ((AIFleshRipping) skill).spell();
+                        break;
+                    }
+                }
+            }
+            else if(skill instanceof AIPenetrateTeleport && skill.canSpell())
+            {
+                ieep.setAI(new EntityAIPenetrateTeleport(owner,target, (AIPenetrateTeleport) skill));
+                break;
             }
             else if (skill instanceof AIScatterBomb && skill.canSpell())
             {
