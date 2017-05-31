@@ -34,4 +34,12 @@ public abstract class EntityAIBaseX
         );
         return (lookingPos.xCoord*direct.xCoord+lookingPos.zCoord*direct.zCoord>=0.5)&&(trace==null || trace.typeOfHit!= MovingObjectPosition.MovingObjectType.BLOCK);
     }
+
+    boolean isTargetInHorizonIgnoreBlock(EntityLivingBase target)
+    {
+        Vec3 lookingPos=owner.getLookVec(),direct=Vec3.createVectorHelper(target.posX-owner.posX,0,target.posZ-owner.posZ).normalize();
+        lookingPos.yCoord=0;
+        lookingPos=lookingPos.normalize();
+        return (lookingPos.xCoord*direct.xCoord+lookingPos.zCoord*direct.zCoord>=0.5);
+    }
 }
