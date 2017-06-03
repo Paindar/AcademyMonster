@@ -125,10 +125,8 @@ public class EntityAIRange extends EntityAIBaseX
             else if(skill instanceof AIMeltdowner && skill.canSpell())
             {
                 validDist=((AIMeltdowner) skill).getMaxDistance();
-                AcademyMonster.log.info("We have it.");
                 if(validDist*validDist>=imaDist)
                 {
-                    AcademyMonster.log.info("We can spell it.");
                     if(isTargetInHorizonIgnoreBlock(target))
                     {
                         ((AIMeltdowner) skill).spell();

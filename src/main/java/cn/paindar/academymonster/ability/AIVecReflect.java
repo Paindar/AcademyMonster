@@ -133,7 +133,6 @@ public class AIVecReflect extends BaseSkill
                     EntityAffection.mark(sourceEntity);
                 }
             }
-            AcademyMonster.log.info("absorb damage = "+refDmg);
             return Math.max(0,dmg-refDmg);
         } else {
             if(maxDamage>=returnRatio * dmg)
@@ -146,7 +145,6 @@ public class AIVecReflect extends BaseSkill
                 refDmg=maxDamage;
                 maxDamage=0;
             }
-            AcademyMonster.log.info("absorb damage = "+refDmg);
             return Math.max(0,dmg-refDmg);
         }
     }
