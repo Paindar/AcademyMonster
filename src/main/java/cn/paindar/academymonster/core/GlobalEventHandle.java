@@ -32,7 +32,7 @@ public class GlobalEventHandle
 
     static boolean isClassAllowed(EntityLiving entity)
     {
-        return (entity instanceof EntityMob || (entity instanceof IMob) || entity instanceof EntityGolem) && !(entity instanceof IEntityOwnable);
+        return (entity instanceof EntityMob || (entity instanceof IMob) || entity instanceof EntityGolem);
     }
 
     @SubscribeEvent
