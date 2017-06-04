@@ -106,6 +106,7 @@ public class SkillManager
         registerSkill(AIBloodRetrograde.class,0.7f,3,Catalog.vector);
         registerSkill(AIDirectedShock.class, 2,1,Catalog.vector);
         registerSkill(AIElectronBomb.class, 1,1,Catalog.meltdown);
+        registerSkill(AIElectronCurtains.class,0.4f,4,Catalog.meltdown);
         registerSkill(AIElectronMissile.class,0.1f,5,Catalog.meltdown);
         //registerSkill(AIFlashing.class,0.2f,5,5,Catalog.teleport);
         registerSkill(AIFleshRipping.class, 1,3,Catalog.teleport);
@@ -167,68 +168,77 @@ public class SkillManager
             double sumWeight=0;
             Catalog[] logs = Catalog.values();
             Catalog type = logs[RandUtils.nextInt(logs.length)];
-
-            int level = 1, last = 0, mark = 0;
-            List<SkillInfo> filtList = new ArrayList<>();
             SkillExtendedEntityProperties data = SkillExtendedEntityProperties.get(entity);
-            data.catalog = type;
-            while (prob >= RandUtils.nextFloat())
+            boolean isTest=true;
+
+            if(!isTest)
             {
-                prob *= factor;
-                SkillInfo info;
-                if (level != last)
+                int level = 1, last = 0, mark = 0;
+                List<SkillInfo> filtList = new ArrayList<>();
+                data.catalog = type;
+                while (prob >= RandUtils.nextFloat())
                 {
-                    for (; mark < list.size(); mark++)
+                    prob *= factor;
+                    SkillInfo info;
+                    if (level != last)
                     {
-                        info = list.get(mark);
-                        if (info.type == type && !banList.contains(info.klass.getSimpleName().substring(2)))
+                        for (; mark < list.size(); mark++)
                         {
-                            if (info.lvl <= level)
+                            info = list.get(mark);
+                            if (info.type == type && !banList.contains(info.klass.getSimpleName().substring(2)))
                             {
-                                filtList.add(info);
-                                sumWeight += info.prob;
+                                if (info.lvl <= level)
+                                {
+                                    filtList.add(info);
+                                    sumWeight += info.prob;
+                                } else
+                                    break;
                             }
-                            else
-                                break;
+                        }
+                    }//flush available skill list
+                    if (filtList.isEmpty())
+                    {
+                        if (mark >= list.size())
+                        {
+                            break;
+                        } else
+                        {
+                            level++;
+                            prob /= factor;
+                            continue;
                         }
                     }
-                }//flush available skill list
-                if (filtList.isEmpty())
-                {
-                    if (mark >= list.size())
+
+                    int index = 0;
+                    info = filtList.get(0);
+                    double p = RandUtils.ranged(0, sumWeight);
+                    while (filtList.size() > index)
                     {
-                        break;
-                    } else
-                    {
-                        level++;
-                        prob /= factor;
-                        continue;
+                        info = filtList.get(index);
+                        if (p < info.prob)
+                            break;
+                        p -= info.prob;
+                        index++;
                     }
-                }
+                    filtList.remove(index);
+                    sumWeight -= info.prob;
+                    last = info.lvl;
+                    if (info.lvl == level)
+                        level++;
 
-                int index = 0;
-                info = filtList.get(0);
-                double p = RandUtils.ranged(0, sumWeight);
-                while (filtList.size() > index)
-                {
-                    info = filtList.get(index);
-                    if (p < info.prob)
-                        break;
-                    p -= info.prob;
-                    index++;
+                    float randExp = RandUtils.nextFloat();
+                    randExp = 0.01f + randExp * randExp;
+                    builder.append(info.name).append('~').append(randExp).append('-');
                 }
-                filtList.remove(index);
-                sumWeight-=info.prob;
-                last = info.lvl;
-                if (info.lvl == level)
-                    level++;
-
-                float randExp = RandUtils.nextFloat();
-                randExp = 0.01f + randExp * randExp;
-                builder.append(info.name).append('~').append(randExp).append('-');
+                data.setSkillData(builder.toString());
+                data.level = level - 1;
             }
-            data.setSkillData(builder.toString());
-            data.level = level - 1;
+            else
+            {
+                data.setSkillData("ac.ability.meltdowner.electron_curtain.name~0.35");
+                data.level=4;
+                data.catalog=Catalog.meltdown;
+            }
         }
     }
 

@@ -4,6 +4,7 @@ ac.settings.prop.open_aim_scanner=开启AIM扫描仪
 am.aim_scanner_skill_list.notinstalled=你还没有安装AIM扫描仪
 ac.app.aim_scanner.name=AIM扫描仪
 ac.ability.MineRay.name=采矿光束
+ac.ability.meltdowner.electron_curtain.name=电子光幕
 
 entity.academy-monster.am_fake_railgun.name=自称的超电磁炮者
 entity.academy-monster.am_insane_meltdowner.name=疯掉的原子崩坏使
