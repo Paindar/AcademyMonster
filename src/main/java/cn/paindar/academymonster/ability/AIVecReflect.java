@@ -65,7 +65,7 @@ public class AIVecReflect extends BaseSkill
             return;
         }
         time--;
-        if(speller==null)
+        if(speller==null||speller.isDead)
             return;
         //
         List<Entity> entities = WorldUtils.getEntities(speller, 5, (Entity entity) -> (!EntityAffection.isMarked(entity)));
@@ -152,28 +152,26 @@ public class AIVecReflect extends BaseSkill
     @SubscribeEvent
     public void onLivingAttack(LivingAttackEvent evt)
     {
-    if (evt.entityLiving.equals(speller)&&isChanting) {
+        if (evt.entityLiving.equals(speller)&&isChanting) {
 
-        if ( handleAttack(evt.source, evt.ammount,  true)<=0) {
-            evt.setCanceled(true);
+            if ( handleAttack(evt.source, evt.ammount,  true)<=0) {
+                evt.setCanceled(true);
+            }
         }
     }
-}
+
     @SubscribeEvent
     public void onLivingHurt(LivingHurtEvent evt)
     {
-        if(!evt.entity.equals(speller) ||( isSkillInCooldown()&&!isChanting))
+        if(!evt.entity.equals(speller))
             return;
-        if(!isChanting)
+        if(canSpell())
         {
             isChanting = true;//make skill available
             reflectRate=lerpf(0.3f,2f,getSkillExp());
             time=maxTime;
         }
-        if (evt.entityLiving.equals(speller))
-        {
-            evt.ammount = handleAttack(evt.source, evt.ammount, false);
-        }
+        evt.ammount = handleAttack(evt.source, evt.ammount, false);
 }
 
     private static void reflect(Entity entity,EntityLivingBase player)
@@ -192,7 +190,7 @@ public class AIVecReflect extends BaseSkill
         source.setDead();
 
         EntityLivingBase shootingEntity = source.shootingEntity;
-        EntityFireball fireball  = null;
+        EntityFireball fireball;
         if(source instanceof EntityLargeFireball)
         {
             fireball = new EntityLargeFireball(((EntityLargeFireball) source).worldObj, shootingEntity, shootingEntity.posX,
