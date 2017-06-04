@@ -169,7 +169,7 @@ public class SkillManager
             Catalog[] logs = Catalog.values();
             Catalog type = logs[RandUtils.nextInt(logs.length)];
             SkillExtendedEntityProperties data = SkillExtendedEntityProperties.get(entity);
-            boolean isTest=true;
+            boolean isTest=false;
 
             if(!isTest)
             {
