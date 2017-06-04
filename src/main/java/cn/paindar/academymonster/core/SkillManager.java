@@ -136,15 +136,15 @@ public class SkillManager
         {
             SkillExtendedEntityProperties data=SkillExtendedEntityProperties.get(entity);
             if(!banList.contains("ArcGen"))
-               builder.append("ac.ability.electromaster.arc_gen.name").append('~').append(rangef(0,0.5f)).append('-');
+               builder.append("ac.ability.electromaster.arc_gen.name").append('~').append(rangef(0.1f,0.5f)).append('-');
             if(!banList.contains("BodyIntensify"))
-                builder.append("ac.ability.electromaster.body_intensify.name").append('~').append(0.25f+ rangef(0,0.75f)).append('-');
+                builder.append("ac.ability.electromaster.body_intensify.name").append('~').append(0.25f+ rangef(0.1f,0.75f)).append('-');
             if(!banList.contains("Railgun"))
-                builder.append("ac.ability.electromaster.railgun.name").append('~').append(0.5f+ rangef(0,0.5f)).append('-');
+                builder.append("ac.ability.electromaster.railgun.name").append('~').append(0.5f+ rangef(0.1f,0.5f)).append('-');
             if(!banList.contains("ThunderBolt"))
-                builder.append("ac.ability.electromaster.thunder_bolt.name").append('~').append(rangef(0,1f)).append('-');
+                builder.append("ac.ability.electromaster.thunder_bolt.name").append('~').append(rangef(0.1f,1f)).append('-');
             if(!banList.contains("ThunderClap"))
-                builder.append("ac.ability.electromaster.thunder_clap.name").append('~').append(0.5f+ rangef(0,1f)).append('-');
+                builder.append("ac.ability.electromaster.thunder_clap.name").append('~').append(0.5f+ rangef(0.1f,0.5f)).append('-');
             data.setSkillData(builder.toString());
         }
         else if(entity instanceof EntityInsaneMeltdowner)
@@ -152,13 +152,13 @@ public class SkillManager
             SkillExtendedEntityProperties data= SkillExtendedEntityProperties.get(entity);
             //unchecked//
             if(!banList.contains("ElectronBomb"))
-                builder.append("ac.ability.meltdowner.electron_bomb.name").append('~').append(0.5f+ rangef(0,0.5f)).append('-');
+                builder.append("ac.ability.meltdowner.electron_bomb.name").append('~').append(0.5f+ rangef(0.1f,0.5f)).append('-');
             if(!banList.contains("BodyIntensify"))
-                builder.append("ac.ability.meltdowner.scatter_bomb.name").append('~').append(0.25f+ rangef(0,0.75f)).append('-');
+                builder.append("ac.ability.meltdowner.scatter_bomb.name").append('~').append(0.25f+ rangef(0.1f,0.75f)).append('-');
             if(!banList.contains("Railgun"))
-                builder.append("ac.ability.meltdowner.meltdowner.name").append('~').append(0.5f+ rangef(0,0.5f)).append('-');
+                builder.append("ac.ability.meltdowner.meltdowner.name").append('~').append(0.5f+ rangef(0.1f,0.5f)).append('-');
             if(!banList.contains("ThunderBolt"))
-                builder.append("ac.ability.meltdowner.electron_missile.name").append('~').append(rangef(0,1f)).append('-');
+                builder.append("ac.ability.meltdowner.electron_missile.name").append('~').append(rangef(0.1f,1f)).append('-');
             data.setSkillData(builder.toString());
         }
         else
@@ -235,9 +235,9 @@ public class SkillManager
             }
             else
             {
-                data.setSkillData("ac.ability.meltdowner.electron_curtain.name~0.35");
+                data.setSkillData("ac.ability.vecmanip.vec_reflection.name~1.00");
                 data.level=4;
-                data.catalog=Catalog.meltdown;
+                data.catalog=Catalog.vector;
             }
         }
     }
