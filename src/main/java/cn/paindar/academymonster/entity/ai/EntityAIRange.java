@@ -32,7 +32,7 @@ public class EntityAIRange extends EntityAIBaseX
             ieep.setAI(new EntityAIChasing(owner,target,40));
             return false;
         }
-        if (imaDist<=9)
+        if (imaDist<=25)
         {
             ieep.setAI(new EntityAIMelee(owner,target));
             return false;

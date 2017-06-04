@@ -31,7 +31,7 @@ public class EntityAIMelee extends EntityAIBaseX
             return false;
         }
         double imaDist=owner.getDistanceSqToEntity(target);
-        if ( imaDist<=9)
+        if ( imaDist<=25)
         {
             for(BaseSkill skill :ieep.list)
             {
@@ -81,6 +81,11 @@ public class EntityAIMelee extends EntityAIBaseX
                             }
                         }
                     }
+                }
+                else if(skill instanceof AIElectronCurtains && skill.canSpell())
+                {
+                    ((AIElectronCurtains) skill).spell();
+                    break;
                 }
                 else if(skill instanceof AIElectronBomb && skill.canSpell())
                 {
