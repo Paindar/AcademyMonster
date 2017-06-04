@@ -34,14 +34,15 @@ import static cn.lambdalib.util.generic.MathUtils.lerpf;
 public class AIVecReflect extends BaseSkill
 {
     private int time=0;
-    private int maxTime;
+    private final int maxTime;
     private float reflectRate;
-    private float maxDamage;
+    private final float maxDamage;
+    private float dmg;
     public AIVecReflect(EntityLivingBase speller, float exp)
     {
         super(speller, (int)lerpf(400,300,exp), exp, "vecmanip.vec_reflection");
-        maxTime=(int)lerpf(60,120,exp);
-        maxDamage=lerpf(20,120,exp);
+        maxTime=(int)lerpf(60,240,exp);
+        maxDamage=lerpf(200,1200,exp);
         MinecraftForge.EVENT_BUS.register(this);
     }
     @Override
@@ -53,12 +54,12 @@ public class AIVecReflect extends BaseSkill
     @Override
     public void onTick()
     {
-        if (time == 0||maxDamage<=1e-6)
+        if (time == 0||dmg<=1e-6)
         {
             if(isChanting)
             {
                 isChanting = false;
-                maxDamage=0;
+                dmg=0;
                 time=0;
                 super.spell();
             }
@@ -113,17 +114,17 @@ public class AIVecReflect extends BaseSkill
             {
                 if(sourceEntity instanceof EntityLivingBase)
                 {
-                    if(maxDamage>=returnRatio * dmg)
+                    if(this.dmg>=returnRatio * dmg)
                     {
-                        attack((EntityLivingBase) sourceEntity, returnRatio * dmg);
                         refDmg=returnRatio * dmg;
-                        maxDamage-=refDmg;
+                        this.dmg-=refDmg;
+                        attack((EntityLivingBase) sourceEntity, refDmg);
                     }
                     else
                     {
-                        refDmg=maxDamage;
+                        refDmg=this.dmg;
+                        this.dmg=0;
                         attack((EntityLivingBase) sourceEntity, refDmg);
-                        maxDamage=0;
                     }
 
                 }
@@ -134,17 +135,18 @@ public class AIVecReflect extends BaseSkill
                 }
             }
             return Math.max(0,dmg-refDmg);
-        } else {
-            if(maxDamage>=returnRatio * dmg)
+        }
+        else
+        {
+            if(this.dmg>=returnRatio * dmg)
             {
                 refDmg=returnRatio * dmg;
-                maxDamage-=refDmg;
             }
             else
             {
-                refDmg=maxDamage;
-                maxDamage=0;
+                refDmg=this.dmg;
             }
+            this.dmg-=refDmg;
             return Math.max(0,dmg-refDmg);
         }
     }
@@ -152,8 +154,17 @@ public class AIVecReflect extends BaseSkill
     @SubscribeEvent
     public void onLivingAttack(LivingAttackEvent evt)
     {
+        if(!evt.entity.equals(speller))
+            return;
+        if(canSpell())
+        {
+            isChanting = true;//make skill available
+            reflectRate=lerpf(0.3f,2f,getSkillExp());
+            time=maxTime;
+            dmg=maxDamage;
+        }
         if (evt.entityLiving.equals(speller)&&isChanting) {
-
+            dmg-=evt.ammount*reflectRate;
             if ( handleAttack(evt.source, evt.ammount,  true)<=0) {
                 evt.setCanceled(true);
             }
@@ -170,6 +181,7 @@ public class AIVecReflect extends BaseSkill
             isChanting = true;//make skill available
             reflectRate=lerpf(0.3f,2f,getSkillExp());
             time=maxTime;
+            dmg=maxDamage;
         }
         evt.ammount = handleAttack(evt.source, evt.ammount, false);
 }
