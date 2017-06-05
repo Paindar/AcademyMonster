@@ -104,9 +104,10 @@ public class EntityMagManipBlock extends EntityBlockNative
                     }
                     else if (event.result.typeOfHit== MovingObjectPosition.MovingObjectType.BLOCK)
                     {
-                        Explosion explosion=new Explosion(worldObj,player2,posX,posY,posZ,3);
-                        explosion.doExplosionB(true);
-                        setDead();
+                        //TODO 不一定要干点啥
+//                        Explosion explosion=new Explosion(worldObj,player2,posX,posY,posZ,3);
+//                        explosion.doExplosionB(true);
+//                        setDead();
                     }
                 }
             }
