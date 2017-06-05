@@ -36,6 +36,8 @@ public class SkillExtendedEntityProperties implements IExtendedEntityProperties
     @SubscribeEvent
     public void onServerTick(TickEvent.ServerTickEvent event)
     {
+        if(event.phase== TickEvent.Phase.START)
+            return;
         time++;
         if(time>=10)
         {
