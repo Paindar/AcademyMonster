@@ -1,5 +1,7 @@
 package cn.paindar.academymonster.core;
 
+import cn.lambdalib.annoreg.core.Registrant;
+import cn.lambdalib.annoreg.core.RegistrationMod;
 import cn.paindar.academymonster.core.command.CommandTest;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
@@ -26,7 +28,7 @@ import org.apache.logging.log4j.Logger;
         dependencies = "required-after:academy-craft@@AC_VERSION@") // LambdaLib is currently unstable. Supports only one version.
 public class AcademyMonster
 {
-    public static final String MODID = "academy-monster";
+    public static final String MODID = "academymonster";
     public static final String NAME = "Academy Monster";
     public static final String VERSION = "@VERSION@";
     public static final Logger log = LogManager.getLogger("AcademyMonster");
