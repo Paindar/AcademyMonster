@@ -43,6 +43,7 @@ public class EntityLoader
 
     public static void registerEntity()
     {
+        registerEntity(EntityMagManipBlock.class,"am_mag_manip_block",40,1,true);
         registerEntity(EntityMineRayNative.class,"am_mine_ray_eff",15,1,true);
         registerEntity(EntityLightShield.class,"am_light_shield_eff",15,1,true);
         registerEntity(EntityCoinThrowingNative.class,"am_coin_throwing_eff",15,1,true);

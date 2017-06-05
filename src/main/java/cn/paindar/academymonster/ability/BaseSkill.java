@@ -7,6 +7,7 @@ import cn.paindar.academymonster.core.support.tile.AbilityInterfManager;
 import cn.paindar.academymonster.entity.SkillExtendedEntityProperties;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.ServerTickEvent;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.StatCollector;
@@ -65,13 +66,16 @@ public abstract class BaseSkill
     @SubscribeEvent
     public void onServerTick(ServerTickEvent event)
     {
-        onTick();
-        if(isInterf()&&isChanting)
+        if(event.phase==ServerTickEvent.Phase.START)
         {
-            isChanting=false;
+            onTick();
+            if (isInterf() && isChanting)
+            {
+                isChanting = false;
+            }
+            if (remainCooldown > 0 && !isChanting)
+                remainCooldown--;
         }
-        if(remainCooldown>0 && !isChanting)
-            remainCooldown--;
     }
 
     protected void onTick()
@@ -87,7 +91,7 @@ public abstract class BaseSkill
         return damage;
     }
 
-    boolean attack(EntityLivingBase target,float damage)
+    public boolean attack(EntityLivingBase target,float damage)
     {
         damage = CalcEvent.calc(new CalcEventNative.SkillAttack(speller, this, target, damage));
 
@@ -98,7 +102,7 @@ public abstract class BaseSkill
         return true;
     }
 
-    boolean attackIgnoreArmor(EntityLivingBase target,float damage)
+    public boolean attackIgnoreArmor(EntityLivingBase target,float damage)
     {
         damage = CalcEvent.calc(new CalcEventNative.SkillAttack(speller, this, target, damage));
 

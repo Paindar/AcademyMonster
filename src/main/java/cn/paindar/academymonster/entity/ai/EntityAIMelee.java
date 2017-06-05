@@ -135,6 +135,11 @@ public class EntityAIMelee extends EntityAIBaseX
                         }
                     }
                 }
+                else if(skill instanceof AILocManip && skill.canSpell())
+                {
+                    ((AIFleshRipping) skill).spell();
+                    break;
+                }
                 else if(skill instanceof AIThunderBolt && skill.canSpell())
                 {
                     validDist=((AIThunderBolt) skill).getMaxDistance();
