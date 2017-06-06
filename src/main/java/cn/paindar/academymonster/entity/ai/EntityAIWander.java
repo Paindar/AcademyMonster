@@ -43,7 +43,8 @@ public class EntityAIWander extends EntityAIBaseX
             }
             else
             {
-                //if it have Mc AI, keep it empty here.
+                ieep.setAI(new EntityAIRange(owner,target));
+                return false;
             }
         }
         return true;
