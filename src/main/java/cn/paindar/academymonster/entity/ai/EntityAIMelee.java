@@ -137,7 +137,7 @@ public class EntityAIMelee extends EntityAIBaseX
                 }
                 else if(skill instanceof AILocManip && skill.canSpell())
                 {
-                    ((AIFleshRipping) skill).spell();
+                    ((AILocManip) skill).spell();
                     break;
                 }
                 else if(skill instanceof AIThunderBolt && skill.canSpell())
