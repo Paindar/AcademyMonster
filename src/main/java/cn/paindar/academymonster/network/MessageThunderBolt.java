@@ -13,6 +13,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.util.Vec3;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,8 +30,8 @@ public class MessageThunderBolt implements IMessage
         public IMessage onMessage(MessageThunderBolt msg, MessageContext ctx)
         {
             EntityLivingBase ori=(EntityLivingBase) Minecraft.getMinecraft().theWorld.getEntityByID(msg.nbt.getInteger("origin"));
-            EntityLivingBase target=(EntityLivingBase) Minecraft.getMinecraft().theWorld.getEntityByID(msg.nbt.getInteger("target"));
-            List<Entity> aoes=new ArrayList<>();
+            Vec3 target=Vec3.createVectorHelper(msg.nbt.getDouble("targetX"),msg.nbt.getDouble("targetY"),msg.nbt.getDouble("targetZ"));
+                    List<Entity> aoes=new ArrayList<>();
             int list[]=msg.nbt.getIntArray("list");
             for(int i:list)
             {
@@ -45,7 +46,7 @@ public class MessageThunderBolt implements IMessage
 
     public MessageThunderBolt(){}
 
-    public MessageThunderBolt(EntityLivingBase ori, EntityLivingBase target, List<Entity> aoes)
+    public MessageThunderBolt(EntityLivingBase ori, Vec3 target, List<Entity> aoes)
     {
         int[] list=new int[aoes.size()];
         for(int i=0;i<aoes.size();i++)
@@ -53,7 +54,9 @@ public class MessageThunderBolt implements IMessage
             list[i]=aoes.get(i).getEntityId();
         }
         nbt.setInteger("origin",ori.getEntityId());
-        nbt.setInteger("target",target.getEntityId());
+        nbt.setDouble("targetX",target.xCoord);
+        nbt.setDouble("targetY",target.yCoord);
+        nbt.setDouble("targetZ",target.zCoord);
         nbt.setIntArray("list",list);
     }
 

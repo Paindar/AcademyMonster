@@ -37,29 +37,28 @@ public class AIElectronBomb extends BaseSkill
 
     public void spell()
     {
-        if(isSkillInCooldown())
+        if(!canSpell())
             return;
         if(speller.worldObj.isRemote)
             return;
-        EntityMdBallNative ball = new EntityMdBallNative(speller,(int)lerpf(20,5,getSkillExp()),new EntityCallback<EntityMdBallNative>() {
-         public void execute(EntityMdBallNative ball) {
-             Vec3 str= VecUtils.vec(ball.posX, ball.posY, ball.posZ),
-             end=getDest(speller);
-             MovingObjectPosition trace = Raytrace.perform(speller.worldObj,str,end
-                    , EntitySelectors.exclude(speller).and(EntitySelectors.living()));
-            if (trace != null && trace.entityHit != null)
+        EntityMdBallNative ball = new EntityMdBallNative(speller,(int)lerpf(20,5,getSkillExp()), ball1 ->
+        {
+            Vec3 str= VecUtils.vec(ball1.posX, ball1.posY, ball1.posZ),
+            end=getDest(speller);
+            MovingObjectPosition trace = Raytrace.perform(speller.worldObj,str,end
+                   , EntitySelectors.exclude(speller).and(EntitySelectors.living()));
+           if (trace != null && trace.entityHit != null)
+           {
+               attack((EntityLivingBase) trace.entityHit, damage);
+            }
+            List<Entity> list= WorldUtils.getEntities(speller, 25, EntitySelectors.player());
+            for(Entity e:list)
             {
-                attack((EntityLivingBase) trace.entityHit, damage);
-                List<Entity> list= WorldUtils.getEntities(speller, 25, EntitySelectors.player());
-                for(Entity e:list)
-                {
-                    NetworkManager.sendMdRayEffectTo(str,end,(EntityPlayerMP)e);
-                }
-             }
+                NetworkManager.sendMdRayEffectTo(str,end,(EntityPlayerMP)e);
+            }
 
 
-        }
-    }) ;
+       }) ;
         super.spell();
         speller.worldObj.spawnEntityInWorld(ball);
 

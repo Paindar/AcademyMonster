@@ -7,6 +7,7 @@ import cn.paindar.academymonster.config.AMConfig;
 import cn.paindar.academymonster.core.support.terminal.AppAIMScanner;
 import cn.paindar.academymonster.core.support.tile.AbilityInterfManager;
 import cn.paindar.academymonster.entity.EntityLoader;
+import cn.paindar.academymonster.items.ItemLoader;
 import cn.paindar.academymonster.network.NetworkManager;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
@@ -27,6 +28,7 @@ public class CommonProxy
         new EntityLoader();
         AMConfig.init(event);
         EntityLoader.registerEntity();
+        ItemLoader.registerItems();
         SkillManager.instance.initSkill();
         NetworkManager.init(event);
         AppRegistry.register(AppAIMScanner.instance);

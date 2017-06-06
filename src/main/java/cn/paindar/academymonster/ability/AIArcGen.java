@@ -47,7 +47,7 @@ public class AIArcGen extends BaseSkill
 
     public void spell()
     {
-        if(isSkillInCooldown())
+        if(!canSpell())
             return;
         World world=speller.worldObj;
         MovingObjectPosition result=Raytrace.traceLiving(speller, range, EntitySelectors.living(), BlockSelectors.filNormal);

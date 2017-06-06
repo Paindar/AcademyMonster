@@ -28,6 +28,8 @@ public class AIThunderClap extends BaseSkill
 
     public void spell(double hitX,double hitY,double hitZ)
     {
+        if(!canSpell())
+            return;
         EntityLightningBolt lightning = new EntityLightningBolt(speller.worldObj, hitX, hitY, hitZ);
         speller.worldObj.addWeatherEffect(lightning);
         List<Entity> list=WorldUtils.getEntities(speller,range, EntitySelectors.exclude(speller).and(EntitySelectors.living()));

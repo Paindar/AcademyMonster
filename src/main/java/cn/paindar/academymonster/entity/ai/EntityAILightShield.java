@@ -4,10 +4,12 @@ import cn.paindar.academymonster.ability.AILightShield;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIBase;
+import net.minecraft.entity.player.EntityPlayer;
 
 /**
  * Created by Paindar on 2017/2/26.
  */
+@Deprecated
 public class EntityAILightShield extends EntityAIBase
 {
     private final EntityLiving speller;
@@ -26,7 +28,7 @@ public class EntityAILightShield extends EntityAIBase
     public boolean shouldExecute()
     {
         EntityLivingBase target=speller.getAttackTarget();
-        return target!=null&&skill.available();
+        return target!=null&&skill.available()&&(!(target instanceof EntityPlayer) || !((EntityPlayer)target).capabilities.isCreativeMode);
     }
 
     @Override

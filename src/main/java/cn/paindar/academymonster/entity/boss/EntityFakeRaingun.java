@@ -38,18 +38,6 @@ public class EntityFakeRaingun extends EntityMob implements IBossDisplayData
         this.targetTasks.addTask(1, new EntityAINearestAttackableTarget(this, EntityPlayer.class, 8, true));
         this.targetTasks.addTask(2, new EntityAIHurtByTarget(this, false));
         this.experienceValue = 50;
-        List<String> banList= AMConfig.getStringArray("am.monster."+this.getClass().getSimpleName()+".ban",new ArrayList<>());
-        SkillExtendedEntityProperties data=SkillExtendedEntityProperties.get(this);
-        if(!banList.contains("ArcGen"))
-            data.list.add(new AIArcGen(this,0.5f+ RandUtils.rangef(0,0.5f)));
-        if(!banList.contains("BodyIntensify"))
-            data.list.add(new AIBodyIntensify(this,0.25f+ RandUtils.rangef(0,0.75f)));
-        if(!banList.contains("Railgun"))
-            data.list.add(new AIRailgun(this,0.5f+ RandUtils.rangef(0,0.5f)));
-        if(!banList.contains("ThunderBolt"))
-            data.list.add(new AIThunderBolt(this,RandUtils.rangef(0,1f)));
-        if(!banList.contains("ThunderClap"))
-            data.list.add(new AIThunderClap(this, RandUtils.rangef(0,1f)));
     }
 
 
@@ -79,7 +67,7 @@ public class EntityFakeRaingun extends EntityMob implements IBossDisplayData
     {
         super.applyEntityAttributes();
         this.getEntityAttribute(SharedMonsterAttributes.followRange).setBaseValue(40.0D);
-        this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.20D);
+        this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.5D);
         this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(60);
     }
 

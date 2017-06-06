@@ -2,6 +2,7 @@ package cn.paindar.academymonster.network;
 
 import cn.academy.vanilla.vecmanip.skill.IVec;
 import cn.paindar.academymonster.core.AcademyMonster;
+import cn.paindar.academymonster.entity.EntityMagManipBlock;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
@@ -34,6 +35,7 @@ public class NetworkManager
         registerMessage(MessageArcGenEffect.Handler.class, MessageArcGenEffect.class,Side.CLIENT);
         registerMessage(MessageThunderBolt.Handler.class, MessageThunderBolt.class,Side.CLIENT);
         registerMessage(MessageGroundShockEffect.Handler.class, MessageGroundShockEffect.class,Side.CLIENT);
+        registerMessage(MessageMagManipBlockSync.Handler.class, MessageMagManipBlockSync.class,Side.CLIENT);
     }
 
 
@@ -131,7 +133,7 @@ public class NetworkManager
             throw new IllegalStateException("Wrong context side!");
     }
 
-    public static void sendThunderBoltTo(EntityLivingBase ori,EntityLivingBase target,List<Entity> list, EntityPlayerMP player)
+    public static void sendThunderBoltTo(EntityLivingBase ori,Vec3 target,List<Entity> list, EntityPlayerMP player)
     {
         if(!player.getEntityWorld().isRemote)
         {
@@ -147,6 +149,16 @@ public class NetworkManager
         {
             MessageGroundShockEffect msg = new MessageGroundShockEffect(vecs);
             instance.sendTo(msg, player);
+        }
+        else
+            throw new IllegalStateException("Wrong context side!");
+    }
+    public static void sendMagToAllAround(NetworkRegistry.TargetPoint point, EntityMagManipBlock entity,boolean value)
+    {
+        if(!entity.worldObj.isRemote)
+        {
+            MessageMagManipBlockSync msg = new MessageMagManipBlockSync(entity,value);
+            instance.sendToAllAround(msg, point);
         }
         else
             throw new IllegalStateException("Wrong context side!");

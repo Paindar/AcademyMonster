@@ -4,57 +4,62 @@ import cn.paindar.academymonster.ability.AIScatterBomb;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIBase;
+import net.minecraft.entity.player.EntityPlayer;
 
 /**
  * Created by Paindar on 2017/3/12.
  */
-public class EntityAIScatterBomb extends EntityAIBase
+public class EntityAIScatterBomb extends EntityAIBaseX
 {
-    private final EntityLiving speller;
     private EntityLivingBase target;
     private AIScatterBomb skill;
 
-    public EntityAIScatterBomb(EntityLiving speller,AIScatterBomb skill)
+    EntityAIScatterBomb(EntityLiving owner,EntityLivingBase target,AIScatterBomb skill)
     {
-        this.speller=speller;
+        super(owner);
+        this.target=target;
         this.skill=skill;
     }
 
     @Override
-    public boolean shouldExecute()
+    public boolean execute()
     {
-        EntityLivingBase target=speller.getAttackTarget();
-        if (target==null|| skill.isSkillInCooldown())
-            return false;
-        double dist=speller.getDistanceSqToEntity(target);
-        return this.speller.getAttackTarget().isEntityAlive() && !skill.isSkillInCooldown() && dist >= 2.25 && dist <= skill.getMaxDistance() * skill.getMaxDistance();
-    }
-
-    public void startExecuting()
-    {
-        this.target =this.speller.getAttackTarget();
-    }
-
-    @Override
-    public void updateTask()
-    {
+        if(skill.isSkillInCooldown())
+        {
+            ieep.setAI(new EntityAIRange(owner,target));
+        }
         if(target!=null)
         {
+            if(target.isDead)
+            {
+                if(skill.isChanting())
+                {
+                    skill.stop();
+                }
+                ieep.setAI(new EntityAIWander(owner));
+            }
             if(!skill.isChanting())
             {
                 skill.spell();
             }
             else
             {
-                double range = speller.getDistanceSqToEntity(target);
+                double range = owner.getDistanceSqToEntity(target);
                 if (range <= skill.getMaxDistance() * skill.getMaxDistance())
                 {
                     if(skill.getBallSize()>=7)
                     {
-                        skill.spell();
+                        skill.stop();
+                        ieep.setAI(new EntityAIRange(owner,target));
                     }
                 }
             }
         }
+        else
+        {
+            ieep.setAI(new EntityAIWander(owner));
+            return false;
+        }
+        return true;
     }
 }

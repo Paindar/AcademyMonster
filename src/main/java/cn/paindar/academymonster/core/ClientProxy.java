@@ -18,7 +18,7 @@ public class ClientProxy extends CommonProxy
     public void preInit(FMLPreInitializationEvent event)
     {
         super.preInit(event);
-        BossHealthBar.preInit();
+        //BossHealthBar.preInit();
         EntityLoader.registerRenders();
     }
 

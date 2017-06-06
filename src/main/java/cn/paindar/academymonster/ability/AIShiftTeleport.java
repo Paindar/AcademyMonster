@@ -36,6 +36,8 @@ public class AIShiftTeleport extends BaseSkill
     }
     public void spell()
     {
+        if(!canSpell())
+            return;
         MovingObjectPosition result=Raytrace.traceLiving(speller,2,EntitySelectors.living());
         EntityLivingBase target=null;
         if(result!=null&&result.typeOfHit==MovingObjectPosition.MovingObjectType.ENTITY)

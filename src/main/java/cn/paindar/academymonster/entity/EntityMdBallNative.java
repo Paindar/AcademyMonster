@@ -19,6 +19,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
@@ -75,6 +76,31 @@ public class EntityMdBallNative extends EntityAdvanced {
         subZ = MathHelper.cos(theta) * range;
 
         subY = RandUtils.rangef(-1.2f, 0.2f);
+
+        // Pos init
+        updatePosition();
+
+        this.life = life;
+
+        this.executeAfter(new EntityCallback<EntityMdBallNative>() {
+
+            @Override
+            public void execute(EntityMdBallNative target) {
+                target.setDead();
+            }
+
+        }, life);
+        if(callback != null)
+            this.executeAfter(callback, life - 2);
+    }
+    public EntityMdBallNative(EntityLivingBase player, int life,float subX,float subZ, final EntityCallback<EntityMdBallNative> callback) {
+        super(player.worldObj);
+        this.spawner = player;
+
+        this.subX = subX;
+        this.subY = 0;
+        this.subZ = subZ;
+
 
         // Pos init
         updatePosition();

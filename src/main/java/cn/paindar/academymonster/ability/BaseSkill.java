@@ -4,8 +4,10 @@ import cn.academy.ability.api.event.CalcEvent;
 import cn.paindar.academymonster.ability.api.SkillDamageSourceNative;
 import cn.paindar.academymonster.ability.api.event.CalcEventNative;
 import cn.paindar.academymonster.core.support.tile.AbilityInterfManager;
+import cn.paindar.academymonster.entity.SkillExtendedEntityProperties;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.ServerTickEvent;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.StatCollector;
@@ -34,22 +36,46 @@ public abstract class BaseSkill
 
     public float getSkillExp(){return skillExp;}
 
-    protected int getMaxCooldown(){return maxCooldown;}
+    public boolean isInterf(){return AbilityInterfManager.instance.find(speller);}
+    public boolean isSkillInCooldown(){return remainCooldown!=0;}
 
-    private boolean isInterf(){return AbilityInterfManager.instance.find(speller);}
-    public boolean isSkillInCooldown(){return remainCooldown!=0||isInterf();}
+    /**
+     * checked if skill can spell.
+     * Type:
+     * Cooldown Chant   Interfer    Result
+     * F        F       F           Valid(True)
+     * F        F       T           Interfered(False)
+     * F        T       F           Chanting(False)
+     * F        T       T           Interrupted(False, impossible)
+     * T        F       F           Cooldown(False)
+     * T        F       T           Interfered(False)
+     * T        T       F           Impossible(Error)
+     * T        T       T           Impossible(Error)
+     * @return nothing
+     */
+    public boolean canSpell()
+    {
+        return !isSkillInCooldown()&&!isChanting&&!isInterf();
+    }
 
+    public boolean available()
+    {
+        return !isSkillInCooldown() &&isChanting&& !isInterf();
+    }
     public boolean isChanting(){return isChanting;}
     @SubscribeEvent
     public void onServerTick(ServerTickEvent event)
     {
-        onTick();
-        if(isInterf()&&isChanting)
+        if(event.phase==ServerTickEvent.Phase.START)
         {
-            isChanting=false;
+            onTick();
+            if (isInterf() && isChanting)
+            {
+                isChanting = false;
+            }
+            if (remainCooldown > 0 && !isChanting)
+                remainCooldown--;
         }
-        if(remainCooldown>0 && !isChanting)
-            remainCooldown--;
     }
 
     protected void onTick()
@@ -57,7 +83,7 @@ public abstract class BaseSkill
 
     }
 
-    public void spell()
+    void spell()
     {
         remainCooldown=maxCooldown;
     }
@@ -65,7 +91,7 @@ public abstract class BaseSkill
         return damage;
     }
 
-    boolean attack(EntityLivingBase target,float damage)
+    public boolean attack(EntityLivingBase target,float damage)
     {
         damage = CalcEvent.calc(new CalcEventNative.SkillAttack(speller, this, target, damage));
 
@@ -76,7 +102,7 @@ public abstract class BaseSkill
         return true;
     }
 
-    boolean attackIgnoreArmor(EntityLivingBase target,float damage)
+    public boolean attackIgnoreArmor(EntityLivingBase target,float damage)
     {
         damage = CalcEvent.calc(new CalcEventNative.SkillAttack(speller, this, target, damage));
 
@@ -85,11 +111,6 @@ public abstract class BaseSkill
             target.attackEntityFrom(new SkillDamageSourceNative(speller, this).setDamageBypassesArmor(), getFinalDamage(damage));
         }
         return true;
-    }
-
-    public boolean available()
-    {
-        return !(isChanting||isSkillInCooldown());
     }
 
     public String getUnlocalizedSkillName(){return "ac.ability." + skillName + ".name";}

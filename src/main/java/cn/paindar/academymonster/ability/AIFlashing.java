@@ -28,12 +28,6 @@ public class AIFlashing extends BaseSkill{
 
     public float getMaxDistance(){return maxDistance;}
 
-    @Override
-    public boolean available()
-    {
-        return isChanting || !isSkillInCooldown();
-    }
-
     public void spell(double x, double y, double z)
     {
         if((!isChanting && isSkillInCooldown())||ilCD>0)
@@ -63,7 +57,7 @@ public class AIFlashing extends BaseSkill{
         {
             return;
         }
-        if(time>=maxtime)
+        if(time>=maxtime||isInterf())
         {
             isChanting=false;
             super.spell();

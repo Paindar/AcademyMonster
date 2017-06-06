@@ -42,6 +42,8 @@ public class AIDirectedShock extends BaseSkill
 
     public void spell()
     {
+        if(!canSpell())
+            return;
         MovingObjectPosition result = Raytrace.traceLiving(speller, 3, EntitySelectors.living());
         if(result!=null && result.typeOfHit== MovingObjectPosition.MovingObjectType.ENTITY)
         {

@@ -61,15 +61,12 @@ public class AILightShield extends BaseSkill
             return;
         if( shield==null||shield.isDead|| speller.isDead||maxTime<=time)
         {
-            if(isChanting)
-            {
-                stop();
-            }
+            stop();
             return ;
         }
         time++;
         List<Entity> candidates= WorldUtils.getEntities(speller, 3,
-                EntitySelectors.exclude(speller).and((Entity t)-> isEntityReachable(t)).and(EntitySelectors.exclude(shield)));
+                EntitySelectors.exclude(speller).and(this::isEntityReachable).and(EntitySelectors.exclude(shield)));
         for(Entity e:candidates)
         {
             if(e instanceof EntityLivingBase)

@@ -3,26 +3,22 @@ package cn.paindar.academymonster.core;
 import cn.academy.ability.ModuleAbility;
 import cn.academy.vanilla.ModuleVanilla;
 import cn.lambdalib.util.generic.RandUtils;
-import cn.paindar.academymonster.core.support.terminal.ui.BossHealthBar;
 import cn.paindar.academymonster.entity.SkillExtendedEntityProperties;
-import cn.paindar.academymonster.entity.ai.EntitySkillAICommon;
 import cn.paindar.academymonster.network.NetworkManager;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityTracker;
+import net.minecraft.entity.IEntityOwnable;
 import net.minecraft.entity.boss.IBossDisplayData;
-import net.minecraft.entity.monster.EntityZombie;
+import net.minecraft.entity.monster.EntityGolem;
+import net.minecraft.entity.monster.EntityMob;
+import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.world.WorldServer;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
-
-import java.lang.reflect.Method;
 
 /**
  * Created by Paindar on 2017/2/12.
@@ -34,11 +30,15 @@ public class GlobalEventHandle
     {
     }
 
+    static boolean isClassAllowed(EntityLiving entity)
+    {
+        return (entity instanceof EntityMob || (entity instanceof IMob) || entity instanceof EntityGolem);
+    }
 
     @SubscribeEvent
     public void onEntityJoinedWorld(EntityJoinWorldEvent  event)
     {
-        if(!event.world.isRemote && event.entity instanceof EntityLiving && AcademyMonster.isClassAllowed((EntityLiving)event.entity))
+        if(!event.world.isRemote && event.entity instanceof EntityLiving && isClassAllowed((EntityLiving)event.entity))
         {
             SkillExtendedEntityProperties data = SkillExtendedEntityProperties.get(event.entity);
             String savedSkills=data.getSkillData();
@@ -47,21 +47,6 @@ public class GlobalEventHandle
                 SkillManager.instance.addSkill((EntityLiving)event.entity);
             }
             data.init();
-            boolean enabled;
-            try
-            {
-                Method method=event.entity.getClass().getDeclaredMethod ("isAIEnabled");
-                method.setAccessible(true);
-                enabled=(boolean) method.invoke(event.entity, (Object[]) null);
-            } catch (Exception e)
-            {
-                enabled=false;
-            }
-            if(!enabled)
-            {
-                new EntitySkillAICommon((EntityLiving)event.entity);
-            }
-
 
             EntityTracker tracker = ((WorldServer)event.world).getEntityTracker();
             for (EntityPlayer entityPlayer : tracker.getTrackingPlayers(event.entity)) {
@@ -95,7 +80,7 @@ public class GlobalEventHandle
             switch(data.catalog)
             {
                 case electro:
-                    if(RandUtils.nextFloat()<=-1+data.level*0.4)
+                    if(RandUtils.nextFloat()<=-0.35+data.level*0.15)
                         theDead.entityDropItem(ModuleAbility.inductionFactor.create(ModuleVanilla.electromaster),1);
                     break;
                 case meltdown:
@@ -114,11 +99,11 @@ public class GlobalEventHandle
         }
     }
 
-    @SubscribeEvent
-    @SideOnly(Side.CLIENT)
-    public void onPreRenderGameOverlay(RenderGameOverlayEvent.Pre event)
-    {
-        BossHealthBar.flushHealthBar(event);
-    }
+//    @SubscribeEvent
+//    @SideOnly(Side.CLIENT)
+//    public void onPreRenderGameOverlay(RenderGameOverlayEvent.Pre event)
+//    {
+//        BossHealthBar.flushHealthBar(event);
+//    }
 
 }

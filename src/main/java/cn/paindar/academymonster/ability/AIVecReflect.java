@@ -34,13 +34,15 @@ import static cn.lambdalib.util.generic.MathUtils.lerpf;
 public class AIVecReflect extends BaseSkill
 {
     private int time=0;
-    private int maxTime;
+    private final int maxTime;
     private float reflectRate;
+    private final float maxDamage;
+    private float dmg;
     public AIVecReflect(EntityLivingBase speller, float exp)
     {
         super(speller, (int)lerpf(400,300,exp), exp, "vecmanip.vec_reflection");
-        maxTime=(int)lerpf(60,120,exp);
-        reflectRate=lerpf(0.3f,2f,exp);
+        maxTime=(int)lerpf(60,240,exp);
+        maxDamage=lerpf(200,1200,exp);
         MinecraftForge.EVENT_BUS.register(this);
     }
     @Override
@@ -52,17 +54,19 @@ public class AIVecReflect extends BaseSkill
     @Override
     public void onTick()
     {
-        if (time == 0)
+        if (time == 0||dmg<=1e-6)
         {
             if(isChanting)
             {
                 isChanting = false;
+                dmg=0;
+                time=0;
                 super.spell();
             }
             return;
         }
         time--;
-        if(speller==null)
+        if(speller==null||speller.isDead)
             return;
         //
         List<Entity> entities = WorldUtils.getEntities(speller, 5, (Entity entity) -> (!EntityAffection.isMarked(entity)));
@@ -100,50 +104,86 @@ public class AIVecReflect extends BaseSkill
      */
     private float handleAttack(DamageSource dmgSource, float dmg,Boolean passby)
     {
-
+        float refDmg=0;
         float returnRatio = reflectRate;
-        if (!passby) { // Perform the action.
+        if (!passby)
+        { // Perform the action.
             Entity sourceEntity = dmgSource.getSourceOfDamage();
 
-            if (sourceEntity != null && sourceEntity != speller) {
+            if (sourceEntity != null && sourceEntity != speller)
+            {
                 if(sourceEntity instanceof EntityLivingBase)
-                    attack((EntityLivingBase) sourceEntity, returnRatio*dmg);
+                {
+                    if(this.dmg>=returnRatio * dmg)
+                    {
+                        refDmg=returnRatio * dmg;
+                        this.dmg-=refDmg;
+                        attack((EntityLivingBase) sourceEntity, refDmg);
+                    }
+                    else
+                    {
+                        refDmg=this.dmg;
+                        this.dmg=0;
+                        attack((EntityLivingBase) sourceEntity, refDmg);
+                    }
+
+                }
                 else
                 {
                     reflect(sourceEntity, speller);
                     EntityAffection.mark(sourceEntity);
                 }
             }
-            return Math.max(0,dmg*(1-returnRatio));
-        } else {
-            return Math.max(0,dmg*(1-returnRatio));
+            return Math.max(0,dmg-refDmg);
+        }
+        else
+        {
+            if(this.dmg>=returnRatio * dmg)
+            {
+                refDmg=returnRatio * dmg;
+            }
+            else
+            {
+                refDmg=this.dmg;
+            }
+            this.dmg-=refDmg;
+            return Math.max(0,dmg-refDmg);
         }
     }
 
     @SubscribeEvent
     public void onLivingAttack(LivingAttackEvent evt)
     {
-    if (evt.entityLiving.equals(speller)&&isChanting) {
-
-        if ( handleAttack(evt.source, evt.ammount,  true)<=0) {
-            evt.setCanceled(true);
+        if(!evt.entity.equals(speller))
+            return;
+        if(canSpell())
+        {
+            isChanting = true;//make skill available
+            reflectRate=lerpf(0.3f,2f,getSkillExp());
+            time=maxTime;
+            dmg=maxDamage;
+        }
+        if (evt.entityLiving.equals(speller)&&isChanting) {
+            dmg-=evt.ammount*reflectRate;
+            if ( handleAttack(evt.source, evt.ammount,  true)<=0) {
+                evt.setCanceled(true);
+            }
         }
     }
-}
+
     @SubscribeEvent
     public void onLivingHurt(LivingHurtEvent evt)
     {
-        if(isSkillInCooldown()&&!isChanting)
+        if(!evt.entity.equals(speller))
             return;
-        if(!isChanting)
+        if(canSpell())
         {
-            isChanting = true;
+            isChanting = true;//make skill available
+            reflectRate=lerpf(0.3f,2f,getSkillExp());
             time=maxTime;
+            dmg=maxDamage;
         }
-        if (evt.entityLiving.equals(speller))
-        {
-            evt.ammount = handleAttack(evt.source, evt.ammount, false);
-        }
+        evt.ammount = handleAttack(evt.source, evt.ammount, false);
 }
 
     private static void reflect(Entity entity,EntityLivingBase player)
@@ -162,7 +202,7 @@ public class AIVecReflect extends BaseSkill
         source.setDead();
 
         EntityLivingBase shootingEntity = source.shootingEntity;
-        EntityFireball fireball  = null;
+        EntityFireball fireball;
         if(source instanceof EntityLargeFireball)
         {
             fireball = new EntityLargeFireball(((EntityLargeFireball) source).worldObj, shootingEntity, shootingEntity.posX,
