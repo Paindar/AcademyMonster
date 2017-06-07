@@ -4,6 +4,7 @@ import cn.academy.vanilla.vecmanip.skill.IVec;
 import cn.paindar.academymonster.core.AcademyMonster;
 import cn.paindar.academymonster.entity.EntityMagManipBlock;
 import cn.paindar.academymonster.entity.EntityPlasmaBodyEffect;
+import cn.paindar.academymonster.entity.EntityTornadoEffect;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
@@ -165,6 +166,16 @@ public class NetworkManager
             throw new IllegalStateException("Wrong context side!");
     }
     public static void sendPlasmaStateChange(NetworkRegistry.TargetPoint point, EntityPlasmaBodyEffect entity)
+    {
+        if(!entity.worldObj.isRemote)
+        {
+            MessagePlasmaEffectSync msg = new MessagePlasmaEffectSync(entity);
+            instance.sendToAllAround(msg, point);
+        }
+        else
+            throw new IllegalStateException("Wrong context side!");
+    }
+    public static void sendPlasmaStateChange(NetworkRegistry.TargetPoint point, EntityTornadoEffect entity)
     {
         if(!entity.worldObj.isRemote)
         {

@@ -162,8 +162,8 @@ class EntityTornadoEffect(world: World) extends LocalEntity(world) {
   var deadTick: Int = 0
   var player: EntityLivingBase=_
   var skill:BaseSkill=_
-  def this(world:World,p: EntityLivingBase, s:BaseSkill)=
-  {
+  var state=false
+  def this(world:World,p: EntityLivingBase, s:BaseSkill) = {
     this(world)
     player=p
     skill=s
@@ -176,16 +176,18 @@ class EntityTornadoEffect(world: World) extends LocalEntity(world) {
     } else {
       initPos = p1
     }
-    this.setPosition(initPos.xCoord,initPos.yCoord,initPos.zCoord)
+    this.setPosition(initPos.xCoord,initPos.yCoord+15,initPos.zCoord)
   }
 
 
   ignoreFrustumCheck = true
 
   override def onUpdate(): Unit = {
-    if(world.isRemote)
-      return
-    if (skill.isChanting) {
+    if (state) {
+      dead = true
+    }
+    if(!worldObj.isRemote&&(player==null ||player.isDead)) {
+      setDead()
       dead = true
     }
 
@@ -206,21 +208,23 @@ class EntityTornadoEffect(world: World) extends LocalEntity(world) {
       1 - deadTick / 20.0f
     }
   }
+  def changeState(): Unit ={state = !state}
 
   override def shouldRenderInPass(pass: Int): Boolean = pass == 1
 }
 
-class EntityPlasmaBodyEffect(world: World) extends LocalEntity(world)
-{
+class EntityPlasmaBodyEffect(world: World) extends LocalEntity(world) {
   import collection.mutable
     import cn.lambdalib.util.generic.RandUtils._
   private var skill:AIPlasmaCannon=_
   var state=false
   var flying=false
+  var speller:EntityLivingBase= _
   var delta:Vec3=_
 
-  def this(world:World,s:AIPlasmaCannon)= {
-    this(world)
+  def this(speller:EntityLivingBase,s:AIPlasmaCannon)= {
+    this(speller.worldObj)
+    this.speller=speller
     skill=s
   }
   case class TrigPar(amp: Float, speed: Float, dphase: Float) {
@@ -264,8 +268,10 @@ class EntityPlasmaBodyEffect(world: World) extends LocalEntity(world)
       override def accept(t: Entity): Unit = {
         t match{
           case entity:EntityLivingBase =>
-            skill.attack(entity, rangef(0.8f, 1.2f) * lerpf(20,45,skill.getSkillExp))
-            entity.hurtResistantTime = -1
+            if(entity != speller){
+              skill.attack(entity, rangef(0.8f, 1.2f) * lerpf(20,45,skill.getSkillExp))
+              entity.hurtResistantTime = -1
+            }
         }
 
       }
@@ -286,10 +292,17 @@ class EntityPlasmaBodyEffect(world: World) extends LocalEntity(world)
   }
 
   override def onUpdate(): Unit = {
+    if(!worldObj.isRemote && speller.isDead){
+      setDead()
+      return
+    }
     val terminated = state
     if(flying) {
       val start:Vec3=Vec3.createVectorHelper(posX,posY,posZ)
-      val result=Raytrace.perform(worldObj,start,VecUtils.add(start, VecUtils.multiply(start,3.0)),EntitySelectors.living,BlockSelectors.filNormal)
+      posX+=delta.xCoord
+      posY+=delta.yCoord
+      posZ+=delta.zCoord
+      val result=Raytrace.perform(worldObj,start,VecUtils.add(start, VecUtils.multiply(delta,3.0)),EntitySelectors.living,BlockSelectors.filNormal)
       if(result!=null && result.typeOfHit!=null && !worldObj.isRemote){
         explode()
         NetworkManager.sendPlasmaStateChange(TargetPoints.convert(this, 20),this)
@@ -317,7 +330,7 @@ class EntityPlasmaBodyEffect(world: World) extends LocalEntity(world)
     from + math.min(math.abs(delta), max) * math.signum(delta)
   }
   def setTargetPoint(x:Double,y:Double,z:Double): Unit ={
-    delta=Vec3.createVectorHelper(x-posX,y-posY,z-posZ)
+    delta=Vec3.createVectorHelper(x-posX,y-posY,z-posZ).normalize
     flying=true
   }
 

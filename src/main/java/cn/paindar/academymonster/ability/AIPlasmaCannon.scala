@@ -21,14 +21,16 @@ class AIPlasmaCannon(speller:EntityLivingBase, exp:Float) extends BaseSkill(spel
 {
   var time: Int = _
   var effect:EntityPlasmaBodyEffect=_
+  var body:EntityTornadoEffect=_
 
   override def spell(): Unit = {
     if(canSpell){
-      effect = new EntityPlasmaBodyEffect(speller.worldObj, this)
+      effect = new EntityPlasmaBodyEffect(speller, this)
       time=0
       isChanting=true
       effect.setPosition(speller.posX, speller.posY + 15, speller.posZ)
-      speller.worldObj.spawnEntityInWorld(new EntityTornadoEffect(speller.worldObj, speller, this))
+      body=new EntityTornadoEffect(speller.worldObj, speller, this)
+      speller.worldObj.spawnEntityInWorld(body)
       speller.worldObj.spawnEntityInWorld(effect)
     }
   }
@@ -42,10 +44,13 @@ class AIPlasmaCannon(speller:EntityLivingBase, exp:Float) extends BaseSkill(spel
   }
   private def flyTo(x:Double,y:Double,z:Double):Unit={
     effect.setTargetPoint(x,y,z)
+    NetworkManager.sendPlasmaStateChange(TargetPoints.convert(effect, 20),body)
   }
   def stop():Unit={
     isChanting=false
     time=0
+    if(speller.worldObj.isRemote)
+      return
     super.spell()
     if(speller==null || speller.isDead){
       NetworkManager.sendPlasmaStateChange(TargetPoints.convert(effect, 20),effect)

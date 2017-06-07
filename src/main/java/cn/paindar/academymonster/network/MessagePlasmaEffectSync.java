@@ -1,6 +1,7 @@
 package cn.paindar.academymonster.network;
 
 import cn.paindar.academymonster.entity.EntityPlasmaBodyEffect;
+import cn.paindar.academymonster.entity.EntityTornadoEffect;
 import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
@@ -26,8 +27,11 @@ public class MessagePlasmaEffectSync implements IMessage
             if (ctx.side == Side.CLIENT)
             {
                 Entity player=  Minecraft.getMinecraft().theWorld.getEntityByID(message.nbt.getInteger("i"));
-                if(player!=null&& player instanceof EntityPlasmaBodyEffect)
-                    ((EntityPlasmaBodyEffect)player).changeState();
+                if(player!=null)
+                    if(player instanceof EntityPlasmaBodyEffect)
+                        ((EntityPlasmaBodyEffect)player).changeState();
+                    else if(player instanceof EntityTornadoEffect)
+                        ((EntityTornadoEffect)player).changeState();
             }
             return null;
         }

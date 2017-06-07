@@ -91,6 +91,11 @@ public class EntityAIRange extends EntityAIBaseX
                 ((AILocManip) skill).spell();
                 break;
             }
+            else if(skill instanceof AIPlasmaCannon && skill.canSpell())
+            {
+                ((AIPlasmaCannon) skill).spell();
+                break;
+            }
             else if(skill instanceof AIThunderBolt && skill.canSpell())
             {
                 validDist=((AIThunderBolt) skill).getMaxDistance();

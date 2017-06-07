@@ -25,8 +25,11 @@ public class ItemRailgunCore extends Item
     @Override
     public ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer player)
     {
-        AIPlasmaCannon skill=new AIPlasmaCannon(player,1);
-        skill.spell();
+        if(!world.isRemote)
+        {
+            AIPlasmaCannon skill = new AIPlasmaCannon(player, 1);
+            skill.spell();
+        }
         return itemStack;
     }
 }
