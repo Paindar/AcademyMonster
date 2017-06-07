@@ -13,7 +13,7 @@ public class ItemLoader
     public static Item railgunCore = new ItemRailgunCore();
     public static void registerItems()
     {
-        //registerItem(railgunCore,"railgun_core");
+        registerItem(railgunCore,"railgun_core");
 
     }
 
