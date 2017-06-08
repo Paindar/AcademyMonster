@@ -94,7 +94,12 @@ idea {
 }
 
 sourceSets.main {
-    java.srcDirs = ['src/main/java']
+    java.srcDirs = []
+    scala.srcDirs =  ['src/main/java']
+}
+
+tasks.withType(ScalaCompile) {
+    options.encoding = "UTF-8"
 }
 
 processResources {
