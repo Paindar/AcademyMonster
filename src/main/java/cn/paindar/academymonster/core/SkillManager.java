@@ -110,6 +110,7 @@ public class SkillManager
         registerSkill(AIGroundShock.class, 1f,2,Catalog.vector);
         registerSkill(AIVecReflect.class, 0.3f,3,Catalog.vector);
         registerSkill(AIBloodRetrograde.class,0.7f,3,Catalog.vector);
+        registerSkill(AIPlasmaCannon.class,0.1f,5,Catalog.vector);
         registerSkill(AIElectronBomb.class, 1,1,Catalog.meltdown);
         registerSkill(AIScatterBomb.class,0.5f,2,Catalog.meltdown);
         registerSkill(AIElectronCurtains.class,0.4f,4,Catalog.meltdown);
@@ -236,7 +237,7 @@ public class SkillManager
             }
             else
             {
-                data.setSkillData("ac.ability.vecmanip.vec_reflection.name~1.00");
+                data.setSkillData("ac.ability.vecmanip.plasma_cannon.name~1.00");
                 data.level=4;
                 data.catalog=Catalog.vector;
             }

@@ -3,6 +3,8 @@ package cn.paindar.academymonster.network;
 import cn.academy.vanilla.vecmanip.skill.IVec;
 import cn.paindar.academymonster.core.AcademyMonster;
 import cn.paindar.academymonster.entity.EntityMagManipBlock;
+import cn.paindar.academymonster.entity.EntityPlasmaBodyEffect;
+import cn.paindar.academymonster.entity.EntityTornadoEffect;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
@@ -10,7 +12,6 @@ import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import cpw.mods.fml.relauncher.Side;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.Vec3;
@@ -36,6 +37,7 @@ public class NetworkManager
         registerMessage(MessageThunderBolt.Handler.class, MessageThunderBolt.class,Side.CLIENT);
         registerMessage(MessageGroundShockEffect.Handler.class, MessageGroundShockEffect.class,Side.CLIENT);
         registerMessage(MessageMagManipBlockSync.Handler.class, MessageMagManipBlockSync.class,Side.CLIENT);
+        registerMessage(MessagePlasmaEffectSync.Handler.class,MessagePlasmaEffectSync.class,Side.CLIENT);
     }
 
 
@@ -158,6 +160,26 @@ public class NetworkManager
         if(!entity.worldObj.isRemote)
         {
             MessageMagManipBlockSync msg = new MessageMagManipBlockSync(entity,value);
+            instance.sendToAllAround(msg, point);
+        }
+        else
+            throw new IllegalStateException("Wrong context side!");
+    }
+    public static void sendPlasmaStateChange(NetworkRegistry.TargetPoint point, EntityPlasmaBodyEffect entity)
+    {
+        if(!entity.worldObj.isRemote)
+        {
+            MessagePlasmaEffectSync msg = new MessagePlasmaEffectSync(entity);
+            instance.sendToAllAround(msg, point);
+        }
+        else
+            throw new IllegalStateException("Wrong context side!");
+    }
+    public static void sendPlasmaStateChange(NetworkRegistry.TargetPoint point, EntityTornadoEffect entity)
+    {
+        if(!entity.worldObj.isRemote)
+        {
+            MessagePlasmaEffectSync msg = new MessagePlasmaEffectSync(entity);
             instance.sendToAllAround(msg, point);
         }
         else

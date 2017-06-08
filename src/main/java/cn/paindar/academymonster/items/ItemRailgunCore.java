@@ -1,6 +1,9 @@
 package cn.paindar.academymonster.items;
 
-import cn.paindar.academymonster.ability.AILocManip;
+import cn.paindar.academymonster.ability.AIPlasmaCannon;
+import cn.paindar.academymonster.ability.AIVecReflect;
+import cn.paindar.academymonster.entity.EntityPlasmaBodyEffect;
+import cn.paindar.academymonster.entity.EntityTornadoEffect;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -15,15 +18,18 @@ public class ItemRailgunCore extends Item
     public ItemRailgunCore()
     {
         super();
-        this.setUnlocalizedName("railgunCore");
+        this.setUnlocalizedName("railgun_core");
         this.setCreativeTab(CreativeTabs.tabMisc);
     }
 
     @Override
     public ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer player)
     {
-        AILocManip ai=new AILocManip(player,1);
-        ai.spell();
+        if(!world.isRemote)
+        {
+            AIPlasmaCannon skill = new AIPlasmaCannon(player, 1);
+            skill.spell();
+        }
         return itemStack;
     }
 }

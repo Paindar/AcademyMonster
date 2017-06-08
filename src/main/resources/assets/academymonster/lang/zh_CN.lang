@@ -9,3 +9,5 @@ ac.ability.teleporter.loc_manip.name=坐标操纵
 
 entity.academymonster.am_fake_railgun.name=自称的超电磁炮者
 entity.academymonster.am_insane_meltdowner.name=疯掉的原子崩坏使
+
+item.railgun_core.name=超电磁炮核心

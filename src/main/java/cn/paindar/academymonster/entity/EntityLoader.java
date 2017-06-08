@@ -1,6 +1,5 @@
 package cn.paindar.academymonster.entity;
 
-import cn.academy.vanilla.meltdowner.entity.EntityMdBall;
 import cn.paindar.academymonster.config.AMConfig;
 import cn.paindar.academymonster.core.AcademyMonster;
 import cn.paindar.academymonster.entity.boss.EntityFakeRaingun;
@@ -15,6 +14,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.world.biome.BiomeGenBase;
+
 
 /**
  * Created by Paindar on 2017/2/9.
@@ -39,11 +39,15 @@ public class EntityLoader
         registerEntityRender(EntityLightShield.class,new EntityLightShield.R());
         registerEntityRender(EntityFakeRaingun.class,new RenderFakeRailgun());
         registerEntityRender(EntityInsaneMeltdowner.class,new RenderFakeRailgun());
+        registerEntityRender(EntityTornadoEffect.class,new TornadoEntityRenderer());
+        registerEntityRender(EntityPlasmaBodyEffect.class,new PlasmaBodyRenderer());
     }
 
     public static void registerEntity()
     {
         registerEntity(EntityMagManipBlock.class,"am_mag_manip_block",40,1,true);
+        registerEntity(EntityTornadoEffect.class,"am_tornado_eff",40,1,true);
+        registerEntity(EntityPlasmaBodyEffect.class,"am_plasma_body_eff",40,1,true);
         registerEntity(EntityMineRayNative.class,"am_mine_ray_eff",15,1,true);
         registerEntity(EntityLightShield.class,"am_light_shield_eff",15,1,true);
         registerEntity(EntityCoinThrowingNative.class,"am_coin_throwing_eff",15,1,true);
@@ -66,7 +70,7 @@ public class EntityLoader
         RenderingRegistry.registerEntityRenderingHandler(entityClass,render);
     }
 
-    public static void registerEntitySpawn(Class<? extends Entity> entityClass, int spawnWeight, int min,
+    private static void registerEntitySpawn(Class<? extends Entity> entityClass, int spawnWeight, int min,
                                             int max, EnumCreatureType typeOfCreature, BiomeGenBase... biomes)
     {
         if (EntityLiving.class.isAssignableFrom(entityClass))
