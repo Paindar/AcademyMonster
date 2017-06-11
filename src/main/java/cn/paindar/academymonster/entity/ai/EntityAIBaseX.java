@@ -25,8 +25,8 @@ public abstract class EntityAIBaseX
 
     boolean isTargetInHorizon(EntityLivingBase target)
     {
-        Vec3 lookingPos=owner.getLookVec(),direct=Vec3.createVectorHelper(target.posX-owner.posX,0,target.posZ-owner.posZ).normalize();
-        lookingPos.yCoord=0;
+        Vec3 lookingPos=owner.getLookVec(),direct=Vec3.createVectorHelper(target.posX-owner.posX,target.posY-owner.posY,target.posZ-owner.posZ).normalize();
+
         lookingPos=lookingPos.normalize();
         MovingObjectPosition trace = Raytrace.rayTraceBlocks(owner.worldObj,
                 Vec3.createVectorHelper(owner.posX, owner.posY + owner.getEyeHeight(), owner.posZ),
@@ -37,9 +37,7 @@ public abstract class EntityAIBaseX
 
     boolean isTargetInHorizonIgnoreBlock(EntityLivingBase target)
     {
-        Vec3 lookingPos=owner.getLookVec(),direct=Vec3.createVectorHelper(target.posX-owner.posX,0,target.posZ-owner.posZ).normalize();
-        lookingPos.yCoord=0;
-        lookingPos=lookingPos.normalize();
+        Vec3 lookingPos=owner.getLookVec().normalize(),direct=Vec3.createVectorHelper(target.posX-owner.posX,target.posY-owner.posY,target.posZ-owner.posZ).normalize();
         return (lookingPos.xCoord*direct.xCoord+lookingPos.zCoord*direct.zCoord>=0.5);
     }
 }
