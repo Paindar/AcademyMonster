@@ -148,6 +148,13 @@ public class AIMeltdowner extends BaseSkill
     {
         if(!isChanting)
             return;
+        if(speller.isDead)
+        {
+            isChanting=false;
+            tick=0;
+            super.spell();
+        }
+
          tick++;
          if(isInterf())
          {
@@ -159,6 +166,7 @@ public class AIMeltdowner extends BaseSkill
         {
             spellLightgun();
             isChanting=false;
+            super.spell();
             tick=0;
         }
     }
