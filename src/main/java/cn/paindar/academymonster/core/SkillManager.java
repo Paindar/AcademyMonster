@@ -103,22 +103,25 @@ public class SkillManager
     {
         registerSkill(AIArcGen.class,1,1,Catalog.electro);
         registerSkill(AIBodyIntensify.class, 1,2,Catalog.electro);
+        registerSkill(AIThunderBolt.class,0.7f,3,Catalog.electro);
         registerSkill(AIRailgun.class, 0.3f,4,Catalog.electro);
-        registerSkill(AIThunderBolt.class,0.7f,4,Catalog.electro);
         registerSkill(AIThunderClap.class,0.4f,5,Catalog.electro);
+
         registerSkill(AIDirectedShock.class, 2,1,Catalog.vector);
         registerSkill(AIGroundShock.class, 1f,2,Catalog.vector);
-        registerSkill(AIVecReflect.class, 0.3f,3,Catalog.vector);
         registerSkill(AIBloodRetrograde.class,0.7f,3,Catalog.vector);
+        registerSkill(AIVecReflect.class, 0.3f,4,Catalog.vector);
         registerSkill(AIPlasmaCannon.class,0.1f,5,Catalog.vector);
+
         registerSkill(AIElectronBomb.class, 1,1,Catalog.meltdown);
         registerSkill(AIScatterBomb.class,0.5f,2,Catalog.meltdown);
-        registerSkill(AIElectronCurtains.class,0.4f,4,Catalog.meltdown);
-        registerSkill(AIElectronMissile.class,0.1f,5,Catalog.meltdown);
+        registerSkill(AIElectronCurtains.class,0.4f,3,Catalog.meltdown);
         registerSkill(AIMeltdowner.class,0.1f,4,Catalog.meltdown);
+        registerSkill(AIElectronMissile.class,0.1f,5,Catalog.meltdown);
+
         registerSkill(AIPenetrateTeleport.class, 1,2,Catalog.teleport);
-        registerSkill(AIFleshRipping.class, 1,3,Catalog.teleport);
         registerSkill(AILocationTeleport.class,0.7f,3,Catalog.teleport);
+        registerSkill(AIFleshRipping.class, 1,4,Catalog.teleport);
         registerSkill(AILocManip.class,0.3f,5,Catalog.teleport);
         //registerSkill(AILightShield.class,1f,5,2,Catalog.meltdown);
         //registerSkill(AIFlashing.class,0.2f,5,5,Catalog.teleport);
