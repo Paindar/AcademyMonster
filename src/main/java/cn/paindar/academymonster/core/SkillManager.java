@@ -119,6 +119,7 @@ public class SkillManager
         registerSkill(AIMeltdowner.class,0.1f,4,Catalog.meltdown);
         registerSkill(AIElectronMissile.class,0.1f,5,Catalog.meltdown);
 
+        registerSkill(AIThreateningTeleport.class, 1,1,Catalog.teleport);
         registerSkill(AIPenetrateTeleport.class, 1,2,Catalog.teleport);
         registerSkill(AILocationTeleport.class,0.7f,3,Catalog.teleport);
         registerSkill(AIFleshRipping.class, 1,4,Catalog.teleport);
@@ -240,7 +241,7 @@ public class SkillManager
             }
             else
             {
-                data.setSkillData("ac.ability.vecmanip.plasma_cannon.name~1.00");
+                data.setSkillData("ac.ability.teleporter.threatening_teleport.name~1.00");
                 data.level=4;
                 data.catalog=Catalog.vector;
             }

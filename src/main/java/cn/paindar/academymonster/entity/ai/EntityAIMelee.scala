@@ -31,7 +31,6 @@ class EntityAIMelee(owner: EntityLiving, target: EntityLivingBase) extends Entit
               return true
             }
           case skill: AIThreateningTeleport if skill.canSpell =>
-            AcademyMonster.log.info("23333")
             validDist = skill.getMaxDistance
             if (validDist * validDist >= imaDist) if (isTargetInHorizonIgnoreBlock(target)) {
               skill.spell()
