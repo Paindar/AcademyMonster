@@ -6,6 +6,7 @@ import cn.paindar.academymonster.ability.BaseSkill;
 import cn.paindar.academymonster.core.AcademyMonster;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.Vec3;
 
 import java.lang.annotation.Target;
@@ -28,7 +29,7 @@ public class EntityAIChasing extends EntityAIBaseX
     public boolean execute()
     {
         double imaDist=owner.getDistanceSqToEntity(target);
-        if(target==null || target.isDead ||dist*dist<imaDist)
+        if(target==null || target.isDead ||dist*dist<imaDist||(target instanceof EntityPlayer && ((EntityPlayer)target).capabilities.isCreativeMode))
         {
             ieep.setAI(new EntityAIWander(owner));
             return false;
