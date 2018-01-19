@@ -30,7 +30,7 @@ public class EntityAIScatterBomb extends EntityAIBaseX
         }
         if(target!=null)
         {
-            if(target.isDead)
+            if(target.isDead||(target instanceof EntityPlayer && ((EntityPlayer)target).capabilities.isCreativeMode))
             {
                 if(skill.isChanting())
                 {

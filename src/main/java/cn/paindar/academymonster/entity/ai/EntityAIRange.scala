@@ -15,7 +15,7 @@ class EntityAIRange(owner: EntityLiving, target: EntityLivingBase) extends Entit
   override def execute: Boolean = {
     val imaDist = owner.getDistanceSqToEntity(target)
     if (target == null || target.isDead || imaDist > 400||(target.isInstanceOf[EntityPlayer] && target.asInstanceOf[EntityPlayer].capabilities.isCreativeMode)) {
-      ieep.setAI(new EntityAIChasing(owner, target, 40))
+      ieep.setAI(new EntityAIWander(owner))
       return false
     }
 
