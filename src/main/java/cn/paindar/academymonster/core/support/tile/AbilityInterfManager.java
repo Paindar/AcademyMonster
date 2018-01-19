@@ -1,17 +1,13 @@
 package cn.paindar.academymonster.core.support.tile;
 
-import cn.academy.ability.block.AbilityInterferer;
 import cn.academy.ability.block.TileAbilityInterferer;
+import cn.academy.crafting.block.BlockAbilityInterferer;
 import cn.lambdalib.util.mc.WorldUtils;
-import cn.paindar.academymonster.core.AcademyMonster;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.monster.IMob;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.World;
-import net.minecraft.world.WorldSavedData;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.event.world.BlockEvent;
@@ -40,7 +36,7 @@ public class AbilityInterfManager
     @SubscribeEvent
     public void onBlockPlaced(BlockEvent.PlaceEvent event)
     {
-        if(event.placedBlock instanceof AbilityInterferer)
+        if(event.placedBlock instanceof BlockAbilityInterferer)
         {
             int pos[]={event.x,event.y,event.z};
             AMWorldData data=AMWorldData.get(event.world);
