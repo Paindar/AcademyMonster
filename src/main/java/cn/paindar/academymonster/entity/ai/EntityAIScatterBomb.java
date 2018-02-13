@@ -1,9 +1,8 @@
 package cn.paindar.academymonster.entity.ai;
 
 import cn.paindar.academymonster.ability.AIScatterBomb;
-import net.minecraft.entity.EntityLiving;
+import cn.paindar.academymonster.entity.SkillExtendedEntityProperties;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.player.EntityPlayer;
 
 /**
@@ -14,19 +13,20 @@ public class EntityAIScatterBomb extends EntityAIBaseX
     private EntityLivingBase target;
     private AIScatterBomb skill;
 
-    EntityAIScatterBomb(EntityLiving owner,EntityLivingBase target,AIScatterBomb skill)
+    EntityAIScatterBomb(EntityLivingBase target,AIScatterBomb skill)
     {
-        super(owner);
+        super();
         this.target=target;
         this.skill=skill;
     }
 
     @Override
-    public boolean execute()
+    public boolean execute(EntityLivingBase owner)
     {
+        SkillExtendedEntityProperties ieep= SkillExtendedEntityProperties.get(owner);
         if(skill.isSkillInCooldown())
         {
-            ieep.setAI(new EntityAIRange(owner,target));
+            ieep.setAI(new EntityAIRange(target));
         }
         if(target!=null)
         {
@@ -36,7 +36,7 @@ public class EntityAIScatterBomb extends EntityAIBaseX
                 {
                     skill.stop();
                 }
-                ieep.setAI(new EntityAIWander(owner));
+                ieep.setAI(new EntityAIWander());
             }
             if(!skill.isChanting())
             {
@@ -50,14 +50,14 @@ public class EntityAIScatterBomb extends EntityAIBaseX
                     if(skill.getBallSize()>=7)
                     {
                         skill.stop();
-                        ieep.setAI(new EntityAIRange(owner,target));
+                        ieep.setAI(new EntityAIRange(target));
                     }
                 }
             }
         }
         else
         {
-            ieep.setAI(new EntityAIWander(owner));
+            ieep.setAI(new EntityAIWander());
             return false;
         }
         return true;

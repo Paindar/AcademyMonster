@@ -1,12 +1,10 @@
 package cn.paindar.academymonster.entity.ai;
 
 import cn.paindar.academymonster.ability.AIPenetrateTeleport;
-import cn.paindar.academymonster.ability.BaseSkill;
+import cn.paindar.academymonster.entity.SkillExtendedEntityProperties;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.ai.EntityAIBase;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 
 /**
@@ -17,9 +15,9 @@ public class EntityAIPenetrateTeleport extends EntityAIBaseX
     AIPenetrateTeleport skill;
     EntityLivingBase target;
 
-    public EntityAIPenetrateTeleport(EntityLiving owner, EntityLivingBase tgt, AIPenetrateTeleport skill)
+    public EntityAIPenetrateTeleport(EntityLivingBase tgt, AIPenetrateTeleport skill)
     {
-        super(owner);
+        super();
         target=tgt;
         this.skill=skill;
     }
@@ -32,9 +30,9 @@ public class EntityAIPenetrateTeleport extends EntityAIBaseX
         return !b1.canCollideCheck(world.getBlockMetadata(ix, iy, iz), false) && !b2.canCollideCheck(world.getBlockMetadata(ix, iy + 1, iz), false);
     }
 
-    public boolean execute()
+    public boolean execute(EntityLivingBase owner)
     {
-        double dist=Math.sqrt(this.owner.getDistanceSqToEntity(target));
+        double dist=Math.sqrt(owner.getDistanceSqToEntity(target));
         double distBtwEntitiess=dist;
         dist=dist>skill.getMaxDistance()?skill.getMaxDistance():dist;
         if(target!=null && !skill.isSkillInCooldown() && dist >=0.5)
@@ -52,7 +50,8 @@ public class EntityAIPenetrateTeleport extends EntityAIBaseX
                 if(hasPlace(world,x,y,z))
                 {
                     this.skill.spell(x,y,z);
-                    owner.getNavigator().clearPathEntity();
+                    if(owner instanceof EntityLiving)
+                        ((EntityLiving)owner).getNavigator().clearPathEntity();
                     break;
                 }
                 else if(hasPlace(world,x,y+1,z))
@@ -62,7 +61,7 @@ public class EntityAIPenetrateTeleport extends EntityAIBaseX
                 }
             }
         }
-        ieep.setAI(new EntityAIChasing(owner,target,40));
+        SkillExtendedEntityProperties.get(owner).setAI(new EntityAIChasing(target,40));
         return true;
     }
 }

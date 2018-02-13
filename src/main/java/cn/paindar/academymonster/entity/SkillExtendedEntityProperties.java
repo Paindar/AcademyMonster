@@ -9,13 +9,13 @@ import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraftforge.common.IExtendedEntityProperties;
 import net.minecraftforge.common.util.Constants;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,7 +27,7 @@ public class SkillExtendedEntityProperties implements IExtendedEntityProperties
     private static final String PROP_NAME= AcademyMonster.MODID;
     private String skillData="";
     public int level=0;
-    private EntityLivingBase speller;
+    private WeakReference<EntityLivingBase> speller;
     public List<BaseSkill> list=new ArrayList<>();
     private int time=0;
     public SkillManager.Catalog catalog;
@@ -42,10 +42,10 @@ public class SkillExtendedEntityProperties implements IExtendedEntityProperties
         if(time>=10)
         {
             if(ai!=null)
-                ai.execute();
+                ai.execute(speller.get());
             time=0;
         }
-        if(speller==null || speller.isDead)
+        if(speller.get()==null || speller.get().isDead)
         {
             FMLCommonHandler.instance().bus().unregister(this);//free this class if possible.
             ai=null;
@@ -68,13 +68,14 @@ public class SkillExtendedEntityProperties implements IExtendedEntityProperties
 
     SkillExtendedEntityProperties(EntityLivingBase e)
     {
-        speller=e;
+        speller= new WeakReference<>(e);
     }
     public void setSkillData(String data)
     {
         skillData=data;
     }// used for AIM Scanner's info sync.
     public String getSkillData(){return skillData;}// used for AIM Scanner's info sync.
+    public EntityLivingBase getSpeller(){return speller.get();}
     public void setAI(EntityAIBaseX ai)//update a AI, fired in initialization and update AI action.
     {
         this.ai=ai;
@@ -106,7 +107,7 @@ public class SkillExtendedEntityProperties implements IExtendedEntityProperties
     }
     public void init()
     {
-        if(speller.worldObj.isRemote)
+        if(speller.get()==null || speller.get().worldObj.isRemote)
             return;
         String[] strList=skillData.split("-");
         for(String name:strList)
@@ -126,11 +127,11 @@ public class SkillExtendedEntityProperties implements IExtendedEntityProperties
                 AcademyMonster.log.warn("Failed to translate "+speller + " in "+skillInfo[0]+"  "+skillInfo[1]);
                 exp=0;
             }
-            BaseSkill skill = SkillManager.instance.createSkillInstance(skillInfo[0],speller,exp);
+            BaseSkill skill = SkillManager.instance.createSkillInstance(skillInfo[0],speller.get(),exp);
             //SkillManager.instance.addSkillAI(skill,(EntityLiving) speller);
             if(skill!=null)list.add(skill);
         }
-        setAI(new EntityAIWander((EntityLiving) speller));
+        setAI(new EntityAIWander());
     }
     /**
      * Called when the entity that this class is attached to is loaded.
@@ -163,6 +164,16 @@ public class SkillExtendedEntityProperties implements IExtendedEntityProperties
     @Override
     public void init(Entity entity, World world)
     {
-        this.speller=(EntityLivingBase) entity;
+        this.speller=new WeakReference<EntityLivingBase>((EntityLivingBase) entity);
+    }
+
+    /**
+     * release all data about SEEP
+     */
+    public void release()
+    {
+        speller.clear();
+        list.clear();
+        ai=null;
     }
 }

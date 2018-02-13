@@ -97,6 +97,7 @@ public class GlobalEventHandle
                     break;
             }
         }
+        data.release();
     }
 
 //    @SubscribeEvent

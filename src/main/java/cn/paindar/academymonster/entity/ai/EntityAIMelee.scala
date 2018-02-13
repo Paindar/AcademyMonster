@@ -1,9 +1,9 @@
 package cn.paindar.academymonster.entity.ai
 
 import cn.lambdalib.util.mc.Raytrace
-import net.minecraft.entity.{EntityLiving, EntityLivingBase}
+import net.minecraft.entity.EntityLivingBase
 import cn.paindar.academymonster.ability._
-import cn.paindar.academymonster.core.AcademyMonster
+import cn.paindar.academymonster.entity.SkillExtendedEntityProperties
 import net.minecraft.block.material.Material
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.util.{MovingObjectPosition, Vec3}
@@ -11,11 +11,13 @@ import net.minecraft.util.{MovingObjectPosition, Vec3}
 /**
   * Created by Paindar on 2017/6/15.
   */
-class EntityAIMelee(owner: EntityLiving, target: EntityLivingBase) extends EntityAIBaseX(owner) {
+class EntityAIMelee(target: EntityLivingBase) extends EntityAIBaseX {
 
-  override def execute: Boolean = {
-    if (target == null || target.isDead||(target.isInstanceOf[EntityPlayer] && target.asInstanceOf[EntityPlayer].capabilities.isCreativeMode)) {
-      ieep.setAI(new EntityAIWander(owner))
+  override def execute(owner:EntityLivingBase): Boolean = {
+    val ieep:SkillExtendedEntityProperties=SkillExtendedEntityProperties.get(owner)
+    if (target == null || target.isDead||(target.isInstanceOf[EntityPlayer] &&
+        target.asInstanceOf[EntityPlayer].capabilities.isCreativeMode)) {
+      ieep.setAI(new EntityAIWander())
       return false
     }
     val imaDist = owner.getDistanceSqToEntity(target)
@@ -26,13 +28,13 @@ class EntityAIMelee(owner: EntityLiving, target: EntityLivingBase) extends Entit
         skill match {
           case shock: AIDirectedShock if skill.canSpell =>
             validDist = shock.getMaxDistance
-            if (validDist * validDist >= imaDist) if (isTargetInHorizon(target)) {
+            if (validDist * validDist >= imaDist) if (isTargetInHorizon(owner, target)) {
               shock.spell()
               return true
             }
           case skill: AIThreateningTeleport if skill.canSpell =>
             validDist = skill.getMaxDistance
-            if (validDist * validDist >= imaDist) if (isTargetInHorizonIgnoreBlock(target)) {
+            if (validDist * validDist >= imaDist) if (isTargetInHorizonIgnoreBlock(owner, target)) {
               skill.spell()
               return true
             }
@@ -61,25 +63,25 @@ class EntityAIMelee(owner: EntityLiving, target: EntityLivingBase) extends Entit
             return true
           case value: AIElectronBomb if skill.canSpell =>
             validDist = value.getMaxDistance
-            if (validDist * validDist >= imaDist) if (isTargetInHorizon(target)) {
+            if (validDist * validDist >= imaDist) if (isTargetInHorizon(owner, target)) {
               value.spell()
               return true
             }
           case value: AIGroundShock if skill.canSpell =>
             validDist = value.getMaxDistance
-            if (validDist * validDist >= imaDist) if (isTargetInHorizon(target)) {
+            if (validDist * validDist >= imaDist) if (isTargetInHorizon(owner, target)) {
               value.spell()
               return true
             }
           case value: AIBloodRetrograde if skill.canSpell =>
             validDist = value.getMaxDistance
-            if (validDist * validDist >= imaDist) if (isTargetInHorizon(target)) {
+            if (validDist * validDist >= imaDist) if (isTargetInHorizon(owner, target)) {
               value.spell()
               return true
             }
           case value: AIFleshRipping if skill.canSpell =>
             validDist = value.getMaxDistance
-            if (validDist * validDist >= imaDist) if (isTargetInHorizon(target)) {
+            if (validDist * validDist >= imaDist) if (isTargetInHorizon(owner, target)) {
               value.spell()
               return true
             }
@@ -88,15 +90,15 @@ class EntityAIMelee(owner: EntityLiving, target: EntityLivingBase) extends Entit
             return true
           case value: AIThunderBolt if skill.canSpell =>
             validDist = value.getMaxDistance
-            if (validDist * validDist >= imaDist) if (isTargetInHorizon(target)) {
+            if (validDist * validDist >= imaDist) if (isTargetInHorizon(owner, target)) {
               value.spell()
               return true
             }
           case skill1: AIScatterBomb if skill.canSpell =>
-            ieep.setAI(new EntityAIScatterBomb(owner, target, skill1))
+            ieep.setAI(new EntityAIScatterBomb(target, skill1))
             return false
           case value: AILocationTeleport if skill.canSpell =>
-            if (6.25 >= imaDist) if (isTargetInHorizon(target)) {
+            if (6.25 >= imaDist) if (isTargetInHorizon(owner, target)) {
               value.spell(target)
               return true
             }
@@ -111,7 +113,7 @@ class EntityAIMelee(owner: EntityLiving, target: EntityLivingBase) extends Entit
       })
     }
     else{
-      ieep.setAI(new EntityAIRange(owner, target))
+      ieep.setAI(new EntityAIRange(target))
       return false
     }
     true

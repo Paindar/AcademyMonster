@@ -1,5 +1,6 @@
 package cn.paindar.academymonster.entity.ai;
 
+import cn.paindar.academymonster.entity.SkillExtendedEntityProperties;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
@@ -11,15 +12,18 @@ import net.minecraft.entity.player.EntityPlayer;
  */
 public class EntityAIWander extends EntityAIBaseX
 {
-    public EntityAIWander(EntityLiving owner)
+    public EntityAIWander()
     {
-        super(owner);
+        super();
     }
 
     @Override
-    public boolean execute()
+    public boolean execute(EntityLivingBase owner)
     {
-        EntityLivingBase target=(owner.getAttackTarget()==null)?null:owner.getAttackTarget();
+
+        EntityLivingBase target=null;
+        if(owner instanceof EntityLiving)
+            target = ((EntityLiving)owner).getAttackTarget();
         if(target==null)
         {
             if (owner instanceof EntityCreature && ((EntityCreature) owner).getEntityToAttack() instanceof EntityLivingBase)
@@ -36,14 +40,15 @@ public class EntityAIWander extends EntityAIBaseX
         }
         if(target!=null)
         {
+            SkillExtendedEntityProperties ieep=SkillExtendedEntityProperties.get(owner);
             if(owner.getDistanceSqToEntity(target)>225)
             {
-                ieep.setAI(new EntityAIChasing(owner,target,30));
+                ieep.setAI(new EntityAIChasing(target,30));
                 return false;
             }
             else
             {
-                ieep.setAI(new EntityAIRange(owner,target));
+                ieep.setAI(new EntityAIRange(target));
                 return false;
             }
         }
