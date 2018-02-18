@@ -7,6 +7,7 @@ import cn.lambdalib.util.mc.BlockSelectors;
 import cn.lambdalib.util.mc.WorldUtils;
 import cn.paindar.academymonster.config.AMConfig;
 import cn.paindar.academymonster.entity.EntityMagManipBlock;
+import net.minecraft.block.BlockStairs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.Vec3;
@@ -46,7 +47,10 @@ public class AILocManip extends BaseSkill
         lastX=speller.posX;
         lastY=speller.posY;
         lastZ=speller.posZ;
-        List<BlockPos> list=WorldUtils.getBlocksWithin(speller, 7, (int)lerpf(25,100,getSkillExp()), BlockSelectors.filNormal,(world1, x, y, z, block) -> world1.getBlock(x,y,z).getBlockHardness(world1,x,y,z)>0);
+        List<BlockPos> list=WorldUtils.getBlocksWithin(speller, 7, (int)lerpf(25,100,getSkillExp()),
+                BlockSelectors.filNormal,
+                (world1, x, y, z, block) -> world1.getBlock(x,y,z).getBlockHardness(world1,x,y,z)>0,
+                ((world1, i, i1, i2, block) -> !(block instanceof BlockStairs)));//BlockStair will cause server crash for its onUpdate()
         for(BlockPos pos:list)
         {
             EntityMagManipBlock entity=  new EntityMagManipBlock(speller, damage,this);

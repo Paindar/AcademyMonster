@@ -10,6 +10,7 @@ import cn.lambdalib.util.helper.EntitySyncer;
 import cn.lambdalib.util.mc.RichEntity;
 import cn.paindar.academymonster.ability.BaseSkill;
 import cn.paindar.academymonster.config.AMConfig;
+import cn.paindar.academymonster.core.AcademyMonster;
 import cn.paindar.academymonster.network.NetworkManager;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.MovingObjectPosition;
@@ -124,7 +125,13 @@ public class EntityMagManipBlock extends EntityBlockNative
     public void onUpdate()
     {
         syncer.update();
-        super.onUpdate();
+        try {
+            super.onUpdate();
+        }
+        catch (NullPointerException e){
+            AcademyMonster.log.info("Found a danger block manipulated, please report to author.");
+            e.printStackTrace();
+        }
         yaw += yawSpeed;
         pitch += pitchSpeed;
 
