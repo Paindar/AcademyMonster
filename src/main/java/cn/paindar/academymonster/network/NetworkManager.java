@@ -91,11 +91,11 @@ public class NetworkManager
             throw new IllegalStateException("Wrong context side!");
     }
 
-    public static void sendRailgunEffectTo(EntityLivingBase target,int dist, EntityPlayerMP player)
+    public static void sendRailgunEffectTo(EntityLivingBase speller, Vec3 str,Vec3 end, EntityPlayerMP player)
     {
         if(!player.getEntityWorld().isRemote)
         {
-            MessageRailgunEffect msg = new MessageRailgunEffect(target,dist);
+            MessageRailgunEffect msg = new MessageRailgunEffect(speller, str, end);
             instance.sendTo(msg, player);
         }
         else

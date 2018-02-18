@@ -6,6 +6,7 @@ import cn.lambdalib.util.generic.VecUtils;
 import cn.lambdalib.util.mc.Raytrace;
 import cn.lambdalib.util.mc.RichEntity;
 import cn.lambdalib.util.mc.WorldUtils;
+import cn.paindar.academymonster.playerskill.electromaster.events.RayShootingEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -84,12 +85,13 @@ public class AIVecReflect extends BaseSkill
     }
 
     @SubscribeEvent
-    public void onReflect(ReflectEvent evt)
+    public void onReflect(RayShootingEvent evt)
     {
         if (evt.target.equals(speller)&&isChanting) {
-            evt.setCanceled(true);
-
-            Vec3 dpos = VecUtils.subtract(new RichEntity(evt.player).headPosition(), new RichEntity(speller).headPosition());
+            dmg-=evt.damage*reflectRate;
+            if(dmg>=0){
+                evt.setCanceled(true);
+            }
         }
     }
 
