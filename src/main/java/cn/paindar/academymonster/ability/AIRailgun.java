@@ -11,7 +11,7 @@ import cn.lambdalib.util.mc.WorldUtils;
 import cn.paindar.academymonster.config.AMConfig;
 import cn.paindar.academymonster.entity.EntityCoinThrowingNative;
 import cn.paindar.academymonster.network.NetworkManager;
-import cn.paindar.academymonster.playerskill.electromaster.events.RayShootingEvent;
+import cn.paindar.academymonster.events.RayShootingEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import net.minecraft.block.Block;
@@ -120,8 +120,10 @@ public class AIRailgun extends BaseSkill
                 targets.sort(Comparator.comparingDouble(lastEntity::getDistanceSqToEntity));
                 for (Entity e : targets) {
                     if (e instanceof EntityLivingBase) {
-                        RayShootingEvent event = new RayShootingEvent(speller, (EntityLivingBase) e, damage);
-                        if (!MinecraftForge.EVENT_BUS.post(event))
+                        RayShootingEvent event = new RayShootingEvent(speller, (EntityLivingBase) e, incr_);
+                        boolean result = MinecraftForge.EVENT_BUS.post(event);
+                        incr_=event.range;
+                        if (!result)
                             attack((EntityLivingBase) e, damage);
                         else {
                             incr_ -= (e.getDistanceToEntity(lastEntity));
