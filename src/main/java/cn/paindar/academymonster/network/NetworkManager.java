@@ -102,11 +102,11 @@ public class NetworkManager
             throw new IllegalStateException("Wrong context side!");
     }
 
-    public static void sendMeltdownerEffectTo(EntityLivingBase target,int dist, EntityPlayerMP player)
+    public static void sendMeltdownerEffectTo(EntityLivingBase speller, Vec3 str,Vec3 end, EntityPlayerMP player)
     {
         if(!player.getEntityWorld().isRemote)
         {
-            MessageMeltdownerEffect msg = new MessageMeltdownerEffect(target,dist);
+            MessageMeltdownerEffect msg = new MessageMeltdownerEffect(speller, str, end);
             instance.sendTo(msg, player);
         }
         else

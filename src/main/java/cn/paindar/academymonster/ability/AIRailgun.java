@@ -121,7 +121,7 @@ public class AIRailgun extends BaseSkill
                 for (Entity e : targets) {
                     if (e instanceof EntityLivingBase) {
                         RayShootingEvent event = new RayShootingEvent(speller, (EntityLivingBase) e, damage);
-                        if (MinecraftForge.EVENT_BUS.post(event))
+                        if (!MinecraftForge.EVENT_BUS.post(event))
                             attack((EntityLivingBase) e, damage);
                         else {
                             incr_ -= (e.getDistanceToEntity(lastEntity));

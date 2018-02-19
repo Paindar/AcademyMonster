@@ -27,7 +27,7 @@ public class MessageRailgunEffect implements IMessage
             if (ctx.side == Side.CLIENT)
             {
                 EntityLivingBase player= (EntityLivingBase)Minecraft.getMinecraft().theWorld.getEntityByID(message.nbt.getInteger("id"));
-                int dist=message.nbt.getInteger("dst");
+
                 Vec3 str=Vec3.createVectorHelper(message.nbt.getDouble("str_x"),
                         message.nbt.getDouble("str_y"),
                         message.nbt.getDouble("str_z"));

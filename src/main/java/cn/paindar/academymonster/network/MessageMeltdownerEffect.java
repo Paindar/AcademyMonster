@@ -1,7 +1,6 @@
 package cn.paindar.academymonster.network;
 
 import cn.paindar.academymonster.entity.EntityMDRayNative;
-import cn.paindar.academymonster.entity.EntityRailgunFXNative;
 import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
@@ -12,6 +11,7 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.Vec3;
 
 /**
  * Created by Paindar on 2017/3/13.
@@ -26,10 +26,14 @@ public class MessageMeltdownerEffect implements IMessage
         {
             if (ctx.side == Side.CLIENT)
             {
-                EntityLivingBase player= (EntityLivingBase) Minecraft.getMinecraft().theWorld.getEntityByID(message.nbt.getInteger("i"));
-                int dist=message.nbt.getInteger("dst");
-                if(player!=null)
-                    player.worldObj.spawnEntityInWorld(new EntityMDRayNative(player, dist));
+                EntityLivingBase player= (EntityLivingBase)Minecraft.getMinecraft().theWorld.getEntityByID(message.nbt.getInteger("id"));
+                Vec3 str=Vec3.createVectorHelper(message.nbt.getDouble("str_x"),
+                        message.nbt.getDouble("str_y"),
+                        message.nbt.getDouble("str_z"));
+                Vec3 end=Vec3.createVectorHelper(message.nbt.getDouble("end_x"),
+                        message.nbt.getDouble("end_y"),
+                        message.nbt.getDouble("end_z"));
+                player.worldObj.spawnEntityInWorld(new EntityMDRayNative(player, str, end));
             }
             return null;
         }
@@ -38,11 +42,16 @@ public class MessageMeltdownerEffect implements IMessage
     NBTTagCompound nbt;
     public MessageMeltdownerEffect(){}
 
-    public MessageMeltdownerEffect(EntityLivingBase speller,int dist)
+    public MessageMeltdownerEffect(EntityLivingBase speller, Vec3 str, Vec3 end)
     {
         nbt=new NBTTagCompound();
-        nbt.setInteger("i",speller.getEntityId());
-        nbt.setInteger("dst",dist);
+        nbt.setInteger("id", speller.getEntityId());
+        nbt.setDouble("str_x", str.xCoord);
+        nbt.setDouble("str_y", str.yCoord);
+        nbt.setDouble("str_z", str.zCoord);
+        nbt.setDouble("end_x", end.xCoord);
+        nbt.setDouble("end_y", end.yCoord);
+        nbt.setDouble("end_z", end.zCoord);
     }
 
     /**
