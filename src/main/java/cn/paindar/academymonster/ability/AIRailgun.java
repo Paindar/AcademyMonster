@@ -1,10 +1,7 @@
 package cn.paindar.academymonster.ability;
 
 import cn.academy.core.event.BlockDestroyEvent;
-import cn.academy.crafting.ModuleCrafting;
 import cn.academy.vanilla.ModuleVanilla;
-import cn.academy.vanilla.electromaster.item.ItemCoin;
-import cn.academy.vanilla.electromaster.skill.Railgun;
 import cn.lambdalib.util.generic.MathUtils;
 import cn.lambdalib.util.generic.RandUtils;
 import cn.lambdalib.util.generic.VecUtils;
@@ -12,19 +9,16 @@ import cn.lambdalib.util.helper.Motion3D;
 import cn.lambdalib.util.mc.EntitySelectors;
 import cn.lambdalib.util.mc.WorldUtils;
 import cn.paindar.academymonster.config.AMConfig;
-import cn.paindar.academymonster.core.AcademyMonster;
 import cn.paindar.academymonster.entity.EntityCoinThrowingNative;
 import cn.paindar.academymonster.network.NetworkManager;
 import cn.paindar.academymonster.playerskill.electromaster.events.RayShootingEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
-import joptsimple.internal.Strings;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.item.ItemBow;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.Vec3;
@@ -131,7 +125,6 @@ public class AIRailgun extends BaseSkill
                             attack((EntityLivingBase) e, damage);
                         else {
                             incr_ -= (e.getDistanceToEntity(lastEntity));
-                            AcademyMonster.log.info("last entity = "+lastEntity+" incr_ = "+incr_);
                             paths.remove(paths.size()-1);
                             pos=Vec3.createVectorHelper(e.posX, e.posY +e.getEyeHeight(), e.posZ);
                             paths.add(pos);
@@ -145,13 +138,6 @@ public class AIRailgun extends BaseSkill
                     }
                 }
             }
-
-            StringBuilder debugString= new StringBuilder();
-            for(Vec3 v:paths){
-                debugString.append(v).append(" ");
-            }
-            System.out.println("Path:"+ debugString);
-
 
             {
                 int index=0;
