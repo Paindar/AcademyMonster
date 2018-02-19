@@ -9,6 +9,7 @@ import cn.paindar.academymonster.core.support.tile.AbilityInterfManager;
 import cn.paindar.academymonster.entity.EntityLoader;
 import cn.paindar.academymonster.items.ItemLoader;
 import cn.paindar.academymonster.network.NetworkManager;
+import cn.paindar.academymonster.playerskill.HookLoader;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
@@ -27,6 +28,8 @@ public class CommonProxy
     {
         new EntityLoader();
         AMConfig.init(event);
+        if(AMConfig.getBoolean("am.general.replaceSkill",true))
+            HookLoader.init();
         EntityLoader.registerEntity();
         ItemLoader.registerItems();
         SkillManager.instance.initSkill();
