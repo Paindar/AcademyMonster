@@ -1,14 +1,19 @@
 package cn.paindar.academymonster.core;
 
 import cn.academy.ability.ModuleAbility;
+import cn.academy.ability.api.Skill;
+import cn.academy.ability.api.data.AbilityData;
+import cn.academy.ability.api.data.CPData;
+import cn.academy.ability.api.event.ReflectEvent;
 import cn.academy.vanilla.ModuleVanilla;
+import cn.academy.vanilla.vecmanip.skill.VecReflection$;
 import cn.lambdalib.util.generic.RandUtils;
 import cn.paindar.academymonster.entity.SkillExtendedEntityProperties;
+import cn.paindar.academymonster.events.RayShootingEvent;
 import cn.paindar.academymonster.network.NetworkManager;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityTracker;
-import net.minecraft.entity.IEntityOwnable;
 import net.minecraft.entity.boss.IBossDisplayData;
 import net.minecraft.entity.monster.EntityGolem;
 import net.minecraft.entity.monster.EntityMob;
@@ -16,9 +21,12 @@ import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.world.WorldServer;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
+
+import static cn.lambdalib.util.generic.MathUtils.lerpf;
 
 /**
  * Created by Paindar on 2017/2/12.
@@ -100,6 +108,25 @@ public class GlobalEventHandle
         data.release();
     }
 
+    @SubscribeEvent
+    public void onPlayerReflectRayShoot(RayShootingEvent evt)
+    {
+        if(evt.target instanceof EntityPlayer)
+        {
+            EntityPlayer player = (EntityPlayer) evt.target;
+            if(MinecraftForge.EVENT_BUS.post(new ReflectEvent(player, null, player))){
+                AbilityData data = AbilityData.get(player);
+                CPData cpData = CPData.get(player);
+                Skill reflect = VecReflection$.MODULE$;
+                float cpConsume = (float) (evt.range*lerpf(0.8f, 1.2f, data.getSkillExp(reflect)))*
+                        reflect.getCPConsumeSpeed();
+                if(cpData.perform(0,cpConsume))
+                {
+                    evt.setCanceled(true);
+                }
+            }
+        }
+    }
 //    @SubscribeEvent
 //    @SideOnly(Side.CLIENT)
 //    public void onPreRenderGameOverlay(RenderGameOverlayEvent.Pre event)
