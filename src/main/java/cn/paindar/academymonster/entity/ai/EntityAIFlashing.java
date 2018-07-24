@@ -2,12 +2,10 @@ package cn.paindar.academymonster.entity.ai;
 
 import cn.lambdalib.util.generic.RandUtils;
 import cn.paindar.academymonster.ability.AIFlashing;
-import cn.paindar.academymonster.ability.AIPenetrateTeleport;
+import cn.paindar.academymonster.entity.SkillExtendedEntityProperties;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.ai.EntityAIBase;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 
 import static java.lang.Math.sqrt;
@@ -21,9 +19,9 @@ public class EntityAIFlashing extends EntityAIBaseX
     AIFlashing skill;
     EntityLivingBase target;
 
-    public EntityAIFlashing(EntityLiving owner,EntityLivingBase target,AIFlashing skill)
+    public EntityAIFlashing(EntityLivingBase target,AIFlashing skill)
     {
-        super(owner);
+        super();
         this.target=target;
         this.skill=skill;
     }
@@ -37,17 +35,20 @@ public class EntityAIFlashing extends EntityAIBaseX
     }
 
     @Override
-    public boolean execute()
+    public boolean execute(EntityLivingBase owner)
     {
+        SkillExtendedEntityProperties ieep=SkillExtendedEntityProperties.get(owner);
         if(skill.isSkillInCooldown())
         {
-            ieep.setAI(new EntityAIWander(owner));
+            ieep.setAI(new EntityAIWander());
+            if(owner instanceof EntityLiving)
+                ((EntityLiving)owner).getNavigator().clearPathEntity();
         }
         if(target!=null)
         {
             if(target.isDead)
             {
-                ieep.setAI(new EntityAIWander(owner));
+                ieep.setAI(new EntityAIWander());
             }
             if(!skill.isChanting())
             {
@@ -55,7 +56,7 @@ public class EntityAIFlashing extends EntityAIBaseX
             }
             else
             {
-                double dist=sqrt(this.owner.getDistanceSqToEntity(target));
+                double dist=sqrt(owner.getDistanceSqToEntity(target));
                 double distBtwEntities=dist;
                 dist=skill.getMaxDistance();
                 if(target!=null && skill.available()&&distBtwEntities>=3)
@@ -72,8 +73,6 @@ public class EntityAIFlashing extends EntityAIBaseX
                     if(hasPlace(world,x+1+RandUtils.nextInt(1),y+1,z+1+RandUtils.nextInt(1)))
                     {
                         this.skill.spell(x,y,z);
-                        owner.getNavigator().clearPathEntity();
-
                     }
 
 
@@ -82,7 +81,7 @@ public class EntityAIFlashing extends EntityAIBaseX
         }
         else
         {
-            ieep.setAI(new EntityAIWander(owner));
+            ieep.setAI(new EntityAIWander());
             return false;
         }
         return true;

@@ -119,7 +119,8 @@ public abstract class BaseSkill
     @SubscribeEvent
     public void onSpellerDeath(LivingDeathEvent event)
     {
-
-        FMLCommonHandler.instance().bus().unregister(this);
+        if(event.entity==speller)
+            speller=null;
+            FMLCommonHandler.instance().bus().unregister(this);
     }
 }

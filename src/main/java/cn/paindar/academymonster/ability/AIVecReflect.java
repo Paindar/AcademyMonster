@@ -1,11 +1,11 @@
 package cn.paindar.academymonster.ability;
 
-import cn.academy.ability.api.event.ReflectEvent;
 import cn.academy.vanilla.vecmanip.skill.EntityAffection;
 import cn.lambdalib.util.generic.VecUtils;
 import cn.lambdalib.util.mc.Raytrace;
 import cn.lambdalib.util.mc.RichEntity;
 import cn.lambdalib.util.mc.WorldUtils;
+import cn.paindar.academymonster.events.RayShootingEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -84,12 +84,22 @@ public class AIVecReflect extends BaseSkill
     }
 
     @SubscribeEvent
-    public void onReflect(ReflectEvent evt)
+    public void onReflect(RayShootingEvent evt)
     {
-        if (evt.target.equals(speller)&&isChanting) {
-            evt.setCanceled(true);
-
-            Vec3 dpos = VecUtils.subtract(new RichEntity(evt.player).headPosition(), new RichEntity(speller).headPosition());
+        if (evt.target.equals(speller)) {
+            if(canSpell())
+            {
+                isChanting = true;//make skill available
+                reflectRate=lerpf(0.3f,2f,getSkillExp());
+                time=maxTime;
+                dmg=maxDamage;
+            }
+            if(isChanting) {
+                dmg -= evt.range * reflectRate;
+                if (dmg >= 0) {
+                    evt.setCanceled(true);
+                }
+            }
         }
     }
 
@@ -183,8 +193,6 @@ public class AIVecReflect extends BaseSkill
 
     private static void reflect(Entity entity,EntityLivingBase player)
     {
-//        Vec3 lookPos = Vec3.createVectorHelper(player.posX-entity.posX,player.posY-entity.posY,player.posZ-entity.posZ);
-//        VecUtils.multiply(lookPos,20.0/lookPos.lengthVector());
         Vec3 lookPos = Raytrace.getLookingPos(player, 20).getLeft();
         double speed = VecUtils.vec(entity.motionX, entity.motionY, entity.motionZ).lengthVector();
         Vec3 vel = VecUtils.multiply(VecUtils.subtract(lookPos,(new RichEntity(entity)).headPosition()).normalize(),speed);

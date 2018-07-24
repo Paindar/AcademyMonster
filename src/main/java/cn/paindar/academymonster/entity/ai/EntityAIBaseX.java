@@ -2,8 +2,6 @@ package cn.paindar.academymonster.entity.ai;
 
 import cn.lambdalib.util.mc.BlockSelectors;
 import cn.lambdalib.util.mc.Raytrace;
-import cn.paindar.academymonster.entity.SkillExtendedEntityProperties;
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
@@ -13,20 +11,16 @@ import net.minecraft.util.Vec3;
  */
 public abstract class EntityAIBaseX
 {
-    EntityLiving owner;
-    SkillExtendedEntityProperties ieep;
-    EntityAIBaseX(EntityLiving owner)
+    EntityAIBaseX()
     {
-        this.owner=owner;
-        ieep=SkillExtendedEntityProperties.get(owner);
     }
 
-    public abstract boolean execute();
+    public abstract boolean execute(EntityLivingBase owner);
 
-    boolean isTargetInHorizon(EntityLivingBase target)
+    boolean isTargetInHorizon(EntityLivingBase owner, EntityLivingBase target)
     {
-        Vec3 lookingPos=owner.getLookVec(),direct=Vec3.createVectorHelper(target.posX-owner.posX,0,target.posZ-owner.posZ).normalize();
-        lookingPos.yCoord=0;
+        Vec3 lookingPos=owner.getLookVec(),direct=Vec3.createVectorHelper(target.posX-owner.posX,target.posY-owner.posY,target.posZ-owner.posZ).normalize();
+
         lookingPos=lookingPos.normalize();
         MovingObjectPosition trace = Raytrace.rayTraceBlocks(owner.worldObj,
                 Vec3.createVectorHelper(owner.posX, owner.posY + owner.getEyeHeight(), owner.posZ),
@@ -35,11 +29,9 @@ public abstract class EntityAIBaseX
         return (lookingPos.xCoord*direct.xCoord+lookingPos.zCoord*direct.zCoord>=0.5)&&(trace==null || trace.typeOfHit!= MovingObjectPosition.MovingObjectType.BLOCK);
     }
 
-    boolean isTargetInHorizonIgnoreBlock(EntityLivingBase target)
+    boolean isTargetInHorizonIgnoreBlock(EntityLivingBase owner, EntityLivingBase target)
     {
-        Vec3 lookingPos=owner.getLookVec(),direct=Vec3.createVectorHelper(target.posX-owner.posX,0,target.posZ-owner.posZ).normalize();
-        lookingPos.yCoord=0;
-        lookingPos=lookingPos.normalize();
+        Vec3 lookingPos=owner.getLookVec().normalize(),direct=Vec3.createVectorHelper(target.posX-owner.posX,target.posY-owner.posY,target.posZ-owner.posZ).normalize();
         return (lookingPos.xCoord*direct.xCoord+lookingPos.zCoord*direct.zCoord>=0.5);
     }
 }

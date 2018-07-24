@@ -26,31 +26,32 @@ public class AMConfig
     public static void init(FMLPreInitializationEvent event)
     {
         ResourceLocation defaultRes = new ResourceLocation("academymonster:config/default.cfg");
-        Reader reader = new InputStreamReader(RegistryUtils.getResourceStream(defaultRes));
-        config = ConfigFactory.parseReader(reader);
-        File customFile = event.getSuggestedConfigurationFile();
-        if (!customFile.isFile())
+
+        File configFile = event.getSuggestedConfigurationFile();
+        if (!configFile.exists())//check if config file exists.
         {
             try
             {
-                Files.copy(RegistryUtils.getResourceStream(defaultRes), customFile.toPath());
+                Files.copy(RegistryUtils.getResourceStream(defaultRes), configFile.toPath());
             } catch (IOException ex)
             {
                 log.error("Error when copying config template to config folder", ex);
             }
+            configFile = new File(defaultRes.getResourcePath());
         }
 
         try
         {
-            Config ex = ConfigFactory.parseFile(customFile);
-            config = ex.withFallback(config);
-        } catch (RuntimeException exception) {
+            String s=new String(Files.readAllBytes(configFile.toPath()));
+            config = ConfigFactory.parseString(s.toLowerCase());
+        } catch (Exception exception) {
             log.error("An error occured parsing custom config", exception);
         }
     }
 
     public static boolean getBoolean(String path,boolean defaultValue)
     {
+        path = path.toLowerCase();
         if(!config.hasPath(path))
         {
             log.debug("Cannot find path: "+path);
@@ -62,6 +63,7 @@ public class AMConfig
 
     public static int getInt(String path,int defaultValue)
     {
+        path = path.toLowerCase();
         if(!config.hasPath(path))
         {
             log.debug("Cannot find path: "+path);
@@ -73,6 +75,7 @@ public class AMConfig
 
     public static double getDouble(String path,double defaultValue)
     {
+        path = path.toLowerCase();
         if(!config.hasPath(path))
         {
             log.debug("Cannot find path: "+path);
@@ -84,6 +87,7 @@ public class AMConfig
 
     public static List<String> getStringArray(String path, List<String> defaultValue)
     {
+        path = path.toLowerCase();
         if(!config.hasPath(path))
         {
             log.debug("Cannot find path: "+path);

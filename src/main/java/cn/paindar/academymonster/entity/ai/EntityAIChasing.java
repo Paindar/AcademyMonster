@@ -3,12 +3,9 @@ package cn.paindar.academymonster.entity.ai;
 import cn.paindar.academymonster.ability.AIBodyIntensify;
 import cn.paindar.academymonster.ability.AIPenetrateTeleport;
 import cn.paindar.academymonster.ability.BaseSkill;
-import cn.paindar.academymonster.core.AcademyMonster;
-import net.minecraft.entity.EntityLiving;
+import cn.paindar.academymonster.entity.SkillExtendedEntityProperties;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.util.Vec3;
-
-import java.lang.annotation.Target;
+import net.minecraft.entity.player.EntityPlayer;
 
 /**
  * Created by Paindar on 2017/5/14.
@@ -17,20 +14,21 @@ public class EntityAIChasing extends EntityAIBaseX
 {
     EntityLivingBase target;
     float dist;
-    EntityAIChasing(EntityLiving owner,EntityLivingBase target,float dst)
+    EntityAIChasing(EntityLivingBase target,float dst)
     {
-        super(owner);
+        super();
         this.target=target;
         this.dist=dst;
     }
 
     @Override
-    public boolean execute()
+    public boolean execute(EntityLivingBase owner)
     {
         double imaDist=owner.getDistanceSqToEntity(target);
-        if(target==null || target.isDead ||dist*dist<imaDist)
+        SkillExtendedEntityProperties ieep = SkillExtendedEntityProperties.get(owner);
+        if(target==null || target.isDead ||dist*dist<imaDist||(target instanceof EntityPlayer && ((EntityPlayer)target).capabilities.isCreativeMode))
         {
-            ieep.setAI(new EntityAIWander(owner));
+            ieep.setAI(new EntityAIWander());
             return false;
         }
         //may it can add Vector Accelerate or other
@@ -43,14 +41,14 @@ public class EntityAIChasing extends EntityAIBaseX
             }
             else if(skill instanceof AIPenetrateTeleport && skill.canSpell())
             {
-                ieep.setAI(new EntityAIPenetrateTeleport(owner,target, (AIPenetrateTeleport) skill));
+                ieep.setAI(new EntityAIPenetrateTeleport(target, (AIPenetrateTeleport) skill));
                 break;
             }
         }
         if(imaDist<=9)
-            ieep.setAI(new EntityAIMelee(owner,target));
+            ieep.setAI(new EntityAIMelee(target));
         else if(imaDist<=400)
-            ieep.setAI(new EntityAIRange(owner,target));
+            ieep.setAI(new EntityAIRange(target));
         else
             return true;
         return false;

@@ -14,19 +14,14 @@ import net.minecraft.util.Vec3;
  */
 public class EntityMDRayNative extends EntityRayBaseNative
 {
-    public EntityMDRayNative(EntityLivingBase _player, double length) {
-        this(_player, new Motion3D(_player, true), length);
-    }
 
-    public EntityMDRayNative(EntityLivingBase spawner, Motion3D mo, double length) {
+    public EntityMDRayNative(EntityLivingBase spawner, Vec3 str, Vec3 end) {
         super(spawner);
 
-        Vec3 start = mo.getPosVec(), end = mo.move(length).getPosVec();
-        this.setFromTo(start, end);
+        this.setFromTo(str, end);
         this.blendInTime = 200;
         this.blendOutTime = 700;
         this.life = 50;
-        this.length = length;
     }
 
     @Override

@@ -39,9 +39,9 @@ public class EntityRailgunFXNative extends EntityRayBaseNative
 
     SubArcHandler arcHandler = new SubArcHandler(templates);
 
-    public EntityRailgunFXNative(EntityLivingBase player, double length) {
+    public EntityRailgunFXNative(EntityLivingBase player, Vec3 str, Vec3 end) {
         super(player);
-        new Motion3D(player, true).applyToEntity(this);
+        //new Motion3D(player, true).applyToEntity(this);
 
         this.life = 50;
         this.blendInTime = 150;
@@ -49,9 +49,9 @@ public class EntityRailgunFXNative extends EntityRayBaseNative
         this.widthWiggleRadius = 0.3;
         this.maxWiggleSpeed = 0.8;
         this.blendOutTime = 1000;
-        this.length = length;
         setPosition(posX,posY+player.getEyeHeight()/4,posZ);
         ignoreFrustumCheck = true;
+        setFromTo(str, end);
 
         //Build the arc list
         {
