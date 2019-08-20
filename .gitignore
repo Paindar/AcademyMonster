@@ -66,8 +66,9 @@ build/
 eclipse/
 libs/
 out/
-AcademyZombie.ipr
-AcademyZombie.iws
+*.ipr
+*.iml
+*.iws
 CREDITS-fml.txt
 LICENSE-fml.txt
 MinecraftForge-Credits.txt

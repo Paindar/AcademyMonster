@@ -68,10 +68,13 @@ public abstract class BaseSkill
     {
         if(event.phase==ServerTickEvent.Phase.START)
         {
-            onTick();
-            if (isInterf() && isChanting)
+            if(isChanting)
             {
-                isChanting = false;
+                onTick();
+                if (isInterf())
+                {
+                    isChanting = false;
+                }
             }
             if (remainCooldown > 0 && !isChanting)
                 remainCooldown--;

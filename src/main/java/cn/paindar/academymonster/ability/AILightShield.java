@@ -58,7 +58,7 @@ public class AILightShield extends BaseSkill
     protected void onTick()
     {
         if(!isChanting)
-            return;
+            stop();
         if( shield==null||shield.isDead|| speller.isDead||maxTime<=time)
         {
             stop();

@@ -3,12 +3,15 @@ package cn.paindar.academymonster.ability;
 import cn.lambdalib.util.generic.VecUtils;
 import cn.lambdalib.util.helper.Motion3D;
 import cn.lambdalib.util.mc.EntitySelectors;
+import cn.lambdalib.util.mc.Raytrace;
 import cn.lambdalib.util.mc.WorldUtils;
 import cn.paindar.academymonster.entity.EntityMdBallNative;
 import cn.paindar.academymonster.network.NetworkManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 
 import java.util.ArrayList;
@@ -49,7 +52,7 @@ public class AIElectronMissile extends BaseSkill
     public void onTick()
     {
         if(!isChanting)
-            return;
+            time=maxTick;
 
         time++;
         if(speller.isDead || time>=maxTick||isInterf())
@@ -64,15 +67,24 @@ public class AIElectronMissile extends BaseSkill
         if(time%freq==0)
         {
             EntityMdBallNative ball=new EntityMdBallNative(speller,2333333);
-            ballList.add(ball);
             speller.worldObj.spawnEntityInWorld(ball);
+            ballList.add(ball);
         }
-        List<Entity> list=WorldUtils.getEntities(speller,range,EntitySelectors.exclude(speller).and(EntitySelectors.living()));
+        List<Entity> list=WorldUtils.getEntities(speller,range,EntitySelectors.exclude(speller).
+                and(EntitySelectors.living()).
+                and((Entity e)-> !(e instanceof EntityPlayer && ((EntityPlayer) e).capabilities.isCreativeMode))
+        );
         if(!list.isEmpty() && !ballList.isEmpty())
         {
             Vec3 str= VecUtils.vec(ballList.get(0).posX, ballList.get(0).posY, ballList.get(0).posZ);
             Vec3 dst=new Motion3D(list.get(0),5,true).getPosVec();
-            attack((EntityLivingBase) list.get(0), damage);
+            MovingObjectPosition trace = Raytrace.perform(speller.worldObj,str,dst
+                    , EntitySelectors.exclude(speller).and(EntitySelectors.living()));
+            if (trace != null && trace.entityHit != null)
+            {
+                attack((EntityLivingBase) trace.entityHit,damage);
+            }
+
             list= WorldUtils.getEntities(speller, 25, EntitySelectors.player());
             for(Entity e:list)
             {
